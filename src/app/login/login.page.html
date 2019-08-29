@@ -1,0 +1,82 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-title>Log Masuk</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content padding>
+    <ion-segment color="primary" [(ngModel)]="loginsegment" scrollable="true">
+      <ion-segment-button value="admin"> Administrator </ion-segment-button>
+      <ion-segment-button value="accProd"> Account&Production </ion-segment-button>
+      <ion-segment-button value="sales"> Team Sales </ion-segment-button>
+
+    </ion-segment>
+
+
+<div [ngSwitch]="loginsegment">
+  <ion-list  *ngSwitchCase="'admin'">
+    <br>
+    <br>
+      <div class="ion-text-center">Administrator</div>
+      <ion-list>
+          <ion-item>
+            <ion-label position="floating">Nama</ion-label>
+            <ion-input type="text" [(ngModel)]="user.username"></ion-input>
+          </ion-item>
+      
+          <ion-item>
+            <ion-label position="floating">Kata Laluan</ion-label>
+            <ion-input type="password" [(ngModel)]="user.password"></ion-input>
+          </ion-item>
+        </ion-list>
+
+        <div>
+            <ion-button expand="block" padding color="tertiary" (click)="processLoginAdmin()">Log Masuk</ion-button>
+        </div>
+
+  </ion-list>
+  <ion-list  *ngSwitchCase="'accProd'">
+      <br>
+      <br>
+        <div class="ion-text-center">Account & Production</div>
+      <ion-list>
+          <ion-item>
+            <ion-label position="floating">Nama</ion-label>
+            <ion-input type="text" [(ngModel)]="accprod_username"></ion-input>
+          </ion-item>
+      
+          <ion-item>
+            <ion-label position="floating">Kata Laluan</ion-label>
+            <ion-input type="password" [(ngModel)]="accprod_password"></ion-input>
+          </ion-item>
+        </ion-list>
+
+            <ion-button expand="block" padding color="tertiary" (click)="processLoginAccProd()">Log Masuk</ion-button>          
+
+  </ion-list>
+  <ion-list  *ngSwitchCase="'sales'">
+      <br>
+      <br>
+        <div class="ion-text-center">Team Sales</div>
+      <ion-list>
+          <ion-item>
+            <ion-label position="floating"> Nama</ion-label>
+            <ion-input type="text" [(ngModel)]="sales_username"></ion-input>
+          </ion-item>
+      
+          <ion-item>
+            <ion-label position="floating">Kata Laluan</ion-label>
+            <ion-input type="password" [(ngModel)]="sales_password"></ion-input>
+          </ion-item>
+        </ion-list>
+
+        
+            <ion-button expand="block" padding color="tertiary" (click)="processLoginSales()">Log Masuk</ion-button>
+
+  </ion-list>
+</div>
+    
+  
+   
+  </ion-content>
+   

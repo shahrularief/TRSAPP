@@ -1,0 +1,29 @@
+ion-card{
+    display: block;
+    flex-direction: column;
+    width: 70% !important;
+    height: 10% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  table{ 
+    width: 100%; 
+    border-collapse: collapse; 
+    font-size: 10pt;
+   }
+   tr:nth-of-type(odd) { 
+    background: #eee; 
+   }
+   th { 
+    background: rgb(160, 89, 13); 
+    color: white; 
+    font-weight: bold; 
+   }
+   td, th { 
+    padding: 6px; 
+    border: 1px solid rgb(204, 204, 204); 
+    text-align: left; 
+   }
+  
+
+

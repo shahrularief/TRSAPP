@@ -1,0 +1,91 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button ></ion-back-button>
+    </ion-buttons>
+    <ion-title>Kemaskini Tempahan</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- new order card -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        Tempahan
+      </ion-card-title>
+      <ion-card-subtitle>
+        Sila masukkan maklumat pelanggan yang baru di bawah
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+
+      <!-- order form -->
+          <ion-list>
+              <ion-item>
+                <ion-label>Tarikh</ion-label>
+                <ion-datetime displayFormat="DD-MM-YY" placeholder="Pilih tarikh"
+                [(ngModel)]="tarikh_order"></ion-datetime>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Nama Pelanggan</ion-label>
+                <ion-input type="text" [(ngModel)]="nama_pelanggan"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Alamat Pelanggan</ion-label>
+                <ion-input type="text" [(ngModel)]="alamat_pelanggan"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Nombor Telefon</ion-label>
+                <ion-input type="number" [(ngModel)]="nombor_hp"></ion-input>
+              </ion-item>
+              <ion-item>
+                  <ion-label position="floating">Akaun Bank</ion-label>
+                  <ion-select placeholder="Pilih bank" type="text" [(ngModel)]="akaun">
+                      <ion-select-option value="Maybank">Maybank</ion-select-option>
+                      <ion-select-option value="CIMB">CIMB</ion-select-option>
+                    </ion-select>
+                </ion-item>
+              <ion-item>
+                <ion-label position="floating">Produk</ion-label>
+                <ion-input type="text" [(ngModel)]="produk"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Penghantaran</ion-label>
+                <ion-select placeholder="Pilih penghantaran" type="text" [(ngModel)]="penghantaran">
+                  <ion-select-option value="Poslaju">Poslaju</ion-select-option>
+                  <ion-select-option value="NinjaVan">NinjaVan</ion-select-option>
+                  <ion-select-option value="CityLink">CityLink</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Bayaran (RM)</ion-label>
+                <ion-input type="number" [(ngModel)]="jumlah_bayaran"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-textarea type="text" [(ngModel)]="nota_tambahan" placeholder="Maklumat tambahan di sini..."></ion-textarea>
+              </ion-item>
+            </ion-list>
+
+            <ion-item>
+                <ion-label >
+                    Fail Lampiran (Jika ada)
+                  </ion-label>
+                      <ion-button>
+                          <ion-icon name="cloud-upload"></ion-icon>
+                      </ion-button>
+            </ion-item>
+      
+    </ion-card-content>
+  </ion-card>
+
+
+  <div class="ion-padding">
+    <ion-button expand="block" type="submit" class="ion-no-margin" shape="round"
+    (click)="updatedProcess()">
+    Kemaskini Tempahan
+        <ion-ripple-effect></ion-ripple-effect>
+    </ion-button>
+  </div>
+
+</ion-content>

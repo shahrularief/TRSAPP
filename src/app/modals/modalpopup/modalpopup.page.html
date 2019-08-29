@@ -1,0 +1,129 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title ion-text-centre>Maklumat Pelanggan</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<ion-grid>
+  <ion-row>
+    <ion-col>
+        <ion-text>
+            <p> Data pelanggan {{nama_pelanggan}}</p>
+            <br>
+            <br>
+          </ion-text>
+
+    </ion-col>
+  </ion-row>
+  
+<ion-row>
+  <ion-col size="4">
+      <ion-text>Pengesahan  </ion-text>
+  </ion-col>
+  <ion-col>
+      <ion-text>:{{pengesahan}}</ion-text>
+  </ion-col>
+</ion-row>
+
+
+<ion-row>
+    <ion-col size="4">
+        <ion-text>Nama Pelanggan</ion-text>
+    </ion-col>
+    <ion-col>
+      <ion-text>:{{nama_pelanggan}}</ion-text>
+    </ion-col>
+</ion-row>
+
+
+<ion-row>
+    <ion-col size="4">
+        <ion-text>Tarikh Order</ion-text>
+    </ion-col>
+    <ion-col>
+        <ion-text>
+              :{{tarikh_order}}
+        </ion-text>
+    </ion-col>
+</ion-row>
+
+
+<ion-row>
+    <ion-col size="4">
+        <ion-text>Alamat Pelanggan</ion-text>
+    </ion-col>
+    <ion-col>
+        <ion-text>:{{alamat_pelanggan}}</ion-text>
+    </ion-col>
+</ion-row>
+
+
+<ion-row>
+    <ion-col size="4">
+        <ion-text> No. Hp</ion-text>
+    </ion-col>
+    <ion-col>
+        <ion-text>:{{nombor_hp}}</ion-text>
+    </ion-col>
+</ion-row>
+
+
+
+<ion-row>
+    <ion-col size="4">
+        <ion-text> Akaun</ion-text>
+    </ion-col>
+    <ion-col>
+        <ion-text>:{{akaun}}</ion-text>
+    </ion-col>
+</ion-row>
+
+
+<ion-row>
+    <ion-col size="4">
+        <ion-text> Produk</ion-text>
+    </ion-col>
+    <ion-col>
+        <ion-text>:{{produk}}</ion-text>
+    </ion-col>
+</ion-row>
+
+
+<ion-row>
+    <ion-col size="4">
+        <ion-text> Penghantaran</ion-text>
+    </ion-col>
+    <ion-col>
+         <ion-text>:{{penghantaran}}</ion-text>
+    </ion-col>
+</ion-row>
+
+
+<ion-row>
+    <ion-col size="4">
+        <ion-text> Jumlah Bayaran</ion-text>
+    </ion-col>
+     <ion-col>
+          <ion-text>:RM {{jumlah_bayaran}}</ion-text>
+      </ion-col>
+</ion-row>
+
+
+<ion-row>
+    <ion-col size="4">
+        <ion-text> Nota Tambahan</ion-text>
+    </ion-col>
+     <ion-col>
+           <ion-text>:{{nota_tambahan}}</ion-text>
+      </ion-col>
+</ion-row>
+
+</ion-grid>
+   
+</ion-content>

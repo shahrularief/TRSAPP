@@ -1,0 +1,98 @@
+<ion-header>
+        <ion-toolbar>
+                <ion-buttons slot="start">
+                        <ion-back-button defaultHref="/home"></ion-back-button>
+                </ion-buttons>
+                <ion-title>Production</ion-title>
+        </ion-toolbar>
+</ion-header>
+
+<ion-content>
+        <ion-searchbar placeholder="Search by company" animated="true" (ionChange)="onSearchTerm($event)">
+        </ion-searchbar>
+
+        <ion-card color="primary">
+                <ion-card-subtitle>
+                        <div class="ion-text-center">
+                                Total pending
+                        </div>  
+                        <br />
+                        <div class="ion-text-center">
+                                .....
+                        </div>
+                </ion-card-subtitle>
+        </ion-card>
+
+        <table>
+                <thead>
+                        <tr>
+                                <th></th>
+                                <th>Tarikh</th>
+                                <th>Pelanggan</th>
+                                <th>Alamat</th>
+                                <th>Jumlah Bayaran</th>
+                                <th>Produk</th>
+                                <th>Person Incharge</th>
+                                <th>Nota</th>
+                        </tr>
+                </thead>
+                <tbody>
+                        <tr *ngFor="let customer of customers">
+                                <td>
+                                        <ion-button size="small" color="warning" (click)="
+              updateOrder(
+                customer.order_id,
+                customer.nama_pelanggan,
+                customer.tarikh_order,
+                customer.alamat_pelanggan,
+                customer.nombor_hp,
+                customer.akaun,
+                customer.produk,
+                customer.penghantaran,
+                customer.jumlah_bayaran,
+                customer.nota_tambahan
+              )
+            ">
+                                                <ion-icon name="create"></ion-icon>
+                                        </ion-button>
+                                        <ion-button size="small" (click)="openTrackModal(customer.order_id, customer.pengesahan)">
+                                                <ion-icon name="keypad"></ion-icon>
+                                        </ion-button>
+                                        <ion-button size="small" (click)="openDeliveryModal(customer.order_id)">
+                                                <ion-icon name="airplane"></ion-icon>
+                                        </ion-button>
+                                        <ion-button size="small" color="danger"
+                                                (click)="deleteOrder(customer.order_id, customer.pengesahan)">
+                                                <ion-icon name="trash"></ion-icon>
+                                        </ion-button>
+                                </td>
+                                <td>
+                                        <ion-text>{{ customer.pengesahan }}</ion-text><br />
+                                        <ion-text>{{ customer.tarikh_order }}</ion-text>
+                                </td>
+                                <td>
+                                        <ion-icon name="person"></ion-icon>
+                                        {{customer.nama_pelanggan}}<br>
+                                        <ion-icon name="call"></ion-icon>
+                                        0{{customer.nombor_hp}}<br>
+                                </td>
+                                <td>
+                                        <ion-icon name="home"></ion-icon>
+                                        <ion-text>{{ customer.alamat_pelanggan }}</ion-text>
+                                </td>
+                                <td>
+                                        <ion-text>{{ customer.jumlah_bayaran }}</ion-text>
+                                </td>
+                                <td>
+                                        <ion-text>{{ customer.produk }}</ion-text>
+                                </td>
+                                <td>
+                                                <ion-text>{{ customer.sales }}</ion-text>
+                                        </td>
+                                <td>
+                                        <ion-text>{{ customer.nota_tambahan }}</ion-text>
+                                </td>
+                        </tr>
+                </tbody>
+        </table>
+</ion-content>

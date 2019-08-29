@@ -1,0 +1,164 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Pendaftaran</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-segment color="primary" [(ngModel)]="registrationSegment" scrollable="true">
+    <ion-segment-button value="admin"> Administrator </ion-segment-button>
+    <ion-segment-button value="accProd"> Account&Production </ion-segment-button>
+    <ion-segment-button value="sales"> Team Sales </ion-segment-button>
+
+  </ion-segment>
+
+
+  <div [ngSwitch]="registrationSegment">
+    <ion-list *ngSwitchCase="'admin'">
+      <br>
+      <br>
+      <div class="ion-text-center">Administrator</div>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">Nama</ion-label>
+          <ion-input type="text" [(ngModel)]="username"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Kata Laluan</ion-label>
+          <ion-input type="password" [(ngModel)]="password"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Sahkan Kata Laluan</ion-label>
+          <ion-input type="password" [(ngModel)]="confirm_password"></ion-input>
+        </ion-item>
+
+
+        <ion-item>
+          <ion-label position="floating">Role</ion-label>
+          <ion-select placeholder="Role" type="text" [(ngModel)]="role">
+            <ion-select-option value="BOD">BOD</ion-select-option>
+            <ion-select-option value="CEO">CEO</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+
+      <ion-item>
+        <ion-label position="floating">Syarikat</ion-label>
+        <ion-select placeholder="company" type="text" [(ngModel)]="company">
+          <ion-select-option value="LUMI ACTIVE">LUMI ACTIVE</ion-select-option>
+          <ion-select-option value="DERIN BEAUTY">DERIN BEAUTY</ion-select-option>
+          <ion-select-option value="2H LEGACY">2H LEGACY</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <div>
+        <ion-button expand="block" padding color="tertiary" (click)="processRegisterAdmin()">Daftar</ion-button>
+      </div>
+
+    </ion-list>
+    <ion-list *ngSwitchCase="'accProd'">
+      <br>
+      <br>
+      <div class="ion-text-center">Account & Production</div>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">Nama</ion-label>
+          <ion-input type="text" [(ngModel)]="accprod_username"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Kata Laluan</ion-label>
+          <ion-input type="password" [(ngModel)]="accprod_password"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Sahkan Kata Laluan</ion-label>
+          <ion-input type="password" [(ngModel)]="confirm_accprod_password"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Role</ion-label>
+          <ion-select placeholder="Role" type="text" [(ngModel)]="accprod_role">
+            <ion-select-option value="ACCOUNT">ACCOUNT</ion-select-option>
+            <ion-select-option value="PRODUCTION">PRODUCTION</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+
+        <ion-item>
+          <ion-label position="floating">Nombor Hp</ion-label>
+          <ion-input type="number" [(ngModel)]="accprod_hp"></ion-input>
+        </ion-item>
+
+
+        <ion-item>
+          <ion-label position="floating">Emel</ion-label>
+          <ion-input type="text" [(ngModel)]="accprod_email"></ion-input>
+        </ion-item>
+
+      </ion-list>
+
+      <ion-button expand="block" padding color="tertiary" (click)="processRegisterAccProd()">Daftar</ion-button>
+
+    </ion-list>
+    <ion-list *ngSwitchCase="'sales'">
+      <br>
+      <br>
+      <div class="ion-text-center">Team Sales</div>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating"> Nama</ion-label>
+          <ion-input type="text" [(ngModel)]="sales_username"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Kata Laluan</ion-label>
+          <ion-input type="password" [(ngModel)]="sales_password"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Sahkan Kata Laluan</ion-label>
+          <ion-input type="password" [(ngModel)]="confirm_sales_password"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Role</ion-label>
+          <ion-select placeholder="Role" type="text" [(ngModel)]="sales_role">
+            <ion-select-option value="TEAM SALES">TEAM SALES</ion-select-option>
+            <ion-select-option value="LEADER">LEADER</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+
+        <ion-item>
+          <ion-label position="floating">Syarikat</ion-label>
+          <ion-select placeholder="company" type="text" [(ngModel)]="sales_company">
+            <ion-select-option value="LUMI ACTIVE">LUMI ACTIVE</ion-select-option>
+            <ion-select-option value="DERIN BEAUTY">DERIN BEAUTY</ion-select-option>
+            <ion-select-option value="2H LEGACY">2H LEGACY</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Nombor Hp</ion-label>
+          <ion-input type="number" [(ngModel)]="sales_hp"></ion-input>
+        </ion-item>
+
+
+        <ion-item>
+          <ion-label position="floating">Emel</ion-label>
+          <ion-input type="text" [(ngModel)]="sales_email"></ion-input>
+        </ion-item>
+
+
+      </ion-list>
+      <ion-button expand="block" padding color="tertiary" (click)="processRegisterSales()">Daftar</ion-button>
+
+    </ion-list>
+  </div>
+
+
+
+</ion-content>

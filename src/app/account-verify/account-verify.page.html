@@ -1,0 +1,106 @@
+<ion-header>
+<ion-toolbar>
+        <ion-buttons slot="start">
+                <ion-back-button defaultHref="/home"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Pengesahan</ion-title>
+</ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+<ion-searchbar placeholder="Search by name // later company" animated="true" (ionChange)="onSearchTerm($event)">
+</ion-searchbar>
+
+<ion-card color="tertiary" height="40px">
+        <ion-card-subtitle>
+                <div class="ion-text-center">
+                        Total pending verification
+                </div>
+                <br>
+                <div class="ion-text-center">
+                        1412
+                </div>
+        </ion-card-subtitle>
+</ion-card>
+
+
+<table>
+<thead>
+<tr>
+        <th></th>
+        <th>Tarikh Bayaran</th>
+        <th>Pelanggan</th>
+        <th>Akaun</th>
+        <th>Jumlah Bayaran</th>
+        <th>Produk</th>
+        <th>Person Incharge</th>
+        <th>Lampiran</th>
+        <th>Nota</th>
+</tr>
+</thead>
+<tbody *ngIf="customers.length > 0; else noItems">
+<tr *ngFor="let customer of customers">
+        <td>
+                <ion-button size="small" color="warning" (click)="updateOrder(customer.order_id,customer.nama_pelanggan,
+                                customer.tarikh_order,
+                                customer.alamat_pelanggan,
+                                customer.nombor_hp,
+                                customer.akaun,
+                                customer.produk,
+                                customer.penghantaran,
+                                customer.jumlah_bayaran,
+                                customer.nota_tambahan)">
+                <ion-icon name="create"></ion-icon>
+
+        </ion-button>
+        <ion-button size="small" (click)="verifyAlert(customer.order_id)">
+                <ion-icon name="checkbox-outline"></ion-icon>
+        </ion-button>
+        <ion-button size="small" color="danger"
+                (click)="deleteOrder(customer.order_id,customer.pengesahan)">
+                <ion-icon name="trash"></ion-icon>
+        </ion-button>
+</td>
+<td>
+        <ion-text color="danger">{{customer.pengesahan}}</ion-text><br>
+        <ion-text>{{customer.tarikh_order}}</ion-text>
+</td>
+<td>
+        <ion-icon name="person"></ion-icon>
+        {{customer.nama_pelanggan}}<br>
+        <ion-icon name="call"></ion-icon>
+        0{{customer.nombor_hp}}<br>
+        <ion-icon name="home"></ion-icon>
+        {{customer.alamat_pelanggan}}
+</td>
+<td>
+        <ion-text>{{customer.akaun}}</ion-text>
+</td>
+<td>
+        <ion-text>RM {{customer.jumlah_bayaran}}</ion-text>
+</td>
+<td>
+        <ion-text>{{customer.produk}}</ion-text>
+</td>
+<td>
+        <ion-text>{{customer.sales}}</ion-text>
+</td>
+
+<td>
+        <ion-button (click)="openModal(customer.fail_lampiran, server)">Open</ion-button>
+       <!-- <img src="{{server+customer.fail_lampiran}}" width="30px" height="40px"> -->
+</td>
+<td>
+        <ion-text>{{customer.nota_tambahan}}</ion-text>
+</td>
+</tr>
+<ng-template #noItems>
+<ion-item>
+        No items found.
+</ion-item>
+</ng-template>
+</tbody>
+</table>
+</ion-content>
