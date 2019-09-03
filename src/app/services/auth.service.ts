@@ -81,10 +81,11 @@ export class AuthService {
     let username = credentials.sales_username;
     let password = credentials.sales_password;
     let role = credentials.sales_role;
+    let team = credentials.sales_team;
     let user = null;
 
     if (username !== '' && password !== '') {
-      user = { username, password, role };
+      user = { username, password, role, team };
     } else {
       console.log("no data");
 

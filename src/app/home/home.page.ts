@@ -21,6 +21,7 @@ export class HomePage implements OnInit {
 
   username: string;
   users: any;
+  team: string;
   totalsum: any= [];
 
 
@@ -57,6 +58,7 @@ export class HomePage implements OnInit {
     this.storage.get(TOKEN_KEY).then((res) => {
       this.users = res;
       this.username = this.users.username;
+      this.team = this.users.team;
       console.log(res);
     });
   }

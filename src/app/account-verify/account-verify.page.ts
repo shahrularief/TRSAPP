@@ -22,6 +22,7 @@ export class AccountVerifyPage implements OnInit {
   penghantaran;
   fail_lampiran;
   image;
+  base64image;
   nota_tambahan;
   sales;
   pengesahan;
@@ -30,6 +31,7 @@ export class AccountVerifyPage implements OnInit {
   total: number;
 
   customers: any = [];
+  unverifys: any = [];
   query: any = [];
   limit = 20; // LIMIT GET PERDATA
   start = 0;
@@ -53,9 +55,10 @@ export class AccountVerifyPage implements OnInit {
 
   ionViewWillEnter() {
     this.customers = [];
+    this.unverifys = [];
     this.start = 0;
     this.loadCustomer();
-
+    this.loadUnverify();
   }
 
   onSearchTerm(ev: CustomEvent) {
@@ -63,7 +66,7 @@ export class AccountVerifyPage implements OnInit {
 
     if (val && val.trim() !== '') {
       this.customers = this.customers.filter(term => {
-        return term.nama_pelanggan.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
+        return term.sales_team.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
       });
     } else {
       this.customers = [];
@@ -96,6 +99,25 @@ export class AccountVerifyPage implements OnInit {
           console.log('customers:' + this.customers);
         }
         resolve(true);
+      });
+    });
+  }
+
+  loadUnverify() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getunverify',
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {
+        for (const verify of Cresult.result) {
+          this.unverifys.push(verify);
+          console.log('unverified items:' + this.unverifys);
+        }
+        resolve(true);
+
       });
     });
   }
@@ -188,17 +210,19 @@ export class AccountVerifyPage implements OnInit {
     });
   }
 
-  async openModal(img, serv) {
+  async openModal(img, serv, base64) {
     const modal = await this.modalController.create({
       component: ImageModalPage,
       componentProps: {
         serverid: serv,
         image: img,
+        base64image: base64,
       }
     });
     return await modal.present().then(_ => {
       // triggered when opening the modal
       console.log('Sending data ');
+      console.log(this.base64image);
     });
   }
 }

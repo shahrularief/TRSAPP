@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { PostProvider } from '../../../providers/post-provider';
 
 
 @Component({
@@ -17,6 +16,7 @@ export class ImageModalPage implements OnInit {
   }
   public serverid: string;
   public image: string;
+  public base64image: string;
 
   ngOnInit() {
   }

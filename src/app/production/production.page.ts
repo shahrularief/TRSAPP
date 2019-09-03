@@ -28,6 +28,7 @@ export class ProductionPage implements OnInit {
   sales;
 
   customers: any = [];
+  unverifiedprod: any = [];
   limit: number = 13; // LIMIT GET PERDATA
   start: number = 0;
 
@@ -47,7 +48,7 @@ export class ProductionPage implements OnInit {
     this.customers = [];
     this.start = 0;
     this.loadCustomer();
-
+    this.loadUnverify();
   }
 
   onSearchTerm(ev: CustomEvent) {
@@ -55,7 +56,7 @@ export class ProductionPage implements OnInit {
 
     if (val && val.trim() !== '') {
       this.customers = this.customers.filter(term => {
-        return term.nama_pelanggan.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
+        return term.sales_team.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
       });
     } else {
       this.customers = [];
@@ -89,6 +90,25 @@ export class ProductionPage implements OnInit {
       });
     });
   }
+  loadUnverify() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getunverifyproduction',
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {
+        for (const verify of Cresult.result) {
+          this.unverifiedprod.push(verify);
+          console.log('unverified items production:' + this.unverifiedprod);
+        }
+        resolve(true);
+
+      });
+    });
+  }
+
 
   updateOrder(id, nama, tarikh, alamat, hp, akaun, produk, penghantaran, bayaran, nota) {
     this.router.navigate(['/update-order/' + id + '/' + tarikh + '/' + nama + '/' + alamat + '/' + hp + '/' + akaun + '/'

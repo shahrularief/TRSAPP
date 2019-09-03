@@ -15,10 +15,11 @@
                 <ion-card-subtitle>
                         <div class="ion-text-center">
                                 Total pending
-                        </div>  
+                        </div>
                         <br />
-                        <div class="ion-text-center">
-                                .....
+                        <div class="ion-text-center" *ngFor="let ver of unverifiedprod">
+                                {{ver}}
+
                         </div>
                 </ion-card-subtitle>
         </ion-card>
@@ -55,7 +56,8 @@
             ">
                                                 <ion-icon name="create"></ion-icon>
                                         </ion-button>
-                                        <ion-button size="small" (click)="openTrackModal(customer.order_id, customer.pengesahan)">
+                                        <ion-button size="small"
+                                                (click)="openTrackModal(customer.order_id, customer.pengesahan)">
                                                 <ion-icon name="keypad"></ion-icon>
                                         </ion-button>
                                         <ion-button size="small" (click)="openDeliveryModal(customer.order_id)">
@@ -87,8 +89,8 @@
                                         <ion-text>{{ customer.produk }}</ion-text>
                                 </td>
                                 <td>
-                                                <ion-text>{{ customer.sales }}</ion-text>
-                                        </td>
+                                        <ion-text>{{ customer.sales }}</ion-text>
+                                </td>
                                 <td>
                                         <ion-text>{{ customer.nota_tambahan }}</ion-text>
                                 </td>

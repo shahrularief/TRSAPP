@@ -31,7 +31,9 @@
       jumlah_bayaran = '$postjson[jumlah_bayaran]',
       nota_tambahan = '$postjson[nota_tambahan]',
       sales = '$postjson[sales]',
-      fail_lampiran = '$directory'
+      sales_team = '$postjson[sales_team]',
+      fail_lampiran = '$directory',
+      resit = '$postjson[resit]'
     ");
 
   	if($query) $result = json_encode(array('success'=>true));
@@ -58,7 +60,9 @@
       'jumlah_bayaran' => $row['jumlah_bayaran'],
       'nota_tambahan' => $row['nota_tambahan'],
       'sales' => $row['sales'],
+      'sales_team' => $row['sales_team'],
       'fail_lampiran' => $row['fail_lampiran'],
+      'resit' => $row['resit'],
       'pengesahan' => $row['pengesahan']
     );
   }
@@ -127,6 +131,36 @@ elseif($postjson['aksi']=='getdataverified'){
       echo $result;
   
     }
+    // get unverified 
+
+  elseif($postjson['aksi']=='getunverify'){
+    $data = array();
+  	$query = mysqli_query($mysqli, "SELECT COUNT(*) AS mycount
+    FROM order_table
+    WHERE pengesahan = 'belum disahkan'");
+
+  	$countresult = mysqli_fetch_object($query); 
+    $Cresult = $countresult->mycount;
+    
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$Cresult));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    echo $result;
+  }
+
+  //get verified production
+  elseif($postjson['aksi']=='getunverifyproduction'){
+    $data = array();
+  	$query = mysqli_query($mysqli, "SELECT COUNT(*) AS mycount
+    FROM order_table
+    WHERE pengesahan = 'sah'");
+
+  	$countresult = mysqli_fetch_object($query); 
+    $Cresult = $countresult->mycount;
+    
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$Cresult));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    echo $result;
+  }
 
 
     //  QUERY // SEARCH
@@ -211,20 +245,6 @@ elseif($postjson['aksi']=='getdataverified'){
   	$query = mysqli_query($mysqli, "UPDATE order_table SET
     penghantaran = '$postjson[penghantaran]',
     pengesahan = '$postjson[pengesahan]' WHERE order_id='$postjson[order_id]'");
-
-  	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
-  	else $result = json_encode(array('success'=>false, 'result'=>'error'));
-
-  	echo $result;
-
-  }
-
-  // get unverified
-
-  elseif($postjson['aksi']=='getunverify'){
-  	$query = mysqli_query($mysqli, "SELECT COUNT(*) 
-    FROM order_table
-    WHERE pengesahan = 'belum disahkan'");
 
   	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
   	else $result = json_encode(array('success'=>false, 'result'=>'error'));
@@ -328,7 +348,8 @@ elseif($postjson['aksi']=='getdataverified'){
         'sales_id' => $data['sales_id'],
         'sales_username' => $data['sales_username'],
         'sales_password' => $data['sales_password'],
-        'sales_role' => $data['sales_role']
+        'sales_role' => $data['sales_role'],
+        'sales_team' => $data['sales_team']
       );
 
       if($data['status']=='y'){

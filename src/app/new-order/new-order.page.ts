@@ -3,11 +3,7 @@ import { PostProvider } from '../../providers/post-provider';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastController, ActionSheetController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { AuthService } from '../services/auth.service';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { DomSanitizer } from '@angular/platform-browser';
-
-
 
 const TOKEN_KEY = 'user-access-token';
 
@@ -36,6 +32,7 @@ export class NewOrderPage implements OnInit {
   id: number;
   userData: any;
   sales_username: string;
+  sales_team: string;
   users: any;
 
 
@@ -47,15 +44,15 @@ export class NewOrderPage implements OnInit {
     public toastController: ToastController,
     private storage: Storage,
     private camera: Camera,
-    public actionSheetController: ActionSheetController,
-    public sanitizer: DomSanitizer
-  ) {
+    public actionSheetController: ActionSheetController  
+    ) {
 
   }
   ionViewWillEnter() {
     this.storage.get(TOKEN_KEY).then((res) => {
       this.users = res;
       this.sales_username = this.users.username;
+      this.sales_team = this.users.team;
       console.log(res);
     });
   }
@@ -78,7 +75,9 @@ export class NewOrderPage implements OnInit {
         nota_tambahan: this.nota_tambahan,
         pengesahan: this.pengesahan,
         images: this.cameraData,
+        resit: this.base64Image,
         sales: this.sales_username,
+        sales_team: this.sales_team,
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(async data => {
@@ -95,6 +94,7 @@ export class NewOrderPage implements OnInit {
         this.penghantaran = '';
         this.jumlah_bayaran = '';
         this.nota_tambahan = '';
+        this.cameraData = '';
 
         const toast = await this.toastController.create({
           message: 'Tempahan telah di simpan',
@@ -124,8 +124,8 @@ export class NewOrderPage implements OnInit {
   openGallery() {
     const options: CameraOptions = {
       quality: 100,
-      targetWidth: 1500,
-      targetHeight: 1500,
+      targetWidth: 1000,
+      targetHeight: 1000,
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
@@ -136,10 +136,10 @@ export class NewOrderPage implements OnInit {
     this.camera.getPicture(options).then((imageData) => {
       this.cameraData = imageData;
       this.base64Image = 'data:image/jpeg;base64,' + imageData;
-
+      console.log(this.base64Image);
     }, (err) => {
       // Handle error
-      console.log("error in camera fucntion");
+      console.log(err + 'error in camera function');
     });
   }
 }
