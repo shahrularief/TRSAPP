@@ -93,7 +93,8 @@ elseif($postjson['aksi']=='getdataverified'){
       'nota_tambahan' => $row['nota_tambahan'],
       'pengesahan' => $row['pengesahan'],
       'sales' => $row['sales'],
-      'tracking' => $row['tracking']
+      'tracking' => $row['tracking'],
+      'sales_team' => $row['sales_team']
     );
   }
 

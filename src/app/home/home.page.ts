@@ -22,13 +22,13 @@ export class HomePage implements OnInit {
   username: string;
   users: any;
   team: string;
-  totalsum: any= [];
+  totalsum: any = [];
 
 
   slides = [
     {
       title: 'Total Sales',
-      text:  '10000000000'
+      text: '10000000000'
     },
     {
       title: 'Total Customer',
@@ -50,7 +50,7 @@ export class HomePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadTotal();
+    // this.loadTotal();
   }
 
 
@@ -64,7 +64,7 @@ export class HomePage implements OnInit {
   }
 
   processLogout() {
-  this.auth.signOut();
+    this.auth.signOut();
   }
 
   loadTotal() {

@@ -6,6 +6,20 @@
         </ion-toolbar>
       </ion-header>
       <ion-content>
+          <div #header>
+              <ion-row style="align-items:center;">
+                <ion-col col-3>
+                </ion-col>
+                <ion-col col-6>
+                  <img class="user-avatar round" [src]="chosenPicture || placeholder" onerror="this.src='assets/img/avatar/avatar-placeholder.png'"/>
+                </ion-col>
+                <ion-col col-3>
+                </ion-col>
+              </ion-row>
+              <ion-row style="justify-content: center;">
+                <h3>{{username}}</h3>
+              </ion-row>
+            </div>
         <ion-list>
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
             <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">

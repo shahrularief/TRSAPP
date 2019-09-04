@@ -5,6 +5,7 @@ import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Storage } from '@ionic/storage';
+import { AuthService } from './services/auth.service';
 
 const TOKEN_KEY = 'user-access-token';
 
@@ -17,6 +18,7 @@ const TOKEN_KEY = 'user-access-token';
 export class AppComponent {
   role: string;
   users: any;
+  username: string;
 
   public appPages = [
     {
@@ -58,6 +60,7 @@ export class AppComponent {
     private statusBar: StatusBar,
     private storage: Storage,
     private router: Router,
+    private auth: AuthService,
   ) {
     this.initializeApp();
   }
@@ -66,6 +69,16 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+     
+    });
+    this.storage.get(TOKEN_KEY).then((res) => {
+      if (res == null) {
+        this.router.navigate(['/login']);
+        this.auth.signOut();
+      } else {
+        this.router.navigate(['/home']);
+        this.loadUser();
+      }
     });
   }
 
@@ -73,8 +86,8 @@ export class AppComponent {
     this.storage.get(TOKEN_KEY).then((res) => {
       this.users = res;
       this.role = this.users.role;
+      this.username = this.users.username;
       console.log(res);
     });
   }
-
 }
