@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { AccountVerifyPage } from './account-verify.page';
 import { ImageModalPage } from '../modals/image-modal/image-modal.page';
+import { CalendarModule } from 'ion2-calendar';
 
 const routes: Routes = [
   {
@@ -20,9 +21,11 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
+    CalendarModule,
     RouterModule.forChild(routes)
   ],
   declarations: [AccountVerifyPage, ImageModalPage],
-  entryComponents:[ImageModalPage]
+  entryComponents: [ImageModalPage]
+
 })
-export class AccountVerifyPageModule {}
+export class AccountVerifyPageModule { }

@@ -36,15 +36,15 @@ export class AuthService {
     });
   }
   signInAdmin(credentials) {
-    let username = credentials.username;
-    let password = credentials.password;
-    let role = credentials.role;
+    const username = credentials.username;
+    const password = credentials.password;
+    const role = credentials.role;
     let user = null;
 
     if (username !== '' && password !== '') {
       user = { username, password, role };
     } else {
-      console.log("no data");
+      console.log('no data');
 
     }
 
@@ -57,15 +57,15 @@ export class AuthService {
   }
 
   signInAccProd(credentials) {
-    let username = credentials.accprod_username;
-    let password = credentials.accprod_password;
-    let role = credentials.accprod_role;
+    const username = credentials.accprod_username;
+    const password = credentials.accprod_password;
+    const role = credentials.accprod_role;
     let user = null;
 
     if (username !== '' && password !== '') {
       user = { username, password, role };
     } else {
-      console.log("no data");
+      console.log('no data');
 
     }
 
@@ -78,16 +78,16 @@ export class AuthService {
   }
 
   signInSales(credentials) {
-    let username = credentials.sales_username;
-    let password = credentials.sales_password;
-    let role = credentials.sales_role;
-    let team = credentials.sales_team;
+    const username = credentials.sales_username;
+    const password = credentials.sales_password;
+    const role = credentials.sales_role;
+    const team = credentials.sales_team;
     let user = null;
 
     if (username !== '' && password !== '') {
       user = { username, password, role, team };
     } else {
-      console.log("no data");
+      console.log('no data');
 
     }
 
@@ -104,14 +104,4 @@ export class AuthService {
     this.authState.next(null);
     this.router.navigateByUrl('/login');
   }
-  public getStoredData() {
-    return this.storage.get(TOKEN_KEY).then((val) => { // <-- Here!
-      console.log(val);
-      val = this.users;
-      this.sales = this.users.username;
-      console.log(this.sales);
-      return of(this.sales);
-    });
-  }
-
 }

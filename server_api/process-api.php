@@ -8,10 +8,9 @@
   include "library/config.php";
   
   $postjson = json_decode(file_get_contents('php://input'), true);
-  $today    = date('YYYY-MM-DD HH:MM:SS');
-  // ADD DATA
   if($postjson['aksi']=='add'){
-
+    $today = date('Y-m-d h:m:s');
+    echo $today;
     $data = array();
 		$datenowxx = date('Y-m-d_H_i_s'); // remove duplicate name image 
 		$entry = base64_decode($postjson['images']);
@@ -22,12 +21,13 @@
 		imagedestroy($img);
 
     $query = mysqli_query($mysqli, "INSERT INTO order_table SET
+      tarikh_order = '$today',
   		nama_pelanggan = '$postjson[nama_pelanggan]',
   		alamat_pelanggan = '$postjson[alamat_pelanggan]',
       nombor_hp = '$postjson[nombor_hp]',
       akaun = '$postjson[akaun]',
       produk = '$postjson[produk]',
-      penghantaran = '$postjson[penghantaran]',
+      jumProduk = '$postjson[jumProduk]',
       jumlah_bayaran = '$postjson[jumlah_bayaran]',
       nota_tambahan = '$postjson[nota_tambahan]',
       sales = '$postjson[sales]',
@@ -36,7 +36,7 @@
       resit = '$postjson[resit]'
     ");
 
-  	if($query) $result = json_encode(array('success'=>true));
+  	if($query) $result = json_encode(array('success'=>true,'msg'=>'success'));
   	else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
 
     echo $result; 
@@ -48,6 +48,8 @@
   $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='belum disahkan' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
 
   while($row = mysqli_fetch_array($query)){
+
+
     $data[] = array(
       'order_id' => $row['order_id'],
       'tarikh_order' => $row['tarikh_order'],
@@ -58,6 +60,7 @@
       'produk' => $row['produk'],
       'penghantaran' => $row['penghantaran'],
       'jumlah_bayaran' => $row['jumlah_bayaran'],
+      'jumProduk' => $row['jumProduk'],
       'nota_tambahan' => $row['nota_tambahan'],
       'sales' => $row['sales'],
       'sales_team' => $row['sales_team'],
@@ -91,6 +94,7 @@ elseif($postjson['aksi']=='getdataverified'){
       'penghantaran' => $row['penghantaran'],
       'jumlah_bayaran' => $row['jumlah_bayaran'],
       'nota_tambahan' => $row['nota_tambahan'],
+      'jumProduk' => $row['jumProduk'],
       'pengesahan' => $row['pengesahan'],
       'sales' => $row['sales'],
       'tracking' => $row['tracking'],
@@ -132,7 +136,7 @@ elseif($postjson['aksi']=='getdataverified'){
       echo $result;
   
     }
-    // get unverified 
+    // get unverified account
 
   elseif($postjson['aksi']=='getunverify'){
     $data = array();
@@ -140,10 +144,49 @@ elseif($postjson['aksi']=='getdataverified'){
     FROM order_table
     WHERE pengesahan = 'belum disahkan'");
 
-  	$countresult = mysqli_fetch_object($query); 
-    $Cresult = $countresult->mycount;
+  	$countresult = mysqli_fetch_array($query); 
+    $data[] = array(
+      'sum' => $countresult['mycount']
+    );
     
-    if($query) $result = json_encode(array('success'=>true, 'result'=>$Cresult));
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    echo $result;
+  }
+
+   // get unverified prod
+
+   elseif($postjson['aksi']=='getunverifyproduction'){
+    $data = array();
+  	$query = mysqli_query($mysqli, "SELECT COUNT(*) AS mycount
+    FROM order_table
+    WHERE pengesahan = 'sah'");
+
+  	$countresult = mysqli_fetch_array($query); 
+    $data[] = array(
+      'sum' => $countresult['mycount']
+    );
+    
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    echo $result;
+  }
+
+
+  // get total sale
+
+  elseif($postjson['aksi']=='getsum'){
+    $data = array();
+    $username =  $postjson['sales_username'];
+    $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
+    FROM order_table
+    WHERE sales = '$username'");
+
+  	$countresult = mysqli_fetch_array($query); 
+    $data[] = array(
+      'sum' => $countresult['mycount']
+    );
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
       else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
     echo $result;
   }

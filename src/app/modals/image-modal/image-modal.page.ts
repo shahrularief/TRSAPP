@@ -12,8 +12,7 @@ export class ImageModalPage implements OnInit {
 
   constructor(
     private modalController: ModalController,
-  ) {
-  }
+  ) { }
   public serverid: string;
   public image: string;
   public base64image: string;

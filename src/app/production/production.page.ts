@@ -2,7 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { PostProvider } from '../../providers/post-provider';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import {
+  CalendarModal,
+  CalendarModalOptions,
+  DayConfig,
+  CalendarResult
+} from 'ion2-calendar';
 
 @Component({
   selector: 'app-production',
@@ -38,6 +45,7 @@ export class ProductionPage implements OnInit {
     private postPrvdr: PostProvider,
     public toastCtrl: ToastController,
     public alertCtrl: AlertController,
+    public modalController: ModalController,
   ) { }
 
   ngOnInit() {
@@ -48,6 +56,7 @@ export class ProductionPage implements OnInit {
     this.customers = [];
     this.start = 0;
     this.loadCustomer();
+    this.unverifiedprod = [];
     this.loadUnverify();
   }
 
@@ -262,5 +271,48 @@ export class ProductionPage implements OnInit {
     this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
       this.ionViewWillEnter();
     });
+  }
+
+  async openCalendar() {
+    const options: CalendarModalOptions = {
+      title: 'Pilih Tarikh',
+      canBackwardsSelected: true,
+    };
+
+    const myCalendar = await this.modalController.create({
+      component: CalendarModal,
+      componentProps: { options }
+    });
+
+    myCalendar.present();
+
+    const event: any = await myCalendar.onDidDismiss();
+    const date: CalendarResult = event.data;
+    let dateString: any = date.string;
+    console.log(dateString);
+    this.onSearchDate(dateString);
+
+  }
+
+  onSearchDate(from) {
+    const val = from;
+    if (val && val.trim() !== '') {
+      this.customers = this.customers.filter(term => {
+        return term.tarikh_order.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
+
+      });
+      this.unverifiedprod = [];
+
+    } else {
+      this.customers = [];
+      this.loadCustomer();
+    }
+  }
+
+  clearArrayCust() {
+    this.customers = [];
+    this.loadCustomer();
+    this.unverifiedprod = [];
+    this.loadUnverify();
   }
 }

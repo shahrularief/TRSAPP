@@ -22,24 +22,7 @@ export class HomePage implements OnInit {
   username: string;
   users: any;
   team: string;
-  totalsum: any = [];
-
-
-  slides = [
-    {
-      title: 'Total Sales',
-      text: '10000000000'
-    },
-    {
-      title: 'Total Customer',
-      text: ''
-    },
-    {
-      title: 'Total something',
-      text: 'RM'
-    },
-  ]
-
+  totalsum: any [];
 
   constructor(
     private router: Router,
@@ -50,16 +33,19 @@ export class HomePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.loadTotal();
+
   }
 
 
   ionViewWillEnter() {
+    this.totalsum = [];
+
     this.storage.get(TOKEN_KEY).then((res) => {
       this.users = res;
       this.username = this.users.username;
       this.team = this.users.team;
       console.log(res);
+      this.loadTotalSale();
     });
   }
 
@@ -67,15 +53,24 @@ export class HomePage implements OnInit {
     this.auth.signOut();
   }
 
-  loadTotal() {
+  doRefresh(event) {
+    setTimeout(() => {
+      this.ionViewWillEnter();
+      event.target.complete();
+    }, 500);
+  }
+
+  loadTotalSale() {
     return new Promise(resolve => {
-      let body = {
+      const body = {
         aksi: 'getsum',
+        sales_username: this.username,
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
         for (let sum of data.result) {
-          this.totalsum.return(sum);
+          this.totalsum.push(sum);
+          console.log('total' + this.totalsum);
         }
         resolve(true);
       });

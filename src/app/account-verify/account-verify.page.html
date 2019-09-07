@@ -1,8 +1,6 @@
 <ion-header>
 <ion-toolbar>
-        <ion-buttons slot="start">
-                <ion-back-button defaultHref="/home"></ion-back-button>
-        </ion-buttons>
+        <ion-menu-button slot="start"></ion-menu-button>
         <ion-title>Pengesahan</ion-title>
 </ion-toolbar>
 </ion-header>
@@ -10,8 +8,10 @@
 
 <ion-content scrollX="true">
 
-<ion-searchbar placeholder="Search by name // later company" animated="true" (ionChange)="onSearchTerm($event)">
-</ion-searchbar>
+        <ion-searchbar placeholder="Search by company" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar>
+        <ion-button (click)="openCalendar()"> Calendar </ion-button>
+        <ion-button (click)="clearArrayCust()"><ion-icon name="close"></ion-icon>Clear </ion-button>
+        
 
 <ion-card color="tertiary" height="40px" >
         <ion-card-subtitle>
@@ -20,7 +20,7 @@
                 </div>
                 <br>
                 <div class="ion-text-center" *ngFor="let ver of unverifys">
-                  {{ver}}
+                  {{ver.sum}}
                 </div>
         </ion-card-subtitle>
 </ion-card>

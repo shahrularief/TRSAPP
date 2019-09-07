@@ -1,8 +1,6 @@
 <ion-header>
     <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button defaultHref="/home"></ion-back-button>
-        </ion-buttons>
+        <ion-menu-button slot="start"></ion-menu-button>
         <ion-title>Rekod Tempahan</ion-title>
       </ion-toolbar>
 </ion-header>
@@ -50,7 +48,7 @@
           customer.nombor_hp,
           customer.akaun,
           customer.produk,
-          customer.penghantaran,
+          customer.jumProduk,
           customer.jumlah_bayaran,
           customer.nota_tambahan)">Update
         </ion-item-option>
@@ -63,7 +61,7 @@
         customer.nombor_hp,
         customer.akaun,
         customer.produk,
-        customer.penghantaran,
+        customer.jumProduk,
         customer.jumlah_bayaran,
         customer.nota_tambahan,
         customer.pengesahan)">Show</ion-item-option>

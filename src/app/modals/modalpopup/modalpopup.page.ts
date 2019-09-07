@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
@@ -11,7 +11,7 @@ export class ModalpopupPage implements OnInit {
   constructor(
     private modalController: ModalController
   ) { }
-  
+
   public id: string;
   public nama_pelanggan: string;
   public tarikh_order: string;

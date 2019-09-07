@@ -69,7 +69,8 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-     
+      this.username = '';
+
     });
     this.storage.get(TOKEN_KEY).then((res) => {
       if (res == null) {

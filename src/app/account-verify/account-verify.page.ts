@@ -4,6 +4,13 @@ import { AlertController, ToastController } from '@ionic/angular';
 import { PostProvider } from '../../providers/post-provider';
 import { ImageModalPage } from '../modals/image-modal/image-modal.page';
 import { ModalController } from '@ionic/angular';
+import {
+  CalendarModal,
+  CalendarModalOptions,
+  DayConfig,
+  CalendarResult
+} from 'ion2-calendar';
+
 
 
 @Component({
@@ -12,7 +19,6 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./account-verify.page.scss'],
 })
 export class AccountVerifyPage implements OnInit {
-
   tarikh_order;
   nama_pelanggan;
   alamat_pelanggan;
@@ -60,6 +66,7 @@ export class AccountVerifyPage implements OnInit {
     this.loadCustomer();
     this.loadUnverify();
   }
+
 
   onSearchTerm(ev: CustomEvent) {
     const val = ev.detail.value;
@@ -224,5 +231,48 @@ export class AccountVerifyPage implements OnInit {
       console.log('Sending data ');
       console.log(this.base64image);
     });
+  }
+
+  async openCalendar() {
+    const options: CalendarModalOptions = {
+      title: 'Pilih Tarikh',
+      canBackwardsSelected: true,
+    };
+
+    const myCalendar = await this.modalController.create({
+      component: CalendarModal,
+      componentProps: { options }
+    });
+
+    myCalendar.present();
+
+    const event: any = await myCalendar.onDidDismiss();
+    const date: CalendarResult = event.data;
+    let dateString: any = date.string;
+    console.log(dateString);
+    this.onSearchDate(dateString);
+
+  }
+
+  onSearchDate(from) {
+    const val = from;
+    if (val && val.trim() !== '') {
+      this.customers = this.customers.filter(term => {
+        return term.tarikh_order.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
+
+      });
+      this.unverifys = [];
+
+    } else {
+      this.customers = [];
+      this.loadCustomer();
+    }
+  }
+
+  clearArrayCust() {
+    this.customers = [];
+    this.loadCustomer();
+    this.unverifys = [];
+    this.loadUnverify();
   }
 }

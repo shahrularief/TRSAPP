@@ -12,6 +12,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginPage implements OnInit {
   loginsegment: string;
+  avatarimage:any;
 
   user = {
     username: '',
@@ -19,11 +20,11 @@ export class LoginPage implements OnInit {
     role: ''
   };
 
-  accprod_username: string = "";
-  accprod_password: string = "";
+  accprod_username = '';
+  accprod_password = '';
 
-  sales_username: string = "";
-  sales_password: string = "";
+  sales_username = '';
+  sales_password = '';
 
   constructor(
     private router: Router,
@@ -31,19 +32,21 @@ export class LoginPage implements OnInit {
     private toastCtrl: ToastController,
     private storage: Storage,
     private auth: AuthService,
-  ) { }
+   
+  ) {}
 
   ngOnInit() {
   }
 
   ionViewWillEnter() {
     this.loginsegment = 'admin';
+    this.auth.signOut();
   }
 
   // LOGIN ADMIN
   async processLoginAdmin() {
     if (this.user.username !== '' && this.user.password !== '') {
-      let body = {
+      const body = {
 
         username: this.user.username,
         password: this.user.password,
@@ -51,7 +54,7 @@ export class LoginPage implements OnInit {
       };
 
       this.postPvdr.postData(body, 'process-api.php').subscribe(async data => {
-        var alertmessage = data.msg;
+        const alertmessage = data.msg;
         if (data.success) {
           this.signInAdmin(data.result);
           const toast = await this.toastCtrl.create({
@@ -82,18 +85,18 @@ export class LoginPage implements OnInit {
   }
   signInAdmin(data) {
     this.auth.signInAdmin(data).subscribe(user => {
-      let role = user['role'];
+      const role = user.role;
       if (role === 'BOD') {
         this.router.navigateByUrl('/home');
       } else if (role === 'CEO') {
-        this.router.navigateByUrl('/rekod-order');
+        this.router.navigateByUrl('/home');
       }
     });
   }
   // LOGIN ACC & PROD
   async processLoginAccProd() {
     if (this.accprod_username !== '' && this.accprod_username !== '') {
-      let body = {
+      const body = {
 
         accprod_username: this.accprod_username,
         accprod_password: this.accprod_password,
@@ -101,7 +104,7 @@ export class LoginPage implements OnInit {
       };
 
       this.postPvdr.postData(body, 'process-api.php').subscribe(async data => {
-        var alertmessage = data.msg;
+        const alertmessage = data.msg;
         if (data.success) {
           this.signInAccProd(data.result);
           const toast = await this.toastCtrl.create({
@@ -133,7 +136,7 @@ export class LoginPage implements OnInit {
 
   signInAccProd(data) {
     this.auth.signInAccProd(data).subscribe(user => {
-      let role = user['role'];
+      const role = user.role;
       if (role === 'ACCOUNT') {
         this.router.navigateByUrl('/account-verify');
       } else if (role === 'PRODUCTION') {
@@ -145,7 +148,7 @@ export class LoginPage implements OnInit {
   // LOGIN SALES
   async processLoginSales() {
     if (this.sales_username !== '' && this.sales_password !== '') {
-      let body = {
+      const body = {
 
         sales_username: this.sales_username,
         sales_password: this.sales_password,
@@ -153,7 +156,7 @@ export class LoginPage implements OnInit {
       };
 
       this.postPvdr.postData(body, 'process-api.php').subscribe(async data => {
-        var alertmessage = data.msg;
+        const alertmessage = data.msg;
         if (data.success) {
           this.signInSales(data.result);
           const toast = await this.toastCtrl.create({
@@ -184,11 +187,11 @@ export class LoginPage implements OnInit {
   }
   signInSales(data) {
     this.auth.signInSales(data).subscribe(user => {
-      let role = user['role'];
-      if (role == 'TEAM SALES') {
-        this.router.navigateByUrl('/new-order');
-      } else if (role == 'SALES LEADER') {
-        this.router.navigateByUrl('/new-order');
+      const role = user.role;
+      if (role === 'TEAM SALES') {
+        this.router.navigateByUrl('/home');
+      } else if (role === 'SALES LEADER') {
+        this.router.navigateByUrl('/home');
       }
     });
   }

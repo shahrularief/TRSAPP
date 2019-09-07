@@ -1,8 +1,6 @@
 <ion-header>
         <ion-toolbar>
-                <ion-buttons slot="start">
-                        <ion-back-button defaultHref="/home"></ion-back-button>
-                </ion-buttons>
+                <ion-menu-button slot="start"></ion-menu-button>
                 <ion-title>Production</ion-title>
         </ion-toolbar>
 </ion-header>
@@ -10,6 +8,9 @@
 <ion-content scrollX="true">
         <ion-searchbar placeholder="Search by company" animated="true" (ionChange)="onSearchTerm($event)">
         </ion-searchbar>
+        <ion-button (click)="openCalendar()"><ion-icon name="calendar"></ion-icon> Date </ion-button>
+        <ion-button (click)="clearArrayCust()"><ion-icon name="close"></ion-icon>Clear </ion-button>
+        
 
         <ion-card color="primary">
                 <ion-card-subtitle>
@@ -18,7 +19,7 @@
                         </div>
                         <br />
                         <div class="ion-text-center" *ngFor="let ver of unverifiedprod">
-                                {{ver}}
+                                {{ver.sum}}
 
                         </div>
                 </ion-card-subtitle>
@@ -83,10 +84,11 @@
                                         <ion-text>{{ customer.alamat_pelanggan }}</ion-text>
                                 </td>
                                 <td>
-                                        <ion-text>{{ customer.jumlah_bayaran }}</ion-text>
+                                        <ion-text>RM {{ customer.jumlah_bayaran }}</ion-text>
                                 </td>
                                 <td>
-                                        <ion-text>{{ customer.produk }}</ion-text>
+                                        <p style="font-weight: bold">{{ customer.produk }} - {{ customer.jumProduk }}</p>
+                                        
                                 </td>
                                 <td>
                                         <ion-text>{{ customer.sales }}</ion-text>

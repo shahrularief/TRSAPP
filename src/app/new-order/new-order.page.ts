@@ -20,7 +20,7 @@ export class NewOrderPage implements OnInit {
   nombor_hp = '';
   akaun = '';
   produk = '';
-  penghantaran = '';
+  jumProduk = '';
   jumlah_bayaran = '';
   nota_tambahan = '';
   pengesahan = '';
@@ -70,7 +70,7 @@ export class NewOrderPage implements OnInit {
         nombor_hp: this.nombor_hp,
         akaun: this.akaun,
         produk: this.produk,
-        penghantaran: this.penghantaran,
+        jumProduk: this.jumProduk,
         jumlah_bayaran: this.jumlah_bayaran,
         nota_tambahan: this.nota_tambahan,
         pengesahan: this.pengesahan,
@@ -91,7 +91,7 @@ export class NewOrderPage implements OnInit {
         this.nombor_hp = '';
         this.akaun = '';
         this.produk = '';
-        this.penghantaran = '';
+        this.jumProduk = '';
         this.jumlah_bayaran = '';
         this.nota_tambahan = '';
         this.cameraData = '';

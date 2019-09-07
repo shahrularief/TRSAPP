@@ -31,6 +31,7 @@ import { Camera } from '@ionic-native/camera/ngx';
     HttpClientModule,
     IonicModule.forRoot(),
     AppRoutingModule,
+    
     IonicStorageModule.forRoot(),
   ],
   providers: [
