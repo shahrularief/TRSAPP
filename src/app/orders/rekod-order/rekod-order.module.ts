@@ -5,14 +5,13 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AccountVerifyPage } from './account-verify.page';
-import { ImageModalPage } from '../modals/image-modal/image-modal.page';
-import { CalendarModule } from 'ion2-calendar';
+import { RekodOrderPage } from './rekod-order.page';
+import { ModalpopupPage} from '../../modals/modalpopup/modalpopup.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: AccountVerifyPage
+    component: RekodOrderPage
   }
 ];
 
@@ -21,11 +20,9 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    CalendarModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AccountVerifyPage, ImageModalPage],
-  entryComponents: [ImageModalPage]
-
+  declarations: [RekodOrderPage, ModalpopupPage],
+  entryComponents: [ModalpopupPage]
 })
-export class AccountVerifyPageModule { }
+export class RekodOrderPageModule {}

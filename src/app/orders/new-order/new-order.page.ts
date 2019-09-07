@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PostProvider } from '../../providers/post-provider';
+import { PostProvider } from '../../../providers/post-provider';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastController, ActionSheetController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
@@ -44,8 +44,8 @@ export class NewOrderPage implements OnInit {
     public toastController: ToastController,
     private storage: Storage,
     private camera: Camera,
-    public actionSheetController: ActionSheetController  
-    ) {
+    public actionSheetController: ActionSheetController
+  ) {
 
   }
   ionViewWillEnter() {

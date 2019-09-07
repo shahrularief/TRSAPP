@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
-import { PostProvider } from '../../providers/post-provider';
-import { ImageModalPage } from '../modals/image-modal/image-modal.page';
+import { PostProvider } from '../../../providers/post-provider';
+import { ImageModalPage } from '../../modals/image-modal/image-modal.page';
 import { ModalController } from '@ionic/angular';
 import {
   CalendarModal,

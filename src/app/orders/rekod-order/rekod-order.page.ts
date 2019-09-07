@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
-import { PostProvider } from '../../providers/post-provider';
+import { PostProvider } from '../../../providers/post-provider';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { ModalpopupPage } from '../modals/modalpopup/modalpopup.page';
+import { ModalpopupPage } from '../../modals/modalpopup/modalpopup.page';
 import { AlertController } from '@ionic/angular';
 
 
