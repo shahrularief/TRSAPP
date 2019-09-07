@@ -126,6 +126,7 @@ elseif($postjson['aksi']=='getdataverified'){
         'jumlah_bayaran' => $row['jumlah_bayaran'],
         'nota_tambahan' => $row['nota_tambahan'],
         'sales' => $row['sales'],
+        'jumProduk' => $row['jumProduk'],
         'pengesahan' => $row['pengesahan']
       );
     }
@@ -246,7 +247,7 @@ elseif($postjson['aksi']=='getdataverified'){
       nombor_hp = '$postjson[nombor_hp]',
       akaun = '$postjson[akaun]',
       produk = '$postjson[produk]',
-      penghantaran = '$postjson[penghantaran]',
+      jumProduk = '$postjson[jumProduk]',
       jumlah_bayaran = '$postjson[jumlah_bayaran]',
       nota_tambahan = '$postjson[nota_tambahan]' WHERE order_id='$postjson[order_id]'");
 

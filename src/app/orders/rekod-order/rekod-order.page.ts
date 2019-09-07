@@ -21,7 +21,7 @@ export class RekodOrderPage implements OnInit {
   nombor_hp;
   akaun;
   produk;
-  penghantaran;
+  jumProduk;
   jumlah_bayaran;
   nota_tambahan;
   pengesahan;
@@ -40,7 +40,7 @@ export class RekodOrderPage implements OnInit {
     public alertCtrl: AlertController,
   ) { }
 
-  async openModal(id, nama, tarikh, alamat, hp, akaun, produk, penghantaran, bayaran, nota, sah) {
+  async openModal(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, sah) {
     const modal = await this.modalController.create({
       component: ModalpopupPage,
       componentProps: {
@@ -51,7 +51,7 @@ export class RekodOrderPage implements OnInit {
         nombor_hp: hp,
         akaun: akaun,
         produk: produk,
-        penghantaran: penghantaran,
+        jumProduk: jumProduk,
         jumlah_bayaran: bayaran,
         nota_tambahan: nota,
         pengesahan: sah,
@@ -73,9 +73,9 @@ export class RekodOrderPage implements OnInit {
     this.loadCustomer();
   }
 
-  updateCustomer(id, nama, tarikh, alamat, hp, akaun, produk, penghantaran, bayaran, nota) {
+  updateCustomer(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota) {
     this.router.navigate(['/update-order/' + id + '/' + tarikh + '/' + nama + '/' + alamat + '/' + hp + '/' + akaun + '/'
-      + produk + '/' + penghantaran + '/' + bayaran + '/' + nota]);
+      + produk + '/' + jumProduk + '/' + bayaran + '/' + nota]);
   }
 
   async deleteAlert(id) {

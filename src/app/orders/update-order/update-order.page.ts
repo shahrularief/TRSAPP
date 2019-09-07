@@ -15,7 +15,7 @@ export class UpdateOrderPage implements OnInit {
   nombor_hp: string = '';
   akaun: string = '';
   produk: string = '';
-  penghantaran: string = '';
+  jumProduk: string = '';
   jumlah_bayaran: string = '';
   nota_tambahan: string = '';
 
@@ -36,7 +36,7 @@ export class UpdateOrderPage implements OnInit {
       this.nombor_hp = data.hp;
       this.akaun = data.akaun;
       this.produk = data.produk;
-      this.penghantaran = data.penghantaran;
+      this.jumProduk = data.jumProduk;
       this.jumlah_bayaran = data.bayaran ;
       this.nota_tambahan = data.nota;
 
@@ -55,7 +55,7 @@ export class UpdateOrderPage implements OnInit {
           nombor_hp : this.nombor_hp,
           akaun : this.akaun,
           produk : this.produk,
-          penghantaran : this.penghantaran,
+          jumProduk : this.jumProduk,
           jumlah_bayaran : this.jumlah_bayaran,
           nota_tambahan : this.nota_tambahan,
         };

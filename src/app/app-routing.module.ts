@@ -35,7 +35,7 @@ const routes: Routes = [
 
   { path: 'update-order', loadChildren: './orders/update-order/update-order.module#UpdateOrderPageModule' },
   {
-    path: 'update-order/:id/:tarikh/:nama/:alamat/:hp/:akaun/:produk/:penghantaran/:bayaran/:nota',
+    path: 'update-order/:id/:tarikh/:nama/:alamat/:hp/:akaun/:produk/:jumProduk/:bayaran/:nota',
     loadChildren: './orders/update-order/update-order.module#UpdateOrderPageModule'
   },
 

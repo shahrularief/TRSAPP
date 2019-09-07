@@ -19,7 +19,7 @@ export class ModalpopupPage implements OnInit {
   public nombor_hp: string;
   public akaun: string;
   public produk: string;
-  public penghantaran: string;
+  public jumProduk: string;
   public jumlah_bayaran: string;
   public pengesahan: string;
   public nota_tambahan: string;

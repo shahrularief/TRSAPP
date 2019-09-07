@@ -12,7 +12,7 @@
   <ion-card>
     <ion-card-header>
       <ion-card-title>
-        Tempahan
+        Kemaskini Tempahan
       </ion-card-title>
       <ion-card-subtitle>
         Sila masukkan maklumat pelanggan yang baru di bawah
@@ -51,13 +51,9 @@
                 <ion-input type="text" [(ngModel)]="produk"></ion-input>
               </ion-item>
               <ion-item>
-                <ion-label position="floating">Penghantaran</ion-label>
-                <ion-select placeholder="Pilih penghantaran" type="text" [(ngModel)]="penghantaran">
-                  <ion-select-option value="Poslaju">Poslaju</ion-select-option>
-                  <ion-select-option value="NinjaVan">NinjaVan</ion-select-option>
-                  <ion-select-option value="CityLink">CityLink</ion-select-option>
-                </ion-select>
-              </ion-item>
+                <ion-label position="floating">Jumlah Produk</ion-label>
+                <ion-input type="number" [(ngModel)]="jumProduk"></ion-input>
+            </ion-item>
               <ion-item>
                 <ion-label position="floating">Bayaran (RM)</ion-label>
                 <ion-input type="number" [(ngModel)]="jumlah_bayaran"></ion-input>
