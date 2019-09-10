@@ -52,8 +52,10 @@
           </ion-select>
         </ion-item>
         <ion-item> 
-          <ion-label position="floating">Produk</ion-label>
-          <ion-input type="text" [(ngModel)]="produk"></ion-input>
+          <ion-label position="floating" >Produk</ion-label>
+          <ion-select placeholder="Pilih produk"[(ngModel)]="produk"> 
+            <ion-select-option *ngFor="let prod of products" [value]="prod.prodName">{{ prod.prodName }}</ion-select-option>
+          </ion-select>
         </ion-item>
         <ion-item>
             <ion-label position="floating">Jumlah Produk</ion-label>

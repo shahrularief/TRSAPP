@@ -48,6 +48,11 @@ export class AppComponent {
       icon: 'cube'
     },
     {
+      title: 'Stok',
+      url: '/stock',
+      icon: 'filing'
+    },
+    {
       title: 'Pendaftaran',
       url: '/registration',
       icon: 'add'

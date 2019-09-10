@@ -1,9 +1,44 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>stock</ion-title>
+    <ion-menu-button slot="start"></ion-menu-button>
+    <ion-title>Stok</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
 
+<ion-content scrollX="true">
+
+  <ion-searchbar placeholder="Search product" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar>
+  <ion-button (click)="openAddProduct()"><ion-icon name="add"></ion-icon>Tambah produk</ion-button>
+
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Nama Produk</th>
+        <th>Kod Produk</th>
+        <th>Harga</th>
+        <th>Stok</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr  *ngFor="let pro of products">
+        <td>
+        </td>
+
+        <td>
+            <ion-text>{{pro.prodName}}</ion-text><br>
+           
+        </td>
+        <td>
+            <ion-text>{{pro.prodCode}}</ion-text>
+        </td>
+        <td>
+            <ion-text>{{pro.prodPrice}}</ion-text>
+        </td>
+        <td>
+            <ion-text>{{pro.stock}}</ion-text>
+        </td>
+    </tbody>
+  </table>
 </ion-content>

@@ -24,6 +24,7 @@ export class ProductionPage implements OnInit {
   nombor_hp;
   akaun;
   produk;
+  product;
   penghantaran;
   jumlah_bayaran;
   nota_tambahan;
@@ -36,6 +37,8 @@ export class ProductionPage implements OnInit {
 
   customers: any = [];
   unverifiedprod: any = [];
+  products: any[];
+  stock: any[];
   limit: number = 13; // LIMIT GET PERDATA
   start: number = 0;
 
@@ -58,6 +61,9 @@ export class ProductionPage implements OnInit {
     this.loadCustomer();
     this.unverifiedprod = [];
     this.loadUnverify();
+    this.loadProduct();
+    this.products = [];
+
   }
 
   onSearchTerm(ev: CustomEvent) {
@@ -315,4 +321,26 @@ export class ProductionPage implements OnInit {
     this.unverifiedprod = [];
     this.loadUnverify();
   }
+
+  //get product array
+  loadProduct() {
+    return new Promise(resolve => {
+      let body = {
+        aksi: 'getproduct',
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (let product of data.result) {
+          this.products.push(product);
+          console.log(this.products);
+
+        }
+        resolve(true);
+      });
+    });
+  }
+
+ 
 }

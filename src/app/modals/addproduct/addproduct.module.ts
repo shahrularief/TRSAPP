@@ -2,17 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-import { AddproductPage } from '../../modals/addProduct/addProduct.page';
-
 
 import { IonicModule } from '@ionic/angular';
 
-import { StockPage } from './stock.page';
+import { AddproductPage } from './addproduct.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: StockPage
+    component: AddproductPage
   }
 ];
 
@@ -23,7 +21,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [StockPage,AddproductPage],
-  entryComponents: [AddproductPage]
+  declarations: [AddproductPage]
 })
-export class StockPageModule {}
+export class AddproductPageModule {}

@@ -42,7 +42,7 @@
     echo $result; 
   }
 
-  // DISPLAY DATA UNVERIFIED
+  ///// DISPLAY DATA UNVERIFIED///////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=='getdataunverified'){
   $data = array();
   $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='belum disahkan' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
@@ -77,7 +77,7 @@
 
   }
 
-// DISPLAY DATA VERIFIED
+// DISPLAY DATA VERIFIED///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getdataverified'){
   $data = array();
   $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='sah'OR pengesahan='tracking' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
@@ -108,7 +108,7 @@ elseif($postjson['aksi']=='getdataverified'){
   	echo $result;
 
   }
-  // DISPLAY DATA ALL
+  // DISPLAY DATA ALL///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=='getdataall'){
     $data = array();
     $query = mysqli_query($mysqli, "SELECT * FROM order_table ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
@@ -137,7 +137,29 @@ elseif($postjson['aksi']=='getdataverified'){
       echo $result;
   
     }
-    // get unverified account
+
+    // get products///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='getproduct'){
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM product_table ORDER BY prodID DESC LIMIT $postjson[start],$postjson[limit]");
+  
+    while($row = mysqli_fetch_array($query)){
+      $data[] = array(
+        'prodID' => $row['prodID'],
+        'prodName' => $row['prodName'],
+        'prodPrice' => $row['prodPrice'],
+        'prodCode' => $row['prodCode'],
+        'stock' => $row['stock']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
+    // get unverified account///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=='getunverify'){
     $data = array();
@@ -155,7 +177,55 @@ elseif($postjson['aksi']=='getdataverified'){
     echo $result;
   }
 
-   // get unverified prod
+  // get stock count///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  elseif($postjson['aksi']=='getstock'){
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM product_table ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
+  
+    while($row = mysqli_fetch_array($query)){
+      $data[] = array(
+        'order_id' => $row['order_id'],
+        'tarikh_order' => $row['tarikh_order'],
+        'nama_pelanggan' => $row['nama_pelanggan'],
+        'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'nombor_hp' => $row['nombor_hp'],
+        'akaun' => $row['akaun'],
+        'produk' => $row['produk'],
+        'penghantaran' => $row['penghantaran'],
+        'jumlah_bayaran' => $row['jumlah_bayaran'],
+        'nota_tambahan' => $row['nota_tambahan'],
+        'sales' => $row['sales'],
+        'jumProduk' => $row['jumProduk'],
+        'pengesahan' => $row['pengesahan']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  }
+
+  // get total sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  elseif($postjson['aksi']=='getsum'){
+    $data = array();
+    $username =  $postjson['sales_username'];
+    $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
+    FROM order_table
+    WHERE sales = '$username'");
+
+  	$countresult = mysqli_fetch_array($query); 
+    $data[] = array(
+      'sum' => $countresult['mycount']
+    );
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    echo $result;
+  }
+
+   // get unverified prod///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    elseif($postjson['aksi']=='getunverifyproduction'){
     $data = array();
@@ -174,25 +244,9 @@ elseif($postjson['aksi']=='getdataverified'){
   }
 
 
-  // get total sale
+  
 
-  elseif($postjson['aksi']=='getsum'){
-    $data = array();
-    $username =  $postjson['sales_username'];
-    $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
-    FROM order_table
-    WHERE sales = '$username'");
-
-  	$countresult = mysqli_fetch_array($query); 
-    $data[] = array(
-      'sum' => $countresult['mycount']
-    );
-    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
-      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
-    echo $result;
-  }
-
-  //get verified production
+  //get verified production///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=='getunverifyproduction'){
     $data = array();
   	$query = mysqli_query($mysqli, "SELECT COUNT(*) AS mycount
@@ -208,7 +262,7 @@ elseif($postjson['aksi']=='getdataverified'){
   }
 
 
-    //  QUERY // SEARCH
+    //  QUERY // SEARCH///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     elseif($postjson['aksi']=='getquery'){
       $data = array();
       $query = mysqli_query($mysqli, "SELECT * FROM order_table ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
@@ -236,7 +290,7 @@ elseif($postjson['aksi']=='getdataverified'){
     
       }
 
-  // UPDATE DATA
+  // UPDATE DATA///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
   elseif($postjson['aksi']=='update'){
@@ -258,7 +312,7 @@ elseif($postjson['aksi']=='getdataverified'){
 
   }
 
-  // update verification
+  // update verification///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=='updateverify'){
   	$query = mysqli_query($mysqli, "UPDATE order_table SET
@@ -271,7 +325,7 @@ elseif($postjson['aksi']=='getdataverified'){
 
   }
 
-   // update tracking
+   // update tracking///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    elseif($postjson['aksi']=='updatetracking'){
   	$query = mysqli_query($mysqli, "UPDATE order_table SET
@@ -284,7 +338,7 @@ elseif($postjson['aksi']=='getdataverified'){
   	echo $result;
 
   }
-   // update penghantaran
+   // update penghantaran///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    elseif($postjson['aksi']=='updatedelivery'){
   	$query = mysqli_query($mysqli, "UPDATE order_table SET
@@ -298,7 +352,7 @@ elseif($postjson['aksi']=='getdataverified'){
 
   }
 
-  //get sum sales
+  //get sum sales///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=='getsum'){
   	$query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) 
@@ -312,7 +366,7 @@ elseif($postjson['aksi']=='getdataverified'){
 
   }
 
-  //DELETE ORDER DATA
+  //DELETE ORDER DATA///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=='delete'){
   	$query = mysqli_query($mysqli, "DELETE FROM order_table WHERE order_id ='$postjson[order_id]'");
@@ -325,7 +379,7 @@ elseif($postjson['aksi']=='getdataverified'){
   }
 
 
-  // login admin
+  // login admin///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=="loginadmin"){
     $password = md5($postjson['password']);
     $query = mysqli_query($mysqli, "SELECT * FROM user_table WHERE username='$postjson[username]' AND password='$password'");
@@ -353,7 +407,7 @@ elseif($postjson['aksi']=='getdataverified'){
     echo $result;
   }
 
-   // login accprod
+   // login accprod///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    elseif($postjson['aksi']=="loginaccprod"){
     $password = md5($postjson['accprod_password']);
     $query = mysqli_query($mysqli, "SELECT * FROM acc_prod_table WHERE accprod_username='$postjson[accprod_username]' AND accprod_password='$password'");
@@ -381,7 +435,7 @@ elseif($postjson['aksi']=='getdataverified'){
     echo $result;
   }
 
-  // login sales
+  // login sales///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=="loginsales"){
     $password = md5($postjson['sales_password']);
     $query = mysqli_query($mysqli, "SELECT * FROM sales_table WHERE sales_username='$postjson[sales_username]' AND sales_password='$password'");
@@ -410,7 +464,7 @@ elseif($postjson['aksi']=='getdataverified'){
     echo $result;
   }
 
-//REGISTRATION ADMIN
+//REGISTRATION ADMIN///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=="registeradmin"){
     $password = md5($postjson['password']);
@@ -429,7 +483,7 @@ elseif($postjson['aksi']=='getdataverified'){
     echo $result;
   }
 
-  //REGISTRATION ACCOUNT & PRODUCTION
+  //REGISTRATION ACCOUNT & PRODUCTION///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=="registeraccprod"){
     $password = md5($postjson['accprod_password']);
@@ -448,7 +502,7 @@ elseif($postjson['aksi']=='getdataverified'){
     echo $result;
   }
 
-  //REGISTER SALES
+  //REGISTER SALES///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=="registersales"){
     $password = md5($postjson['sales_password']);
     $query = mysqli_query($mysqli, "INSERT INTO sales_table SET

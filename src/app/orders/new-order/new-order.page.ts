@@ -34,8 +34,9 @@ export class NewOrderPage implements OnInit {
   sales_username: string;
   sales_team: string;
   users: any;
-
-
+  products: any[];
+  limit: number = 13; // LIMIT GET PERDATA
+  start: number = 0;
 
   constructor(
     private postPrvdr: PostProvider,
@@ -55,6 +56,9 @@ export class NewOrderPage implements OnInit {
       this.sales_team = this.users.team;
       console.log(res);
     });
+
+    this.loadProduct();
+    this.products = [];
   }
 
 
@@ -142,5 +146,27 @@ export class NewOrderPage implements OnInit {
       console.log(err + 'error in camera function');
     });
   }
+
+  //get product array
+  loadProduct() {
+    return new Promise(resolve => {
+      let body = {
+        aksi: 'getproduct',
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (let product of data.result) {
+          this.products.push(product);
+          console.log(this.products);
+
+        }
+        resolve(true);
+      });
+    });
+  }
+
+
 }
 

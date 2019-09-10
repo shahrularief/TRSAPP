@@ -48,6 +48,7 @@ const routes: Routes = [
   { path: 'shipping', loadChildren: './prod/shipping/shipping.module#ShippingPageModule' },
   { path: 'image-modal', loadChildren: './modals/image-modal/image-modal.module#ImageModalPageModule' },
   { path: 'stock', loadChildren: './prod/stock/stock.module#StockPageModule' },
+  { path: 'addproduct', loadChildren: './modals/addproduct/addproduct.module#AddproductPageModule' },
 
 
 ];
