@@ -23,7 +23,7 @@ export class ModalpopupPage implements OnInit {
   public jumlah_bayaran: string;
   public pengesahan: string;
   public nota_tambahan: string;
-
+ public base64image: string;
   ngOnInit() {
   }
 

@@ -34,11 +34,13 @@ export class ProductionPage implements OnInit {
   id: number;
   total: number;
   sales;
+  chProduk;
 
   customers: any = [];
   unverifiedprod: any = [];
   products: any[];
   stock: any[];
+  count: any[];
   limit: number = 13; // LIMIT GET PERDATA
   start: number = 0;
 
@@ -63,7 +65,8 @@ export class ProductionPage implements OnInit {
     this.loadUnverify();
     this.loadProduct();
     this.products = [];
-
+    this.count = [];
+  
   }
 
   onSearchTerm(ev: CustomEvent) {
@@ -342,5 +345,27 @@ export class ProductionPage implements OnInit {
     });
   }
 
+  getProduct(event) {
+    console.log(event.detail.value);
+    this.count = [];
+    let chProduk= event.detail.value;
+    return new Promise(resolve => {
+      let body = {
+        aksi: 'getchoosenproductProd',
+        produk: chProduk,
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (let choose of data.result) {
+          this.count.push(choose);
+          console.log(this.count);
+
+        }
+        resolve(true);
+      });
+    });
+  }
  
 }

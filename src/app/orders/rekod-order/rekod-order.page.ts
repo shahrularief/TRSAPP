@@ -40,7 +40,7 @@ export class RekodOrderPage implements OnInit {
     public alertCtrl: AlertController,
   ) { }
 
-  async openModal(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, sah) {
+  async openModal(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, resit, sah) {
     const modal = await this.modalController.create({
       component: ModalpopupPage,
       componentProps: {
@@ -55,6 +55,7 @@ export class RekodOrderPage implements OnInit {
         jumlah_bayaran: bayaran,
         nota_tambahan: nota,
         pengesahan: sah,
+        base64image: resit,
       }
     });
     return await modal.present().then(_ => {
@@ -69,7 +70,7 @@ export class RekodOrderPage implements OnInit {
 
   ionViewWillEnter() {
     this.customers = [];
-    this.start = 0;
+    this.start = 0; 
     this.loadCustomer();
   }
 

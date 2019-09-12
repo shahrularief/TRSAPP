@@ -8,6 +8,8 @@
   include "library/config.php";
   
   $postjson = json_decode(file_get_contents('php://input'), true);
+
+  ////////ADD CUSTOMER/ORDER ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   if($postjson['aksi']=='add'){
     $today = date('Y-m-d h:m:s');
     echo $today;
@@ -127,6 +129,7 @@ elseif($postjson['aksi']=='getdataverified'){
         'nota_tambahan' => $row['nota_tambahan'],
         'sales' => $row['sales'],
         'jumProduk' => $row['jumProduk'],
+        'resit' => $row['resit'],
         'pengesahan' => $row['pengesahan']
       );
     }
@@ -179,33 +182,7 @@ elseif($postjson['aksi']=='getdataverified'){
 
   // get stock count///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  elseif($postjson['aksi']=='getstock'){
-    $data = array();
-    $query = mysqli_query($mysqli, "SELECT * FROM product_table ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
-  
-    while($row = mysqli_fetch_array($query)){
-      $data[] = array(
-        'order_id' => $row['order_id'],
-        'tarikh_order' => $row['tarikh_order'],
-        'nama_pelanggan' => $row['nama_pelanggan'],
-        'alamat_pelanggan' => $row['alamat_pelanggan'],
-        'nombor_hp' => $row['nombor_hp'],
-        'akaun' => $row['akaun'],
-        'produk' => $row['produk'],
-        'penghantaran' => $row['penghantaran'],
-        'jumlah_bayaran' => $row['jumlah_bayaran'],
-        'nota_tambahan' => $row['nota_tambahan'],
-        'sales' => $row['sales'],
-        'jumProduk' => $row['jumProduk'],
-        'pengesahan' => $row['pengesahan']
-      );
-    }
-  
-    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
-      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
-  
-      echo $result;
-  }
+
 
   // get total sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -378,6 +355,18 @@ elseif($postjson['aksi']=='getdataverified'){
 
   }
 
+   //DELETE PRODUCT DATA///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   elseif($postjson['aksi']=='deleteProd'){
+  	$query = mysqli_query($mysqli, "DELETE FROM product_table WHERE prodID ='$postjson[prodID]'");
+
+  	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
+  	else $result = json_encode(array('success'=>false, 'result'=>'error'));
+
+  	echo $result;
+
+  }
+
 
   // login admin///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=="loginadmin"){
@@ -520,6 +509,55 @@ elseif($postjson['aksi']=='getdataverified'){
 
     echo $result;
   }
+
+
+  /////ADD PRODUCT/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=="addproduct"){
+    $query = mysqli_query($mysqli, "INSERT INTO product_table SET
+      prodName = '$postjson[prodName]',
+      prodPrice = '$postjson[prodPrice]',
+      prodCode = '$postjson[prodCode]',
+      stock = '$postjson[prodStock]'
+    ");
+
+    if($query) $result = json_encode(array('success'=>true));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+  }
+///////////GET PRODUCT PRODUCTION/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getchoosenproductProd'){
+  $data = array();
+  $produk =  $postjson['produk'];
+  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS mycount
+  FROM order_table
+  WHERE produk = '$produk' AND pengesahan = 'sah'");
+
+  $countresult = mysqli_fetch_array($query); 
+  $data[] = array(
+    'sum' => $countresult['mycount']
+  );
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  echo $result;
+}
+
+///////////GET PRODUCT PRODUCTION/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getchoosenproductAcc'){
+  $data = array();
+  $produk =  $postjson['produk'];
+  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS mycount
+  FROM order_table
+  WHERE produk = '$produk' AND pengesahan = 'belum disahkan'");
+
+  $countresult = mysqli_fetch_array($query); 
+  $data[] = array(
+    'sum' => $countresult['mycount']
+  );
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  echo $result;
+}
 
 
 

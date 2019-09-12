@@ -9,7 +9,7 @@
 <ion-content scrollX="true">
 
         <ion-searchbar placeholder="Search by company" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar>
-        <ion-button (click)="openCalendar()"> Calendar </ion-button>
+        <ion-button (click)="openCalendar()"><ion-icon name="calendar"></ion-icon> Search by Date </ion-button>
         <ion-button (click)="clearArrayCust()"><ion-icon name="close"></ion-icon>Clear </ion-button>
         
 
@@ -24,7 +24,12 @@
                 </div>
         </ion-card-subtitle>
 </ion-card>
-
+<ion-item>
+        <ion-select [interfaceOptions]='{ showBackdrop: false }' interface="popover" placeholder="Select One" (ionChange)="getProduct($event)">
+                <ion-select-option *ngFor="let prod of products" [value]="prod.prodName">{{ prod.prodName }}</ion-select-option>
+        </ion-select>
+        <ion-card *ngFor="let c of count" class=count-card>{{c.sum}}</ion-card>
+</ion-item>
 
 <table>
 <thead>
@@ -51,7 +56,7 @@
                                 customer.nombor_hp,
                                 customer.akaun,
                                 customer.produk,
-                                customer.penghantaran,
+                                customer.jumProduk,
                                 customer.jumlah_bayaran,
                                 customer.nota_tambahan)">
                 <ion-icon name="create"></ion-icon>
@@ -84,7 +89,8 @@
         <ion-text>RM {{customer.jumlah_bayaran}}</ion-text>
 </td>
 <td>
-        <ion-text>{{customer.produk}}</ion-text>
+        <p style="font-weight: bold">{{ customer.produk }} - {{ customer.jumProduk }}
+        </p>
 </td>
 <td>
         <ion-text>{{customer.sales}}</ion-text>

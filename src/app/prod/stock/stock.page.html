@@ -9,7 +9,11 @@
 <ion-content scrollX="true">
 
   <ion-searchbar placeholder="Search product" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar>
-  <ion-button (click)="openAddProduct()"><ion-icon name="add"></ion-icon>Tambah produk</ion-button>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openAddProduct()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
   <table>
     <thead>
@@ -24,6 +28,13 @@
     <tbody>
       <tr  *ngFor="let pro of products">
         <td>
+            <ion-button size="small" (click)="verifyAlert(customer.order_id)">
+                <ion-icon name="checkbox-outline"></ion-icon>
+        </ion-button>
+            <ion-button size="small" color="danger"
+            (click)="deleteOrder(pro.prodID)">
+            <ion-icon name="trash"></ion-icon>
+    </ion-button>
         </td>
 
         <td>

@@ -24,6 +24,19 @@ ion-card{
     border: 1px solid rgb(204, 204, 204); 
     text-align: left; 
    }
+
+   ion-select{
+    width: 40% !important;
+   }
+
+   .count-card{
+    background: rgb(167, 88, 23); 
+    color: white; 
+    width: 40px !important;
+     height: 20px !important;
+     font-size: 10pt;
+     text-align: center;
+   }
   
 
 

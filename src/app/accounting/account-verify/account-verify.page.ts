@@ -26,6 +26,7 @@ export class AccountVerifyPage implements OnInit {
   akaun;
   produk;
   penghantaran;
+  jumProduks
   fail_lampiran;
   image;
   base64image;
@@ -39,6 +40,8 @@ export class AccountVerifyPage implements OnInit {
   customers: any = [];
   unverifys: any = [];
   query: any = [];
+  count: any = [];
+  products: any = [];
   limit = 20; // LIMIT GET PERDATA
   start = 0;
 
@@ -62,9 +65,12 @@ export class AccountVerifyPage implements OnInit {
   ionViewWillEnter() {
     this.customers = [];
     this.unverifys = [];
+    this.count = [];
+    this.products = [];
     this.start = 0;
     this.loadCustomer();
     this.loadUnverify();
+    this.loadProduct()
   }
 
 
@@ -274,5 +280,47 @@ export class AccountVerifyPage implements OnInit {
     this.loadCustomer();
     this.unverifys = [];
     this.loadUnverify();
+  }
+//get product array
+loadProduct() {
+  return new Promise(resolve => {
+    let body = {
+      aksi: 'getproduct',
+      limit: this.limit,
+      start: this.start,
+    };
+
+    this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+      for (let product of data.result) {
+        this.products.push(product);
+        console.log(this.products);
+
+      }
+      resolve(true);
+    });
+  });
+}
+
+  getProduct(event) {
+    console.log(event.detail.value);
+    this.count = [];
+    let chProduk= event.detail.value;
+    return new Promise(resolve => {
+      let body = {
+        aksi: 'getchoosenproductAcc',
+        produk: chProduk,
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (let choose of data.result) {
+          this.count.push(choose);
+          console.log(this.count);
+
+        }
+        resolve(true);
+      });
+    });
   }
 }
