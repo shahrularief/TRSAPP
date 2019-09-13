@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
-
+import { CalendarModule } from 'ion2-calendar';
 import { ShippingPage } from './shipping.page';
 
 const routes: Routes = [
@@ -18,7 +18,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
+    IonicModule,CalendarModule,
     RouterModule.forChild(routes)
   ],
   declarations: [ShippingPage]

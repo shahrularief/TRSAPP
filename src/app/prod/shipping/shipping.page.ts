@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
+import { CalendarModal, CalendarModalOptions, CalendarResult } from 'ion2-calendar';
 import { PostProvider } from '../../../providers/post-provider';
-import { Router, ActivatedRoute } from '@angular/router';
-import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-shipping',
@@ -22,29 +22,35 @@ export class ShippingPage implements OnInit {
   nota_tambahan;
   pengesahan;
   tacking;
-  sah: string = '';
+  sah = '';
   id: number;
   total: number;
+  sums: any = [];
 
   customers: any = [];
-  limit: number = 13; // LIMIT GET PERDATA
-  start: number = 0;
+  shipCount: any = [];
+  limit = 13; // LIMIT GET PERDATA
+  start = 0;
 
   constructor(
     private router: Router,
     private postPrvdr: PostProvider,
     public toastCtrl: ToastController,
     public alertCtrl: AlertController,
+    public modalController: ModalController,
   ) { }
 
   ngOnInit() {
   }
 
   ionViewWillEnter() {
+    this.shipCount = [];
     this.customers = [];
+    this.sums = [];
     this.start = 0;
     this.loadCustomer();
-
+    this.loadShipped();
+    this.getSum();
   }
 
   loadData(event: any) {
@@ -58,19 +64,93 @@ export class ShippingPage implements OnInit {
 
   loadCustomer() {
     return new Promise(resolve => {
-      let body = {
-        aksi: 'getdataverified',
+      const body = {
+        aksi: 'getdatashipped',
         limit: this.limit,
         start: this.start,
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
-        for (let customer of data.result) {
+        for (const customer of data.result) {
           this.customers.push(customer);
         }
         resolve(true);
       });
     });
+  }
+
+  loadShipped() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getshippedcount',
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {
+        for (const verify of Cresult.result) {
+          this.shipCount.push(verify);
+          console.log('unverified items production:' + this.shipCount);
+        }
+        resolve(true);
+
+      });
+    });
+  }
+
+  onSearchTerm(ev: CustomEvent) {
+    const val = ev.detail.value;
+
+    if (val && val.trim() !== '') {
+      this.customers = this.customers.filter(term => {
+        return term.sales_team.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
+      });
+    } else {
+      this.customers = [];
+      this.loadCustomer();
+    }
+  }
+  async openCalendar() {
+    const options: CalendarModalOptions = {
+      title: 'Pilih Tarikh',
+      canBackwardsSelected: true,
+    };
+
+    const myCalendar = await this.modalController.create({
+      component: CalendarModal,
+      componentProps: { options }
+    });
+
+    myCalendar.present();
+
+    const event: any = await myCalendar.onDidDismiss();
+    const date: CalendarResult = event.data;
+    const dateString: any = date.string;
+    console.log(dateString);
+    this.onSearchDate(dateString);
+
+  }
+
+  onSearchDate(from) {
+    const val = from;
+    if (val && val.trim() !== '') {
+      this.customers = this.customers.filter(term => {
+        return term.tarikh_order.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
+
+      });
+
+
+    } else {
+      this.customers = [];
+      this.loadCustomer();
+    }
+  }
+
+  clearArrayCust() {
+    this.customers = [];
+    this.loadCustomer();
+    this.shipCount = [];
+    this.loadShipped();
   }
 
   updateOrder(id, nama, tarikh, alamat, hp, akaun, produk, penghantaran, bayaran, nota) {
@@ -105,7 +185,7 @@ export class ShippingPage implements OnInit {
   }
 
   delCustomer(id) {
-    let body = {
+    const body = {
       aksi: 'delete',
       order_id: id
     };
@@ -115,5 +195,23 @@ export class ShippingPage implements OnInit {
   }
 
 
+  //GET TOTAL PAYMENT
+  getSum() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getsumship',
+        limit: this.limit,
+        start: this.start,
+      };
 
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (const sum of data.result) {
+          this.sums.push(sum);
+          console.log(this.sums);
+
+        }
+        resolve(true);
+      });
+    });
+  }
 }

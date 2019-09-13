@@ -36,22 +36,35 @@ export class AppComponent {
       url: '/rekod-order',
       icon: 'cart'
     },
+  ];
 
+  public appAccount = [
     {
       title: 'Pengesahan',
       url: '/account-verify',
       icon: 'people'
     },
+  ];
+
+  public appProduction = [
     {
       title: 'Production',
       url: '/production',
       icon: 'cube'
     },
     {
+      title: 'Shipping',
+      url: '/shipping',
+      icon: 'train'
+    },
+
+    {
       title: 'Stok',
       url: '/stock',
       icon: 'filing'
     },
+  ];
+  public appAdmin = [
     {
       title: 'Pendaftaran',
       url: '/registration',

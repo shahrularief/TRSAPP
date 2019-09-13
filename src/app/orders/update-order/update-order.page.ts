@@ -18,7 +18,6 @@ export class UpdateOrderPage implements OnInit {
   jumProduk: string = '';
   jumlah_bayaran: string = '';
   nota_tambahan: string = '';
-
   id: number;
 
   constructor(
@@ -39,7 +38,6 @@ export class UpdateOrderPage implements OnInit {
       this.jumProduk = data.jumProduk;
       this.jumlah_bayaran = data.bayaran ;
       this.nota_tambahan = data.nota;
-
       console.log(data);
     });
   }

@@ -11,7 +11,7 @@
                 <ion-col col-3>
                 </ion-col>
                 <ion-col col-6>
-                  <img class="user-avatar round" [src]="chosenPicture || placeholder" onerror="this.src='assets/img/avatar/avatar-placeholder.png'"/>
+                  <img class="user-avatar round" [src]="'assets/img/avatar/avatar-placeholder.png'"/>
                 </ion-col>
                 <ion-col col-3>
                 </ion-col>
@@ -21,7 +21,50 @@
               </ion-row>
             </div>
         <ion-list>
+          <ion-item>
+              <ion-label color="medium">Order</ion-label>
+          </ion-item>
+         
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
+            <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
+              <ion-icon slot="start" [name]="p.icon"></ion-icon>
+              <ion-label>
+                {{p.title}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-item>
+              <ion-label  color="medium">Accounting</ion-label>
+          </ion-item>
+          
+          <ion-menu-toggle auto-hide="false" *ngFor="let p of appAccount">
+            <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
+              <ion-icon slot="start" [name]="p.icon"></ion-icon>
+              <ion-label>
+                {{p.title}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-item>
+              <ion-label color="medium">Production</ion-label>
+          </ion-item>
+          
+          <ion-menu-toggle auto-hide="false" *ngFor="let p of appProduction">
+            <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
+              <ion-icon slot="start" [name]="p.icon"></ion-icon>
+              <ion-label>
+                {{p.title}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-item>
+              <ion-label color="medium">Administration</ion-label>
+          </ion-item>
+          
+          <ion-menu-toggle auto-hide="false" *ngFor="let p of appAdmin">
             <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
               <ion-icon slot="start" [name]="p.icon"></ion-icon>
               <ion-label>

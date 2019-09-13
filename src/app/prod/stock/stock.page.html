@@ -27,14 +27,21 @@
     </thead>
     <tbody>
       <tr  *ngFor="let pro of products">
-        <td>
-            <ion-button size="small" (click)="verifyAlert(customer.order_id)">
-                <ion-icon name="checkbox-outline"></ion-icon>
-        </ion-button>
+        <td >
             <ion-button size="small" color="danger"
             (click)="deleteOrder(pro.prodID)">
             <ion-icon name="trash"></ion-icon>
-    </ion-button>
+            </ion-button>
+
+            <ion-button size="small" color="primary"
+            (click)="addAlert(pro.prodID, pro.stock,pro.prodName)">
+            <ion-icon name="add"></ion-icon>
+            </ion-button>
+
+            <ion-button size="small" color="tertiary"
+            (click)="removeAlert(pro.prodID, pro.stock, pro.prodName)">
+            <ion-icon name="remove-circle"></ion-icon>
+            </ion-button>
         </td>
 
         <td>

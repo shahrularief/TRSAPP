@@ -16,20 +16,42 @@
         </ion-button>
 
         
-        
-               
-        <ion-card color="primary">
-                <ion-card-subtitle>
-                        <div class="ion-text-center">
-                                Total pending
-                        </div>
-                        <br />
-                        <div class="ion-text-center" *ngFor="let ver of unverifiedprod">
-                                {{ver.sum}}
 
-                        </div>
-                </ion-card-subtitle>
-        </ion-card>
+    <ion-grid>
+            <ion-row>
+                    <ion-col>
+                        <ion-card color="primary">
+                                <ion-card-subtitle>
+                                        <div class="ion-text-center">
+                                                Total pending
+                                        </div>
+                                        <br />
+                                        <div class="ion-text-center" *ngFor="let ver of unverifiedprod">
+                                                {{ver.sum}}
+                
+                                        </div>
+                                </ion-card-subtitle>
+                        </ion-card>
+                    </ion-col>
+                    <ion-col>
+                        <ion-card color="primary">
+                                <ion-card-subtitle>
+                                        <div class="ion-text-center">
+                                                Jumlah
+                                        </div>
+                                        <br />
+                                        <div class="ion-text-center" *ngFor="let ss of sums">
+                                                RM {{ss.sum}}
+                
+                                        </div>
+                                </ion-card-subtitle>
+                        </ion-card>
+                        
+                    </ion-col>
+            </ion-row>
+    </ion-grid>
+       
+        
 
         <ion-item>
                 <ion-select [interfaceOptions]='{ showBackdrop: false }' interface="popover" placeholder="Select One" (ionChange)="getProduct($event)">
@@ -82,7 +104,7 @@
                                         </ion-button>
                                 </td>
                                 <td>
-                                        <ion-text>{{ customer.pengesahan }}</ion-text><br />
+                                        <ion-text color="success">{{ customer.pengesahan }}</ion-text><br />
                                         <ion-text>{{ customer.tarikh_order }}</ion-text>
                                 </td>
                                 <td>

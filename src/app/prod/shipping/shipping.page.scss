@@ -1,0 +1,34 @@
+   table{ 
+    width: 100%; 
+    border-collapse: collapse; 
+    font-size: 10pt;
+   }
+   tr:nth-of-type(odd) { 
+    background: #eee; 
+   }
+   th { 
+    background: rgb(160, 89, 13); 
+    color: white; 
+    font-weight: bold; 
+   }
+   td, th { 
+    padding: 6px; 
+    border: 1px solid rgb(204, 204, 204); 
+    text-align: left; 
+   }
+
+   ion-select{
+    width: 40% !important;
+   }
+
+   .count-card{
+    background: rgb(167, 88, 23); 
+    color: white; 
+    width: 40px !important;
+     height: 20px !important;
+     font-size: 10pt;
+     text-align: center;
+   }
+  
+
+

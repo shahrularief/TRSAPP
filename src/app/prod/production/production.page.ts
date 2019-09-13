@@ -1,15 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
+import { CalendarModal, CalendarModalOptions, CalendarResult } from 'ion2-calendar';
 import { PostProvider } from '../../../providers/post-provider';
-import { Router, ActivatedRoute } from '@angular/router';
-import { ModalController } from '@ionic/angular';
-import { AlertController } from '@ionic/angular';
-import {
-  CalendarModal,
-  CalendarModalOptions,
-  DayConfig,
-  CalendarResult
-} from 'ion2-calendar';
 
 @Component({
   selector: 'app-production',
@@ -24,13 +17,11 @@ export class ProductionPage implements OnInit {
   nombor_hp;
   akaun;
   produk;
-  product;
   penghantaran;
   jumlah_bayaran;
   nota_tambahan;
   pengesahan;
-  tacking;
-  sah: string = '';
+  sah = '';
   id: number;
   total: number;
   sales;
@@ -40,9 +31,10 @@ export class ProductionPage implements OnInit {
   unverifiedprod: any = [];
   products: any[];
   stock: any[];
+  sums: any[];
   count: any[];
-  limit: number = 13; // LIMIT GET PERDATA
-  start: number = 0;
+  limit = 13; // LIMIT GET PERDATA
+  start = 0;
 
 
   constructor(
@@ -66,7 +58,9 @@ export class ProductionPage implements OnInit {
     this.loadProduct();
     this.products = [];
     this.count = [];
-  
+    this.sums= [];
+    this.getSum();
+
   }
 
   onSearchTerm(ev: CustomEvent) {
@@ -94,14 +88,14 @@ export class ProductionPage implements OnInit {
 
   loadCustomer() {
     return new Promise(resolve => {
-      let body = {
+      const body = {
         aksi: 'getdataverified',
         limit: this.limit,
         start: this.start,
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
-        for (let customer of data.result) {
+        for (const customer of data.result) {
           this.customers.push(customer);
         }
         resolve(true);
@@ -140,7 +134,7 @@ export class ProductionPage implements OnInit {
       inputs: [
         {
           name: 'track',
-          type: 'text',
+          type: 'number',
           placeholder: 'Track',
         },
       ],
@@ -168,7 +162,7 @@ export class ProductionPage implements OnInit {
   }
   trackOrder(id, track, tracking) {
     return new Promise(resolve => {
-      let body = {
+      const body = {
         aksi: 'updatetracking',
         order_id: id,
         tracking: track,
@@ -231,7 +225,7 @@ export class ProductionPage implements OnInit {
 
   async deliveryOrder(id, hantar, deliver) {
     return new Promise(resolve => {
-      let body = {
+      const body = {
         aksi: 'updatedelivery',
         order_id: id,
         penghantaran: hantar,
@@ -273,7 +267,7 @@ export class ProductionPage implements OnInit {
   }
 
   delCustomer(id) {
-    let body = {
+    const body = {
       aksi: 'delete',
       order_id: id
     };
@@ -297,7 +291,7 @@ export class ProductionPage implements OnInit {
 
     const event: any = await myCalendar.onDidDismiss();
     const date: CalendarResult = event.data;
-    let dateString: any = date.string;
+    const dateString: any = date.string;
     console.log(dateString);
     this.onSearchDate(dateString);
 
@@ -325,17 +319,17 @@ export class ProductionPage implements OnInit {
     this.loadUnverify();
   }
 
-  //get product array
+  // get product array
   loadProduct() {
     return new Promise(resolve => {
-      let body = {
+      const body = {
         aksi: 'getproduct',
         limit: this.limit,
         start: this.start,
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
-        for (let product of data.result) {
+        for (const product of data.result) {
           this.products.push(product);
           console.log(this.products);
 
@@ -348,9 +342,9 @@ export class ProductionPage implements OnInit {
   getProduct(event) {
     console.log(event.detail.value);
     this.count = [];
-    let chProduk= event.detail.value;
+    const chProduk = event.detail.value;
     return new Promise(resolve => {
-      let body = {
+      const body = {
         aksi: 'getchoosenproductProd',
         produk: chProduk,
         limit: this.limit,
@@ -358,7 +352,7 @@ export class ProductionPage implements OnInit {
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
-        for (let choose of data.result) {
+        for (const choose of data.result) {
           this.count.push(choose);
           console.log(this.count);
 
@@ -367,5 +361,25 @@ export class ProductionPage implements OnInit {
       });
     });
   }
- 
+
+  //GET TOTAL PAYMENT
+  getSum() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getsumproduction',
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (const sum of data.result) {
+          this.sums.push(sum);
+          console.log(this.sums);
+
+        }
+        resolve(true);
+      });
+    });
+  }
+
 }

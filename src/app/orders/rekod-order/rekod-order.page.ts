@@ -74,9 +74,10 @@ export class RekodOrderPage implements OnInit {
     this.loadCustomer();
   }
 
-  updateCustomer(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota) {
+  updateCustomer(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, resit) {
     this.router.navigate(['/update-order/' + id + '/' + tarikh + '/' + nama + '/' + alamat + '/' + hp + '/' + akaun + '/'
       + produk + '/' + jumProduk + '/' + bayaran + '/' + nota]);
+      resit;
   }
 
   async deleteAlert(id) {
