@@ -23,6 +23,7 @@ export class HomePage implements OnInit {
   users: any;
   team: string;
   totalsum: any [];
+  todaysum: any[];
 
   constructor(
     private router: Router,
@@ -46,6 +47,8 @@ export class HomePage implements OnInit {
       this.team = this.users.team;
       console.log(res);
       this.loadTotalSale();
+      this.todaysum = [];
+      this.loadSaleToday();
     });
   }
 
@@ -71,6 +74,22 @@ export class HomePage implements OnInit {
         for (let sum of data.result) {
           this.totalsum.push(sum);
           console.log('total' + this.totalsum);
+        }
+        resolve(true);
+      });
+    });
+  }
+  loadSaleToday() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getsumtoday',
+        sales_username: this.username,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (let sumT of data.result) {
+          this.todaysum.push(sumT);
+          console.log('total' + this.todaysum);
         }
         resolve(true);
       });

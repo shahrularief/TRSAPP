@@ -4,7 +4,7 @@ import { PostProvider } from '../../providers/post-provider';
 import { ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { AuthService } from '../services/auth.service';
-
+import { MenuController } from '@ionic/angular';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -12,7 +12,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginPage implements OnInit {
   loginsegment: string;
-  avatarimage:any;
+  avatarimage: any;
 
   user = {
     username: '',
@@ -32,8 +32,9 @@ export class LoginPage implements OnInit {
     private toastCtrl: ToastController,
     private storage: Storage,
     private auth: AuthService,
-   
-  ) {}
+    private menu: MenuController,
+
+  ) { }
 
   ngOnInit() {
   }
@@ -41,6 +42,7 @@ export class LoginPage implements OnInit {
   ionViewWillEnter() {
     this.loginsegment = 'admin';
     this.auth.signOut();
+    this.menu.swipeGesture(false);
   }
 
   // LOGIN ADMIN

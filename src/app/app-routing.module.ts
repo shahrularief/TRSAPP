@@ -42,12 +42,13 @@ const routes: Routes = [
   { path: 'modalpopup', loadChildren: './modals/modalpopup/modalpopup.module#ModalpopupPageModule' },
 
   { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
-  { path: 'registration', loadChildren: './registration/registration.module#RegistrationPageModule' },
+  { path: 'registration', loadChildren: './admin/registration/registration.module#RegistrationPageModule' },
   { path: 'account-verify', loadChildren: './accounting/account-verify/account-verify.module#AccountVerifyPageModule' },
   { path: 'production', loadChildren: './prod/production/production.module#ProductionPageModule' },
   { path: 'shipping', loadChildren: './prod/shipping/shipping.module#ShippingPageModule' },
   { path: 'image-modal', loadChildren: './modals/image-modal/image-modal.module#ImageModalPageModule' },
   { path: 'stock', loadChildren: './prod/stock/stock.module#StockPageModule' },
+  { path: 'company', loadChildren: './admin/company/company.module#CompanyPageModule' },
 
 
 

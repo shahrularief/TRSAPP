@@ -243,6 +243,24 @@ elseif($postjson['aksi']=='getdatashipped'){
       else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
     echo $result;
   }
+  // get today sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  elseif($postjson['aksi']=='getsumtoday'){
+    $today = date('Y-m-d');
+    $data = array();
+    $username =  $postjson['sales_username'];
+    $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
+    FROM order_table
+    WHERE sales = '$username' AND tarikh_order=$today");
+
+  	$countresult = mysqli_fetch_array($query); 
+    $data[] = array(
+      'sum' => $countresult['mycount']
+    );
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    echo $result;
+  }
  //get sum prod///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
  elseif($postjson['aksi']=='getsumproduction'){
@@ -504,6 +522,7 @@ elseif($postjson['aksi']=='getsumship'){
 //REGISTRATION ADMIN///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=="registeradmin"){
+    $today = date('Y-m-d h:m:s');
     $password = md5($postjson['password']);
     $query = mysqli_query($mysqli, "INSERT INTO user_table SET
       username = '$postjson[username]',

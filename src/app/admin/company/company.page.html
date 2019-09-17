@@ -1,0 +1,100 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-menu-button slot="start"></ion-menu-button>
+      <ion-title>Syarikat</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+
+<ion-content>
+<ion-button>
+View companies
+</ion-button>
+
+  <ion-card>  
+    <ion-card-content>
+        <ion-card-title> Company Information</ion-card-title>
+      <ion-item>
+        <ion-label position="floating">
+          Company Name
+        </ion-label>
+
+        <ion-input type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">
+          Registration Number
+        </ion-label>
+
+        <ion-input type="text"></ion-input>
+
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">
+          Address
+        </ion-label>
+
+        <ion-input type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">
+          City
+        </ion-label>
+
+        <ion-input type="text"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">
+          Postcode </ion-label>
+
+        <ion-input type="text"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">
+          State
+        </ion-label>
+
+        <ion-input type="text"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">
+          Telephone Number
+        </ion-label>
+
+        <ion-input type="text"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">
+          Monthly Cycle (Start)
+        </ion-label>
+        <ion-input type="number"></ion-input>
+        <ion-input type="number"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">
+          Monthly Cycle (End)
+        </ion-label>
+        <ion-input type="number"></ion-input>
+        <ion-input type="number"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">
+          Consider Debtor as Sales and Unit Sold?
+        </ion-label>
+
+        <ion-input type="text"></ion-input>
+      </ion-item>
+
+    </ion-card-content>
+  </ion-card>
+
+<div class="ion-padding">
+    <ion-button expand="block" type="submit" class="ion-no-margin" shape="round" (click)="createCompany()">
+      Submit
+      <ion-ripple-effect></ion-ripple-effect>
+    </ion-button>
+  </div>
+
+</ion-content>

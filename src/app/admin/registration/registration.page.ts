@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PostProvider } from '../../providers/post-provider';
+import { PostProvider } from '../../../providers/post-provider';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 @Component({
