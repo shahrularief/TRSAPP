@@ -41,7 +41,6 @@ export class LoginPage implements OnInit {
 
   ionViewWillEnter() {
     this.loginsegment = 'admin';
-    this.auth.signOut();
     this.menu.swipeGesture(false);
   }
 

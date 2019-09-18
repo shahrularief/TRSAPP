@@ -15,6 +15,7 @@ export class AuthService {
   private authState = new BehaviorSubject(null);
   users: any;
   sales: string;
+  isLogged: boolean;
 
   constructor(private router: Router, private storage: Storage) {
     this.loadUser();
@@ -102,6 +103,9 @@ export class AuthService {
   async signOut() {
     await this.storage.set(TOKEN_KEY, null);
     this.authState.next(null);
+    this.storage.clear();
     this.router.navigateByUrl('/login');
+    console.log(this.storage);
+    console.log(this.authState);
   }
 }

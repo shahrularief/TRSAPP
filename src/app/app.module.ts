@@ -19,7 +19,8 @@ import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ng
 import { File } from '@ionic-native/file/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
-
+import { ImageModalPageModule } from './modals/image-modal/image-modal.module';
+import { ModalpopupPageModule } from './modals/modalpopup/modalpopup.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,7 +32,8 @@ import { Camera } from '@ionic-native/camera/ngx';
     HttpClientModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    
+    ImageModalPageModule,
+    ModalpopupPageModule,
     IonicStorageModule.forRoot(),
   ],
   providers: [

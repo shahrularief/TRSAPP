@@ -15,10 +15,6 @@ const TOKEN_KEY = 'user-access-token';
 })
 export class HomePage implements OnInit {
 
-  // sample data for testing slider
-
-  ///////
-
   username: string;
   users: any;
   team: string;

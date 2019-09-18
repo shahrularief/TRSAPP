@@ -134,7 +134,7 @@ export class ProductionPage implements OnInit {
       inputs: [
         {
           name: 'track',
-          type: 'number',
+          type: 'text',
           placeholder: 'Track',
         },
       ],

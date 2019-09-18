@@ -3,56 +3,53 @@
 
     <ion-menu-button slot="start"></ion-menu-button>
     <ion-title>Home</ion-title>
-      <ion-button slot="end" (click)="processLogout()">
-        <ion-icon name="log-out"   fill="solid" height="100px" width="100px"></ion-icon>
-      </ion-button>
+    <ion-button slot="end" (click)="processLogout()">
+      <ion-icon name="log-out" fill="solid" height="100px" width="100px"></ion-icon>
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content
-          pullingIcon="arrow-dropdown"
-          pullingText="Pull to refresh"
-          refreshingSpinner="circles"
-          refreshingText="Refreshing...">
-        </ion-refresher-content>
-      </ion-refresher>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
   <ion-item>
     <ion-text color="dark">
       <h1>Hi, {{username}}</h1>
-     <h3>{{team}}</h3>
+      <h3>{{team}}</h3>
     </ion-text>
   </ion-item>
 
 
 
 
-<ion-grid>
-  <ion-row>
-    <ion-col>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
         <ion-card color="primary">
-            <ion-card-content *ngFor="let sumTotal of totalsum">
-              <div class="ion-text-center">
-                <h2>Total Sales</h2>
-                <br>
-               RM {{ sumTotal.sum}}
-              </div>
-            </ion-card-content>
-          </ion-card> 
-    </ion-col>
-    <ion-col>
+          <ion-card-content *ngFor="let sumTotal of totalsum">
+            <div class="ion-text-center">
+              <h2>Total Sales</h2>
+              <br>
+              RM {{ sumTotal.sum}}
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col>
         <ion-card color="primary">
-            <ion-card-content *ngFor="let sumTotal of totalsum">
-              <div class="ion-text-center">
-                <h2>Sales Today</h2>
-                <br>
-               RM {{ sumTotal.sum}}
-              </div>
-            </ion-card-content>
-          </ion-card> 
-    </ion-col>
-  </ion-row>
-</ion-grid>
-  
+          <ion-card-content *ngFor="let sumTotal of totalsum">
+            <div class="ion-text-center">
+              <h2>Sales Today</h2>
+              <br>
+              RM {{ sumTotal.sum}}
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 </ion-content>

@@ -46,9 +46,9 @@ const routes: Routes = [
   { path: 'account-verify', loadChildren: './accounting/account-verify/account-verify.module#AccountVerifyPageModule' },
   { path: 'production', loadChildren: './prod/production/production.module#ProductionPageModule' },
   { path: 'shipping', loadChildren: './prod/shipping/shipping.module#ShippingPageModule' },
-  { path: 'image-modal', loadChildren: './modals/image-modal/image-modal.module#ImageModalPageModule' },
   { path: 'stock', loadChildren: './prod/stock/stock.module#StockPageModule' },
   { path: 'company', loadChildren: './admin/company/company.module#CompanyPageModule' },
+  { path: 'viewcompany', loadChildren: './admin/viewcompany/viewcompany.module#ViewcompanyPageModule' },
 
 
 
