@@ -11,8 +11,16 @@
 
   ////////ADD CUSTOMER/ORDER ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   if($postjson['aksi']=='add'){
-    $today = date('Y-m-d h:m:s');
+    $today = date('Y-m-d');
+    $day = date('d');
+    $month = date('m');
+    $year = date('Y');
+
     echo $today;
+  
+    echo $day;
+    echo $month;
+    echo $year;
     $data = array();
 		$datenowxx = date('Y-m-d_H_i_s'); // remove duplicate name image 
 		$entry = base64_decode($postjson['images']);
@@ -35,7 +43,10 @@
       sales = '$postjson[sales]',
       sales_team = '$postjson[sales_team]',
       fail_lampiran = '$directory',
-      resit = '$postjson[resit]'
+      resit = '$postjson[resit]',
+      day = '$day',
+      month = '$month',
+      year = '$year'
     ");
 
   	if($query) $result = json_encode(array('success'=>true,'msg'=>'success'));
@@ -83,6 +94,9 @@
       'sales_team' => $row['sales_team'],
       'fail_lampiran' => $row['fail_lampiran'],
       'resit' => $row['resit'],
+      'day' => $row['day'],
+      'month' => $row['month'],
+      'year' => $row['year'],
       'pengesahan' => $row['pengesahan']
     );
   }
@@ -115,7 +129,10 @@ elseif($postjson['aksi']=='getdataverified'){
       'pengesahan' => $row['pengesahan'],
       'sales' => $row['sales'],
       'tracking' => $row['tracking'],
-      'sales_team' => $row['sales_team']
+      'sales_team' => $row['sales_team'],
+      'day' => $row['day'],
+      'month' => $row['month'],
+      'year' => $row['year']
     );
   }
 
@@ -147,6 +164,9 @@ elseif($postjson['aksi']=='getdatashipped'){
       'pengesahan' => $row['pengesahan'],
       'sales' => $row['sales'],
       'tracking' => $row['tracking'],
+      'day' => $row['day'],
+      'month' => $row['month'],
+      'year' => $row['year'],
       'sales_team' => $row['sales_team']
     );
   }
@@ -177,6 +197,9 @@ elseif($postjson['aksi']=='getdatashipped'){
         'sales' => $row['sales'],
         'jumProduk' => $row['jumProduk'],
         'resit' => $row['resit'],
+        'day' => $row['day'],
+        'month' => $row['month'],
+        'year' => $row['year'],
         'pengesahan' => $row['pengesahan']
       );
     }
@@ -226,6 +249,22 @@ elseif($postjson['aksi']=='getdatashipped'){
       else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
     echo $result;
   }
+
+  // get all total sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  elseif($postjson['aksi']=='getsumall'){
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
+    FROM order_table");
+
+  	$countresult = mysqli_fetch_array($query); 
+    $data[] = array(
+      'sum' => $countresult['mycount']
+    );
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    echo $result;
+  }
   // get total sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=='getsum'){
@@ -251,7 +290,7 @@ elseif($postjson['aksi']=='getdatashipped'){
     $username =  $postjson['sales_username'];
     $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
     FROM order_table
-    WHERE sales = '$username' AND tarikh_order=$today");
+    WHERE sales = '$username' AND tarikh_order ='$today'");
 
   	$countresult = mysqli_fetch_array($query); 
     $data[] = array(
@@ -260,6 +299,103 @@ elseif($postjson['aksi']=='getdatashipped'){
     if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
       else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
     echo $result;
+  }
+
+  // get all today sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  elseif($postjson['aksi']=='getsumalltoday'){
+    $today = date('Y-m-d');
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
+    FROM order_table
+    WHERE tarikh_order ='$today'");
+
+  	$countresult = mysqli_fetch_array($query); 
+    $data[] = array(
+      'sum' => $countresult['mycount']
+    );
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    echo $result;
+  }
+
+  // get month sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  elseif($postjson['aksi']=='getsumallmonth'){
+    $data = array();
+   
+    $monthnow = date('m');
+    $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
+    FROM order_table
+    WHERE month ='$monthnow'");
+
+  	$countresult = mysqli_fetch_array($query); 
+    $data[] = array(
+      'sum' => $countresult['mycount']
+    );
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    echo $result;
+  }
+
+   // get month sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   elseif($postjson['aksi']=='getsumsalesmonth'){
+    $data = array();
+    $username =  $postjson['username'];
+    $monthnow = date('m');
+    $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
+    FROM order_table
+    WHERE month ='$monthnow' AND sales='$username'");
+
+  	$countresult = mysqli_fetch_array($query); 
+    $data[] = array(
+      'sum' => $countresult['mycount']
+    );
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    echo $result;
+  }
+
+
+   // graph month admin///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   elseif($postjson['aksi']=='getgraphmonth'){
+    $data = array();
+
+    $query = mysqli_query($mysqli, "SELECT jumlah_bayaran,month FROM order_table ORDER BY month ASC");
+  
+    while($row = mysqli_fetch_array($query)){
+      $data[] = array(
+        'month' => $row['month'],
+        'jumlah_bayaran' => $row['jumlah_bayaran']
+      );
+    }
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+
+  }
+
+  // graph month team sales ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  elseif($postjson['aksi']=='getgraphmonthsales'){
+    $data = array();
+    $username =  $postjson['username'];
+    $query = mysqli_query($mysqli, "SELECT jumlah_bayaran,month FROM order_table WHERE sales='$username' ORDER BY month ASC");
+  
+    while($row = mysqli_fetch_array($query)){
+      $data[] = array(
+        'month' => $row['month'],
+        'jumlah_bayaran' => $row['jumlah_bayaran']
+      );
+    }
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+
   }
  //get sum prod///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -278,6 +414,8 @@ elseif($postjson['aksi']=='getdatashipped'){
   echo $result;
 
 }
+
+
 //get sum ship///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 elseif($postjson['aksi']=='getsumship'){

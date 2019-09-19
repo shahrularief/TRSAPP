@@ -27,6 +27,7 @@
 
   <ion-grid>
     <ion-row>
+
       <ion-col>
         <ion-card color="primary">
           <ion-card-content *ngFor="let sumTotal of totalsum">
@@ -38,18 +39,44 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
+
       <ion-col>
-        <ion-card color="primary">
-          <ion-card-content *ngFor="let sumTotal of totalsum">
+        <ion-card color="tertiary">
+          <ion-card-content *ngFor="let today of todaysum">
             <div class="ion-text-center">
               <h2>Sales Today</h2>
               <br>
-              RM {{ sumTotal.sum}}
+              RM {{ today.sum}}
             </div>
           </ion-card-content>
         </ion-card>
       </ion-col>
+
+      <ion-col>
+          <ion-card color="warning">
+            <ion-card-content *ngFor="let month of monthsum">
+              <div class="ion-text-center">
+                <h2>This Month</h2>
+                <br>
+                RM {{ month.sum}}
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
     </ion-row>
+  </ion-grid>
+
+  <ion-grid>
+      <ion-card>
+          <ion-card-header>
+            <ion-label>
+                Total Sale Performance
+            </ion-label>
+          </ion-card-header>
+          <ion-card-content>
+            <canvas #lineCanvas></canvas>
+          </ion-card-content>
+        </ion-card>
   </ion-grid>
 
 </ion-content>
