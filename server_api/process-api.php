@@ -397,6 +397,86 @@ elseif($postjson['aksi']=='getdatashipped'){
     echo $result;
 
   }
+
+   // graph month product admin///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   elseif($postjson['aksi']=='getgraphmonthbyproduct'){
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT jumlah_bayaran,month,produk FROM order_table ORDER BY produk ASC");
+  
+    while($row = mysqli_fetch_array($query)){
+      $data[] = array(
+        'month' => $row['month'],
+        'produk' => $row['produk'],
+        'jumlah_bayaran' => $row['jumlah_bayaran']
+      );
+    }
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+
+  }
+  
+ // graph product sold SALES  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ elseif($postjson['aksi']=='getgraphproductsold'){
+  $data = array();
+  $username =  $postjson['username'];
+  $query = mysqli_query($mysqli, "SELECT jumProduk,month FROM order_table WHERE sales='$username'ORDER BY month ASC");
+
+  while($row = mysqli_fetch_array($query)){
+    $data[] = array(
+      'month' => $row['month'],
+      'jumProduk' => $row['jumProduk']
+    );
+  }
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+  else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+  echo $result;
+
+}
+// graph product sold SALES  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+elseif($postjson['aksi']=='getgraphproductsoldall'){
+  $data = array();
+  
+  $query = mysqli_query($mysqli, "SELECT jumProduk,month FROM order_table ORDER BY month ASC");
+
+  while($row = mysqli_fetch_array($query)){
+    $data[] = array(
+      'month' => $row['month'],
+      'jumProduk' => $row['jumProduk']
+    );
+  }
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+  else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+  echo $result;
+
+}
+
+  // graph TEAM admin///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  elseif($postjson['aksi']=='getgraphmonthbyteam'){
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT jumlah_bayaran,month,sales_team FROM order_table ORDER BY sales_team ASC");
+  
+    while($row = mysqli_fetch_array($query)){
+      $data[] = array(
+        'month' => $row['month'],
+        'sales_team' => $row['sales_team'],
+        'jumlah_bayaran' => $row['jumlah_bayaran']
+      );
+    }
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+
+  }
+
  //get sum prod///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
  elseif($postjson['aksi']=='getsumproduction'){
@@ -751,6 +831,61 @@ elseif($postjson['aksi']=='getchoosenproductAcc'){
   echo $result;
 }
 
+// get sales ranking///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getrankingsales'){
+  $data = array();
+  $salesteam=$postjson['sales_team'];
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran FROM order_table WHERE sales_team='$salesteam' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
 
+  while($row = mysqli_fetch_array($query)){
+    $data[] = array(
+      'sales' => $row['sales'],
+      'jumlah_bayaran' => $row['jumlah_bayaran']
+    );
+  }
 
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+
+  }
+  
+  // get sales ranking all///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getrankingall'){
+  $data = array();
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+
+  while($row = mysqli_fetch_array($query)){
+    $data[] = array(
+      'sales' => $row['sales'],
+      'jumProduk' => $row['jumProduk'],
+      'jumlah_bayaran' => $row['jumlah_bayaran']
+    );
+  }
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+  }
+
+  // DISPLAY Shipping Dashboard///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getshippingdashboard'){
+  $data = array();
+  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS jumProduk, (COUNT(nama_pelanggan)) AS Total FROM order_table WHERE pengesahan='shipping' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
+
+  while($row = mysqli_fetch_array($query)){
+    $data[] = array(
+      'jumProduk' => $row['jumProduk'],
+      'Total' => $row['Total']
+    );
+  }
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+  	else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+  	echo $result;
+
+  }
 ?>

@@ -53,30 +53,147 @@
       </ion-col>
 
       <ion-col>
-          <ion-card color="warning">
-            <ion-card-content *ngFor="let month of monthsum">
-              <div class="ion-text-center">
-                <h2>This Month</h2>
-                <br>
-                RM {{ month.sum}}
-              </div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
+        <ion-card color="warning">
+          <ion-card-content *ngFor="let month of monthsum">
+            <div class="ion-text-center">
+              <h2>This Month</h2>
+              <br>
+              RM {{ month.sum}}
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
     </ion-row>
   </ion-grid>
 
   <ion-grid>
-      <ion-card>
+    <ion-row>
+      <ion-col *ngIf="showSale">
+        <ion-card>
           <ion-card-header>
             <ion-label>
-                Total Sale Performance
+              Total Sale Performance
             </ion-label>
           </ion-card-header>
           <ion-card-content>
-            <canvas #lineCanvas></canvas>
+            <canvas #lineCanvas ></canvas>
           </ion-card-content>
         </ion-card>
+      </ion-col>
+      <ion-col *ngIf="showAdmin">
+        <ion-card>
+          <ion-card-header>
+            <ion-label>
+              Total Sale By Product
+            </ion-label>
+          </ion-card-header>
+          <ion-card-content>
+
+            <canvas #barCanvasP ></canvas>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 
+
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngIf="showAdmin">
+        <ion-card>
+          <ion-card-header>
+            <ion-label>
+              Total Sale By Team
+            </ion-label>
+          </ion-card-header>
+          <ion-card-content>
+
+            <canvas #barCanvasT width="100" height="50"></canvas>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col *ngIf="showSale">
+        <ion-card>
+          <ion-card-header>
+            Sales Ranking
+          </ion-card-header>
+          <ion-card-content>
+            <table>
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Sale(RM)</th>
+                  <th>Unit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let name of ranking">
+                  <td>
+                    <ion-text>{{name.sales}}</ion-text>
+                  </td>
+                  <td>
+                    <ion-text>{{name.jumlah_bayaran}}</ion-text>
+                  </td>
+                  <td>
+                    <ion-text>{{name.jumProduk}}</ion-text>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+
+
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngIf="showSale">
+        <ion-card>
+          <ion-card-header>
+            <ion-label>
+              Total Unit Sold
+            </ion-label>
+          </ion-card-header>
+          <ion-card-content>
+            <canvas #lineCanvasProductSold></canvas>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col *ngIf="showProd">
+        <ion-card>
+          <ion-card-header>
+            Shipping Transaction
+          </ion-card-header>
+          <ion-card-content>
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Unit</th>
+                  <th>Customer</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let sdb of shippingdashboard">
+                  <td>
+                    <ion-text>Total</ion-text>
+                  </td>
+                  <td>
+                    <ion-text>{{sdb.jumProduk}}</ion-text>
+                  </td>
+                  <td>
+                    <ion-text>{{sdb.Total}}</ion-text>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
 </ion-content>
