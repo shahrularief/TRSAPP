@@ -1,0 +1,121 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-menu-button slot="start"></ion-menu-button>
+    <ion-title>Performance</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+    
+        <ion-slides [options]="slider1">
+            <ion-slide>
+              
+                <ion-card>
+                    <table>
+                        <thead>
+                          <tr>
+                            <th>Nama</th>
+                            <th colspan="2">Daily</th>
+                           
+                          </tr>
+                          <tr>
+                            <th></th>
+                            <th>Sales</th>
+                            <th>Unit</th>
+                          
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let name of ranking">
+                            <td>
+                              <ion-text>{{name.sales_team}}</ion-text>
+                            </td>
+                            <td>
+                              <ion-text>{{name.jumlah_bayaran}}</ion-text>
+                            </td>
+                            <td>
+                              <ion-text>{{name.jumProduk}}</ion-text>
+                            </td>
+                            
+                          </tr>
+                        </tbody>
+                      </table>
+                </ion-card>
+          
+            </ion-slide>
+            <ion-slide>
+              
+                <ion-card>
+                    <table>
+                        <thead>
+                          <tr>
+                            <th>Nama</th>
+                            <th colspan="2">Weekly</th>
+                           
+                          </tr>
+                          <tr>
+                            <th></th>
+                            <th>Sales</th>
+                            <th>Unit</th>
+                          
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let name of rankingW">
+                            <td>
+                              <ion-text>{{name.sales_team}}</ion-text>
+                            </td>
+                            <td>
+                              <ion-text>{{name.jumlah_bayaran}}</ion-text>
+                            </td>
+                            <td>
+                              <ion-text>{{name.jumProduk}}</ion-text>
+                            </td>
+                            
+                          </tr>
+                        </tbody>
+                      </table>
+                </ion-card>
+          
+            </ion-slide>
+            <ion-slide>
+              
+                <ion-card>
+                    <table>
+                        <thead>
+                          <tr>
+                            <th>Nama</th>
+                            <th colspan="2">Monthly</th>
+                           
+                          </tr>
+                          <tr>
+                            <th></th>
+                            <th>Sales</th>
+                            <th>Unit</th>
+                          
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let name of rankingM">
+                            <td>
+                              <ion-text>{{name.sales_team}}</ion-text>
+                            </td>
+                            <td>
+                              <ion-text>{{name.jumlah_bayaran}}</ion-text>
+                            </td>
+                            <td>
+                              <ion-text>{{name.jumProduk}}</ion-text>
+                            </td>
+                            
+                          </tr>
+                        </tbody>
+                      </table>
+                </ion-card>
+          
+            </ion-slide>
+          </ion-slides>
+
+</ion-content>

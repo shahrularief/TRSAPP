@@ -16,20 +16,11 @@ const routes: Routes = [
   {
     path: 'new-order',
     loadChildren: './orders/new-order/new-order.module#NewOrderPageModule',
-    // canActivate: [AuthGuard],
-    // data: {
-    //   role: 'TEAM SALES'
-    // }
   },
 
   {
     path: 'rekod-order',
     loadChildren: './orders/rekod-order/rekod-order.module#RekodOrderPageModule',
-    // canActivate: [AuthGuard],
-    // data: {
-    //   role: 'BOD'
-    // }
-
   },
 
 
@@ -49,6 +40,8 @@ const routes: Routes = [
   { path: 'stock', loadChildren: './prod/stock/stock.module#StockPageModule' },
   { path: 'company', loadChildren: './admin/company/company.module#CompanyPageModule' },
   { path: 'viewcompany', loadChildren: './admin/viewcompany/viewcompany.module#ViewcompanyPageModule' },
+  { path: 'salesteam', loadChildren: './admin/salesteam/salesteam.module#SalesteamPageModule' },
+  { path: 'salesmember', loadChildren: './admin/salesmember/salesmember.module#SalesmemberPageModule' },
 
 
 

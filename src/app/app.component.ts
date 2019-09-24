@@ -83,6 +83,15 @@ export class AppComponent {
     //   url: '/company',
     //   icon: 'business'
     // },
+    // {
+    //   title: 'Sales by Team',
+    //   url: '/team',
+    //   icon: 'business'
+    // },
+  ];
+
+  public appPerform = [
+  
   ];
 
   constructor(
@@ -135,15 +144,15 @@ export class AppComponent {
             icon: 'cart'
           },
         ];
-
+        this.appPerform = [];
         this.appAccount = [];
         this.appProduction = [];
         this.appAdmin = [];
 
       } else if (res !== null && this.role === 'ACCOUNT') {
-        this.router.navigate(['/account-verify']);
+        this.router.navigate(['/home']);
         this.appSales = [];
-
+        this.appPerform = [];
         this.appAccount = [{
           title: 'Pengesahan',
           url: '/account-verify',
@@ -155,16 +164,13 @@ export class AppComponent {
           icon: 'train'
         },
         ];
-        this.appProduction = [{
-          title: 'Production',
-          url: '/production',
-          icon: 'cube'
-        },
+        this.appProduction = [
         ];
         this.appAdmin = [];
 
       } else if (res !== null && this.role === 'PRODUCTION') {
-        this.router.navigate(['/production']);
+        this.router.navigate(['/home']);
+        this.appPerform = [];
         this.appSales = [
           {
             title: 'Tempahan Baru',
@@ -201,6 +207,7 @@ export class AppComponent {
 
       } else if (res !== null && this.role === 'CEO' || this.role === 'BOD') {
         this.router.navigate(['/home']);
+        
         this.appSales = [
           {
             title: 'Tempahan Baru',
@@ -214,6 +221,17 @@ export class AppComponent {
           },
         ];
 
+        this.appPerform = [ {
+          title: 'Sales by Team',
+          url: '/salesteam',
+          icon: 'people'
+        },
+        {
+          title: 'Sales by Member',
+          url: '/salesmember',
+          icon: 'group'
+        },
+      ];
         this.appAccount = [
           {
             title: 'Pengesahan',

@@ -1,0 +1,26 @@
+table{ 
+    width: 100%; 
+    border-collapse: collapse; 
+    font-size: 10pt;
+   }
+   tr:nth-of-type(odd) { 
+    background: #eee; 
+   }
+   th { 
+    background: #0D6FB1; 
+    color: white; 
+    font-weight: bold; 
+   }
+   td, th { 
+    padding: 6px; 
+    border: 1px solid #ccc; 
+    text-align: center; 
+   }
+   canvas{
+  
+    width:100% !important;
+    height:25% !important;
+  }
+  .vertical{
+    display:block;
+   }

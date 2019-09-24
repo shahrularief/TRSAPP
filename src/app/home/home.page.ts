@@ -27,9 +27,12 @@ export class HomePage implements OnInit {
   showAdmin: boolean = false;
   showProd: boolean = false;
   showSale: boolean = false;
+  showAcc: boolean = false;
+
   username: string;
   users: any;
   team: string;
+
   totalsum: any[];
   todaysum: any[];
   monthsum: any[];
@@ -51,14 +54,18 @@ export class HomePage implements OnInit {
   role: string;
   salesranking: any[];
   ranking: any[];
+  ranksales:any[];
   nameranking: any[];
   allranking: any[];
   rankingall: any[];
   shippingdashboard: any[];
+  unverifiedprod: any[];
+  unverifys: any[];
 
   limit = 13; // LIMIT GET PERDATA
   start = 0;
   customers: any = [];
+  
   constructor(
     private postPrvdr: PostProvider,
     private storage: Storage,
@@ -97,6 +104,9 @@ export class HomePage implements OnInit {
     this.rankingall = [];
     this.nameranking = [];
     this.shippingdashboard = [];
+    this.unverifiedprod = [];
+    this.unverifys = [];
+    this.ranksales = [];
     this.storage.get(TOKEN_KEY).then((res) => {
       this.users = res;
       this.username = this.users.username;
@@ -143,9 +153,12 @@ export class HomePage implements OnInit {
       this.loadMonthGraphByProductSoldALL();
       this.loadAllShipping();
     } else if (this.role === 'ACCOUNT') {
-
-    }else if (this.role === 'PRODUCTION') {
-
+      this.showAcc = true;
+      this.loadUnverifyAcc();
+    } else if (this.role === 'PRODUCTION') {
+      this.showProd = true;
+      this.loadUnverifyProduction();
+      this.loadAllShipping();
     }
 
   }
@@ -181,7 +194,6 @@ export class HomePage implements OnInit {
       });
     });
   }
-
   loadAllMonthSale() {
     return new Promise(resolve => {
       const body = {
@@ -499,7 +511,6 @@ export class HomePage implements OnInit {
 
 
   }
-
   loadAllSalesRanking() {
     return new Promise(resolve => {
       const body = {
@@ -517,12 +528,12 @@ export class HomePage implements OnInit {
         let ranking = [];
 
         this.salesranking.forEach(function (a) {
-          if (!this[a.sales]) {
-            this[a.sales] = { sales: a.sales, jumlah_bayaran: 0, jumProduk: 0 };
-            ranking.push(this[a.sales]);
+          if (!this[a.sales_team]) {
+            this[a.sales_team] = { sales_team: a.sales_team, jumlah_bayaran: 0, jumProduk: 0 };
+            ranking.push(this[a.sales_team]);
           }
-          this[a.sales].jumlah_bayaran += +a.jumlah_bayaran;
-          this[a.sales].jumProduk += +a.jumProduk;
+          this[a.sales_team].jumlah_bayaran += +a.jumlah_bayaran;
+          this[a.sales_team].jumProduk += +a.jumProduk;
         }, Object.create(null));
         console.log('ranking', ranking);
         this.ranking = ranking.concat();
@@ -852,21 +863,64 @@ export class HomePage implements OnInit {
         }
         resolve(true);
         console.log('sales:' + this.salesranking);
-        let ranking = [];
+        let ranksales = [];
 
         this.salesranking.forEach(function (a) {
           if (!this[a.sales]) {
-            this[a.sales] = { sales: a.sales, jumlah_bayaran: 0 };
-            ranking.push(this[a.sales]);
+            this[a.sales] = { sales: a.sales, jumProduk: 0, jumlah_bayaran: 0 };
+            ranksales.push(this[a.sales]);
           }
           this[a.sales].jumlah_bayaran += +a.jumlah_bayaran;
+          this[a.sales].jumProduk += +a.jumProduk;
         }, Object.create(null));
-        console.log('ranking', ranking);
-        this.ranking = ranking.concat();
-        this.ranking.sort(function (a, b) {
+        console.log('ranking', ranksales);
+        this.ranksales = ranksales.concat();
+        this.ranksales.sort(function (a, b) {
           return b.jumlah_bayaran - a.jumlah_bayaran;
         });
-        console.log('Nranking', this.ranking);
+        console.log('Nranking', this.ranksales);
+
+      });
+    });
+  }
+
+  //PROOOOODUCTIOOON
+
+  loadUnverifyProduction() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getunverifyproduction',
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {
+        for (const verify of Cresult.result) {
+          this.unverifiedprod.push(verify);
+          console.log('unverified items production:' + this.unverifiedprod);
+        }
+        resolve(true);
+
+      });
+    });
+  }
+
+  //ACOOUUNNTTT
+
+  loadUnverifyAcc() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getunverify',
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {
+        for (const verify of Cresult.result) {
+          this.unverifys.push(verify);
+          console.log('unverified items:' + this.unverifys);
+        }
+        resolve(true);
 
       });
     });
