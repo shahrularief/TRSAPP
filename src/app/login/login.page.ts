@@ -13,7 +13,15 @@ import { MenuController } from '@ionic/angular';
 export class LoginPage implements OnInit {
   loginsegment: string;
   avatarimage: any;
-
+  slider1 = {
+    initialSlide: 0,
+    slidesPerView: 1,
+    spaceBetween: 0,
+    centeredSlides: true,
+    autoplay: {
+      delay: 5000,
+    },
+  };
   user = {
     username: '',
     password: '',
