@@ -27,21 +27,12 @@ export class SalesteamPage implements OnInit {
     slidesPerView: 1,
     spaceBetween: 0,
     centeredSlides: true,
-
-   
   };
  
   constructor(
     private postPrvdr: PostProvider,
     private storage: Storage,
   ) {
-
-    this.sliderOne =
-      {
-        isBeginningSlide: true,
-        isEndSlide: false,
-        slidesItems: this.ranking,
-      };
   }
 
   ngOnInit() {

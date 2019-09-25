@@ -48,9 +48,8 @@
       <ion-item>
         <ion-label position="floating">Syarikat</ion-label>
         <ion-select placeholder="company" type="text" [(ngModel)]="company">
-          <ion-select-option value="LUMI ACTIVE">LUMI ACTIVE</ion-select-option>
-          <ion-select-option value="DERIN BEAUTY">DERIN BEAUTY</ion-select-option>
-          <ion-select-option value="2H LEGACY">2H LEGACY</ion-select-option>
+            <ion-select-option *ngFor="let td of teams" [value]="td.compName">{{ td.compName }}</ion-select-option>
+
         </ion-select>
       </ion-item>
 
@@ -136,9 +135,8 @@
         <ion-item>
           <ion-label position="floating">Syarikat</ion-label>
           <ion-select placeholder="company" type="text" [(ngModel)]="sales_company">
-            <ion-select-option value="LUMI ACTIVE">LUMI ACTIVE</ion-select-option>
-            <ion-select-option value="DERIN BEAUTY">DERIN BEAUTY</ion-select-option>
-            <ion-select-option value="2H LEGACY">2H LEGACY</ion-select-option>
+              <ion-select-option *ngFor="let td of teams" [value]="td.compName">{{ td.compName }}</ion-select-option>
+
           </ion-select>
         </ion-item>
 

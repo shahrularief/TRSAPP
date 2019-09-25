@@ -229,7 +229,7 @@ export class AppComponent {
         {
           title: 'Sales by Member',
           url: '/salesmember',
-          icon: 'group'
+          icon: 'body'
         },
       ];
         this.appAccount = [

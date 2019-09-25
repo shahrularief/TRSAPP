@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { PostProvider } from '../../../providers/post-provider';
-
+import { IonSlides } from '@ionic/angular';
 const TOKEN_KEY = 'user-access-token';
 
 @Component({
@@ -16,8 +16,18 @@ export class SalesmemberPage implements OnInit {
   rankingW: any[];
   salesrankingM: any[];
   rankingM: any[];
+  teams: any[];
+  salesteam: string;
   limit = 13; // LIMIT GET PERDATA
   start = 0;
+
+  slider1 = {
+    initialSlide: 0,
+    slidesPerView: 1,
+    spaceBetween: 0,
+    centeredSlides: true,
+  };
+
   constructor(
     private postPrvdr: PostProvider,
     private storage: Storage, ) { }
@@ -31,14 +41,17 @@ export class SalesmemberPage implements OnInit {
     this.rankingW = [];
     this.salesrankingM = [];
     this.rankingM = [];
-    this.loadSalesRankToday();
-    this.loadSalesRankWeekly();
-    this.loadSalesRankMonthly();
+    this.teams = [];
+    this.loadTeam();
   }
-  loadSalesRankToday() {
+  loadSalesRankToday(ev: CustomEvent) {
+    this.clearArrayCustT();
+    let val = ev.detail.value;
+
     return new Promise(resolve => {
       const body = {
-        aksi: 'getrankingteamdaily',
+        aksi: 'getrankingmemberstoday',
+        sales_team: val,
         limit: this.limit,
         start: this.start,
       };
@@ -52,12 +65,12 @@ export class SalesmemberPage implements OnInit {
         let ranking = [];
 
         this.salesranking.forEach(function (a) {
-          if (!this[a.sales_team]) {
-            this[a.sales_team] = { sales_team: a.sales_team, jumlah_bayaran: 0, jumProduk: 0 };
-            ranking.push(this[a.sales_team]);
+          if (!this[a.sales]) {
+            this[a.sales] = { sales: a.sales, jumlah_bayaran: 0, jumProduk: 0 };
+            ranking.push(this[a.sales]);
           }
-          this[a.sales_team].jumlah_bayaran += +a.jumlah_bayaran;
-          this[a.sales_team].jumProduk += +a.jumProduk;
+          this[a.sales].jumlah_bayaran += +a.jumlah_bayaran;
+          this[a.sales].jumProduk += +a.jumProduk;
         }, Object.create(null));
         console.log('ranking', ranking);
         this.ranking = ranking.concat();
@@ -70,10 +83,15 @@ export class SalesmemberPage implements OnInit {
     });
   }
 
-  loadSalesRankWeekly() {
+  loadSalesRankWeekly(ev: CustomEvent) {
+    this.clearArrayCustW();
+    let val = ev.detail.value;
+
     return new Promise(resolve => {
       const body = {
-        aksi: 'getrankingteamweekly',
+        aksi: 'getrankingmembersweekly',
+        sales_team: val,
+
         limit: this.limit,
         start: this.start,
       };
@@ -87,12 +105,12 @@ export class SalesmemberPage implements OnInit {
         let rankingW = [];
 
         this.salesrankingW.forEach(function (a) {
-          if (!this[a.sales_team]) {
-            this[a.sales_team] = { sales_team: a.sales_team, jumlah_bayaran: 0, jumProduk: 0 };
-            rankingW.push(this[a.sales_team]);
+          if (!this[a.sales]) {
+            this[a.sales] = { sales: a.sales, jumlah_bayaran: 0, jumProduk: 0 };
+            rankingW.push(this[a.sales]);
           }
-          this[a.sales_team].jumlah_bayaran += +a.jumlah_bayaran;
-          this[a.sales_team].jumProduk += +a.jumProduk;
+          this[a.sales].jumlah_bayaran += +a.jumlah_bayaran;
+          this[a.sales].jumProduk += +a.jumProduk;
         }, Object.create(null));
         console.log('ranking', rankingW);
         this.rankingW = rankingW.concat();
@@ -105,10 +123,15 @@ export class SalesmemberPage implements OnInit {
     });
   }
 
-  loadSalesRankMonthly() {
+  loadSalesRankMonthly(ev: CustomEvent) {
+    this.clearArrayCustM();
+    let val = ev.detail.value;
+
     return new Promise(resolve => {
       const body = {
-        aksi: 'getrankingteammonthly',
+        aksi: 'getrankingmembersmonthly',
+        sales_team: val,
+
         limit: this.limit,
         start: this.start,
       };
@@ -122,12 +145,12 @@ export class SalesmemberPage implements OnInit {
         let rankingM = [];
 
         this.salesrankingM.forEach(function (a) {
-          if (!this[a.sales_team]) {
-            this[a.sales_team] = { sales_team: a.sales_team, jumlah_bayaran: 0, jumProduk: 0 };
-            rankingM.push(this[a.sales_team]);
+          if (!this[a.sales]) {
+            this[a.sales] = { sales: a.sales, jumlah_bayaran: 0, jumProduk: 0 };
+            rankingM.push(this[a.sales]);
           }
-          this[a.sales_team].jumlah_bayaran += +a.jumlah_bayaran;
-          this[a.sales_team].jumProduk += +a.jumProduk;
+          this[a.sales].jumlah_bayaran += +a.jumlah_bayaran;
+          this[a.sales].jumProduk += +a.jumProduk;
         }, Object.create(null));
         console.log('ranking', rankingM);
         this.rankingM = rankingM.concat();
@@ -139,4 +162,36 @@ export class SalesmemberPage implements OnInit {
       });
     });
   }
+
+  clearArrayCustT() {
+    this.salesranking = [];
+  }
+  clearArrayCustW() {
+    this.salesrankingW.length = 0;
+  
+  }
+  clearArrayCustM() {
+    this.salesrankingM = [];
+  }
+
+  loadTeam() {
+    return new Promise(resolve => {
+      let body = {
+        aksi: 'getcompany',
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (let comp of data.result) {
+          this.teams.push(comp);
+          
+
+        }
+        console.log(this.teams);
+        resolve(true);
+      });
+    });
+  }
+
 }

@@ -70,7 +70,56 @@
 
     echo $result;
   }
+  
+   /////ADD COMPANY/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   elseif($postjson['aksi']=="addcompany"){
+    $startdate =date('Y-m-d');
+    $enddate =date('Y-m-d', strtotime('+1 month'));
+    echo $startdate;
+    echo $enddate;
 
+    $query = mysqli_query($mysqli, "INSERT INTO company_table SET
+      compName	 = '$postjson[compname]',
+      compReg	 = '$postjson[compreg]',
+      compAddr	 = '$postjson[compaddr]',
+      compCity	 = '$postjson[compcity]',
+      compPostcode = '$postjson[comppostcode]',
+      compState = '$postjson[compstate]',
+      compHP = '$postjson[comphp]',
+      compMonthS = '$startdate',
+      compMonthE = '$enddate'
+    ");
+
+    if($query) $result = json_encode(array('success'=>true));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+  }
+
+    // get company///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    elseif($postjson['aksi']=='getcompany'){
+      $data = array();
+      $query = mysqli_query($mysqli, "SELECT * FROM company_table ORDER BY compName DESC LIMIT $postjson[start],$postjson[limit]");
+    
+      while($row = mysqli_fetch_array($query)){
+        $data[] = array(
+          'compName' => $row['compName'],
+          'compReg' => $row['compReg'],
+          'compAddr' => $row['compAddr'],
+          'compCity' => $row['compCity'],
+          'compPostcode' => $row['compPostcode'],
+          'compHP' => $row['compHP'],
+          'compMonthS' => $row['compMonthS'],
+          'compMonthE' => $row['compMonthE']
+        );
+      }
+    
+      if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+        else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    
+        echo $result;
+    
+      }
   ///// DISPLAY DATA UNVERIFIED///////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=='getdataunverified'){
   $data = array();
@@ -873,9 +922,13 @@ elseif($postjson['aksi']=='getrankingall'){
   }
 // get sales ranking by team daily ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getrankingteamdaily'){
+
+  $month = date('m');
+  $year = date('Y');
+  $week = date('W');
   $datetoday = date('d');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales_team,jumlah_bayaran,jumProduk FROM order_table WHERE day='$datetoday' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT sales_team,jumlah_bayaran,jumProduk FROM order_table WHERE day='$datetoday' AND week='$week' AND month='$month' AND year='$year' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -893,9 +946,12 @@ elseif($postjson['aksi']=='getrankingteamdaily'){
 
   // get sales ranking by team weekly///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getrankingteamweekly'){
+ 
+  $month = date('m');
+  $year = date('Y');
   $weeknow = date('W');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales_team,jumlah_bayaran,jumProduk FROM order_table WHERE week='$weeknow' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT sales_team,jumlah_bayaran,jumProduk FROM order_table WHERE week='$weeknow' AND month='$month' AND year='$year' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -913,13 +969,85 @@ elseif($postjson['aksi']=='getrankingteamweekly'){
 
    // get sales ranking by team MONTHLY///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getrankingteammonthly'){
+
+  $year = date('Y');
   $monthnow = date('m');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales_team,jumlah_bayaran,jumProduk FROM order_table WHERE month='$monthnow' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT sales_team,jumlah_bayaran,jumProduk FROM order_table WHERE month='$monthnow' AND year='$year' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
       'sales_team' => $row['sales_team'],
+      'jumProduk' => $row['jumProduk'],
+      'jumlah_bayaran' => $row['jumlah_bayaran']
+    );
+  }
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+  }
+
+ // get sales ranking by members today ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ elseif($postjson['aksi']=='getrankingmemberstoday'){
+  $day = date('d');
+  $month = date('m');
+  $year = date('Y');
+  $week = date('W');
+  $salesteam = $postjson['sales_team'];
+  $data = array();
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE day='$day' AND week='$week' AND month='$month' AND year='$year' AND sales_team='$salesteam' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+
+  while($row = mysqli_fetch_array($query)){
+    $data[] = array(
+      'sales' => $row['sales'],
+      'jumProduk' => $row['jumProduk'],
+      'jumlah_bayaran' => $row['jumlah_bayaran']
+    );
+  }
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+  }
+
+  // get sales ranking by members weekly ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ elseif($postjson['aksi']=='getrankingmembersweekly'){
+  $month = date('m');
+  $year = date('Y');
+  $week = date('W');
+  $salesteam = $postjson['sales_team'];
+  $data = array();
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE week='$week' AND month='$month' AND year='$year' AND sales_team='$salesteam' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+
+  while($row = mysqli_fetch_array($query)){
+    $data[] = array(
+      'sales' => $row['sales'],
+      'jumProduk' => $row['jumProduk'],
+      'jumlah_bayaran' => $row['jumlah_bayaran']
+    );
+  }
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+  }
+
+   // get sales ranking by members monthly ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ elseif($postjson['aksi']=='getrankingmembersmonthly'){
+  $month = date('m');
+  $year = date('Y');
+  
+  $salesteam = $postjson['sales_team'];
+  $data = array();
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE month='$month' AND year='$year' AND sales_team='$salesteam' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+
+  while($row = mysqli_fetch_array($query)){
+    $data[] = array(
+      'sales' => $row['sales'],
       'jumProduk' => $row['jumProduk'],
       'jumlah_bayaran' => $row['jumlah_bayaran']
     );

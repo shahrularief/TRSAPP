@@ -15,19 +15,19 @@ View companies
     <ion-card-content>
         <ion-card-title> Company Information</ion-card-title>
       <ion-item>
-        <ion-label position="floating">
+        <ion-label position="floating" >
           Company Name
         </ion-label>
 
-        <ion-input type="text"></ion-input>
+        <ion-input type="text" [(ngModel)]="compname"></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label position="floating">
+        <ion-label position="floating" >
           Registration Number
         </ion-label>
 
-        <ion-input type="text"></ion-input>
+        <ion-input type="text" [(ngModel)]="compreg"></ion-input>
 
       </ion-item>
       <ion-item>
@@ -35,58 +35,36 @@ View companies
           Address
         </ion-label>
 
-        <ion-input type="text"></ion-input>
+        <ion-input type="text"  [(ngModel)]="compaddr"></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label position="floating">
+        <ion-label position="floating" >
           City
         </ion-label>
 
-        <ion-input type="text"></ion-input>
+        <ion-input type="text" [(ngModel)]="compcity"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">
+        <ion-label position="floating" >
           Postcode </ion-label>
 
-        <ion-input type="text"></ion-input>
+        <ion-input type="text" [(ngModel)]="comppostcode"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">
+        <ion-label position="floating" >
           State
         </ion-label>
 
-        <ion-input type="text"></ion-input>
+        <ion-input type="text" [(ngModel)]="compstate"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">
+        <ion-label position="floating" >
           Telephone Number
         </ion-label>
-
-        <ion-input type="text"></ion-input>
+        <ion-input type="text" [(ngModel)]="comphp"></ion-input>
       </ion-item>
-      <ion-item>
-        <ion-label position="floating">
-          Monthly Cycle (Start)
-        </ion-label>
-        <ion-input type="number"></ion-input>
-        <ion-input type="number"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">
-          Monthly Cycle (End)
-        </ion-label>
-        <ion-input type="number"></ion-input>
-        <ion-input type="number"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">
-          Consider Debtor as Sales and Unit Sold?
-        </ion-label>
-
-        <ion-input type="text"></ion-input>
-      </ion-item>
-
+    
     </ion-card-content>
   </ion-card>
 

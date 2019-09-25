@@ -18,6 +18,15 @@ export class HomePage implements OnInit {
   @ViewChild('barCanvasT') barCanvasT: ElementRef;
   @ViewChild('barCanvasP') barCanvasP: ElementRef;
 
+  slider1 = {
+    initialSlide: 0,
+    slidesPerView: 1,
+    spaceBetween: 0,
+    centeredSlides: true,
+    autoplay: {
+      delay: 5000,
+    },
+  };
 
   private barChartT: Chart;
   private barChartP: Chart;
@@ -152,6 +161,7 @@ export class HomePage implements OnInit {
       this.loadAllSalesRanking();
       this.loadMonthGraphByProductSoldALL();
       this.loadAllShipping();
+      this.loadTeamSales();
     } else if (this.role === 'ACCOUNT') {
       this.showAcc = true;
       this.loadUnverifyAcc();

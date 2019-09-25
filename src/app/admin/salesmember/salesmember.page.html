@@ -8,127 +8,148 @@
 
 
 <ion-content>
-  <ion-card>
-    <ion-card-header>
-      Today Team Sales Ranking
-    </ion-card-header>
-    <ion-card-content>
-      <table>
-        <thead>
-          <tr>
-              <th>Nama</th>
-              <th colspan="2">Daily</th>
-             
-            </tr>
-            <tr>
-              <th></th>
-              <th>Sales</th>
-              <th>Unit</th>
-            
-            </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let name of ranking">
-            <td>
-              <ion-text>{{name.sales_team}}</ion-text>
-            </td>
-            <td>
-              <ion-text>{{name.jumlah_bayaran}}</ion-text>
-            </td>
-            <td>
-              <ion-text>{{name.jumProduk}}</ion-text>
-            </td>
-            
-          </tr>
 
-          <tr *ngFor="let name of ranking">
-              <td>
-                <ion-text>{{name.sales_team}}</ion-text>
-              </td>
-              <td>
-                <ion-text>{{name.jumlah_bayaran}}</ion-text>
-              </td>
-              <td>
-                <ion-text>{{name.jumProduk}}</ion-text>
-              </td>
+  <h1> Sales Performance by Members</h1>
+  <ion-row>
+      <ion-item>
+          <ion-label position="floating"> Team </ion-label>
+         
+          <ion-select placeholder="Pilih team" type="text" (ionChange)="loadSalesRankWeekly($event)" (ionChange)="loadSalesRankToday($event)" (ionChange)="loadSalesRankMonthly($event)">
+              <ion-select-option *ngFor="let td of teams" [value]="td.compName">{{ td.compName }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+  </ion-row>
+ 
+        <ion-slides [options]="slider1">
+         
+          <ion-slide>
+              <ion-grid>
+                <ion-row>
+                  <ion-label>Today Performance</ion-label>
+                </ion-row>
+                <ion-row> 
+                    <ion-card>
+                        <table>
+                            <thead>
+                              <tr>
+                                <th>Nama</th>
+                                <th colspan="2">Daily</th>
+                               
+                              </tr>
+                              <tr>
+                                <th></th>
+                                <th>Sales</th>
+                                <th>Unit</th>
+                              
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let name of ranking">
+                                <td>
+                                  <ion-text>{{name.sales}}</ion-text>
+                                </td>
+                                <td>
+                                  <ion-text>{{name.jumlah_bayaran}}</ion-text>
+                                </td>
+                                <td>
+                                  <ion-text>{{name.jumProduk}}</ion-text>
+                                </td>
+                                
+                              </tr>
+                            </tbody>
+                          </table>
+                    </ion-card>
               
-            </tr>
-        </tbody>
-      </table>
-    </ion-card-content>
-  </ion-card>
+                </ion-row>
+              </ion-grid> 
+            </ion-slide>
 
-  <ion-card>
-    <ion-card-header>
-      Weekly Team Sales Ranking
-    </ion-card-header>
-    <ion-card-content>
-      <table>
-        <thead>
-          <tr>
-            <th>Nama</th>
-            <th colspan="2">Weekly</th>
-           
-          </tr>
-          <tr>
-            <th></th>
-            <th>Sales</th>
-            <th>Unit</th>
-          
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let name of rankingW">
-            <td>
-              <ion-text>{{name.sales_team}}</ion-text>
-            </td>
-            <td>
-              <ion-text>{{name.jumlah_bayaran}}</ion-text>
-            </td>
-            <td>
-              <ion-text>{{name.jumProduk}}</ion-text>
-            </td>
-            
-          </tr>
-        </tbody>
-      </table>
-    </ion-card-content>
-  </ion-card>
 
-  <ion-card>
-    <ion-card-header>
-      Monthly Team Sales Ranking
-    </ion-card-header>
-    <ion-card-content>
-      <table>
-        <thead>
-          <tr>
-            <th>Nama</th>
-            <th colspan="2">Monthly</th>
-           
-          </tr>
-          <tr>
-            <th></th>
-            <th>Sales</th>
-            <th>Unit</th>
+            <ion-slide>
+              <ion-grid>
+                <ion-row>
+                  <ion-label>Weekly Performance</ion-label>
+                </ion-row>
+                <ion-row>
+                    <ion-card>
+                        <table>
+                            <thead>
+                              <tr>
+                                <th>Nama</th>
+                                <th colspan="2">Weekly</th>
+                               
+                              </tr>
+                              <tr>
+                                <th></th>
+                                <th>Sales</th>
+                                <th>Unit</th>
+                              
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let name of rankingW">
+                                <td>
+                                  <ion-text>{{name.sales}}</ion-text>
+                                </td>
+                                <td>
+                                  <ion-text>{{name.jumlah_bayaran}}</ion-text>
+                                </td>
+                                <td>
+                                  <ion-text>{{name.jumProduk}}</ion-text>
+                                </td>
+                                
+                              </tr>
+                            </tbody>
+                          </table>
+                    </ion-card>
+                </ion-row>
+              </ion-grid>
+            </ion-slide>
+
+
+            <ion-slide>
+              <ion-grid>
+                <ion-row>
+                    <ion-label>Monthly Performance</ion-label>
+                  </ion-row>
+                <ion-row>
+                    <ion-card>
+                        <table>
+                            <thead>
+                              <tr>
+                                <th>Nama</th>
+                                <th colspan="2">Monthly</th>
+                               
+                              </tr>
+                              <tr>
+                                <th></th>
+                                <th>Sales</th>
+                                <th>Unit</th>
+                              
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let name of rankingM">
+                                <td>
+                                  <ion-text>{{name.sales}}</ion-text>
+                                </td>
+                                <td>
+                                  <ion-text>{{name.jumlah_bayaran}}</ion-text>
+                                </td>
+                                <td>
+                                  <ion-text>{{name.jumProduk}}</ion-text>
+                                </td>
+                                
+                              </tr>
+                            </tbody>
+                          </table>
+                    </ion-card>
+                </ion-row>
+              </ion-grid>
+               
+               
           
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let name of rankingM">
-            <td>
-              <ion-text>{{name.sales_team}}</ion-text>
-            </td>
-            <td>
-              <ion-text>{{name.jumlah_bayaran}}</ion-text>
-            </td>
-            <td>
-              <ion-text>{{name.jumProduk}}</ion-text>
-            </td>
-            
-          </tr>
-        </tbody>
-      </table>
-    </ion-card-content>
-  </ion-card>
+            </ion-slide>
+          </ion-slides>
+
 </ion-content>

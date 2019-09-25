@@ -31,7 +31,9 @@ export class RegistrationPage implements OnInit {
   sales_hp = '';
   sales_email = '';
 
-
+  teams: any[];
+  limit = 20; // LIMIT GET PERDATA
+  start = 0;
   constructor(
     private router: Router,
     private postPvdr: PostProvider,
@@ -42,6 +44,8 @@ export class RegistrationPage implements OnInit {
   }
   ionViewWillEnter() {
     this.registrationSegment = 'admin';
+    this.loadTeam();
+    this.teams = [];
   }
 
   async processRegisterAdmin() {
@@ -95,6 +99,24 @@ export class RegistrationPage implements OnInit {
     }
 
   }
+  loadTeam() {
+    return new Promise(resolve => {
+      let body = {
+        aksi: 'getcompany',
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (let comp of data.result) {
+          this.teams.push(comp);
+        }
+        console.log(this.teams);
+        resolve(true);
+      });
+    });
+  }
+
 
   async processRegisterAccProd() {
     // validation done
