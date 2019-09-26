@@ -155,6 +155,8 @@ export class HomePage implements OnInit {
       this.loadMonthGraphByTeam();
       this.loadMonthGraphByProductSold();
       this.loadTeamSales();
+      this.loadAllSalesRanking();
+
     } else if (this.role === 'CEO' || this.role === 'BOD') {
       this.showAdmin = true;
       this.showSale = true;

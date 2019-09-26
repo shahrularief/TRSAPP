@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
 import { PostProvider } from '../../../providers/post-provider';
 import { ImageModalPage } from '../../modals/image-modal/image-modal.page';
+import { VerifyproductPage } from '../../modals/verifyproduct/verifyproduct.page';
 import { ModalController } from '@ionic/angular';
 import {
   CalendarModal,
@@ -10,8 +11,6 @@ import {
   DayConfig,
   CalendarResult
 } from 'ion2-calendar';
-
-
 
 @Component({
   selector: 'app-account-verify',
@@ -37,6 +36,7 @@ export class AccountVerifyPage implements OnInit {
   id: number;
   total: number;
 
+  sortedcount: any = [];
   customers: any = [];
   unverifys: any = [];
   query: any = [];
@@ -66,11 +66,13 @@ export class AccountVerifyPage implements OnInit {
     this.customers = [];
     this.unverifys = [];
     this.count = [];
+    this.sortedcount = [];
     this.products = [];
     this.start = 0;
     this.loadCustomer();
     this.loadUnverify();
-    this.loadProduct()
+    this.loadProduct();
+    this.getProduct();
   }
 
 
@@ -239,6 +241,20 @@ export class AccountVerifyPage implements OnInit {
     });
   }
 
+  async totalProductModal() {
+    let count = this.sortedcount;
+    const modal = await this.modalController.create({
+      component: VerifyproductPage,
+      componentProps: {
+          counted: count,
+      }
+    });
+    return await modal.present().then(_ => {
+      // triggered when opening the modal
+      console.log('Sending data ');
+    });
+  }
+
   async openCalendar() {
     const options: CalendarModalOptions = {
       title: 'Pilih Tarikh',
@@ -301,14 +317,11 @@ loadProduct() {
   });
 }
 
-  getProduct(event) {
-    console.log(event.detail.value);
-    this.count = [];
-    let chProduk= event.detail.value;
+  getProduct() {
+    
     return new Promise(resolve => {
       let body = {
         aksi: 'getchoosenproductAcc',
-        produk: chProduk,
         limit: this.limit,
         start: this.start,
       };
@@ -316,8 +329,23 @@ loadProduct() {
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
         for (let choose of data.result) {
           this.count.push(choose);
-          console.log(this.count);
 
+          console.log(this.count);
+          let ch = [];
+
+          this.count.forEach(function (a) {
+            if (!this[a.produk]) {
+              this[a.produk] = { produk: a.produk, jumProduk: 0 };
+              ch.push(this[a.produk]);
+            }
+            this[a.produk].jumProduk += +a.jumProduk;
+          }, Object.create(null));
+          console.log('chranking', ch);
+          this.sortedcount = ch.concat();
+          this.sortedcount.sort(function (a, b) {
+            return b.jumlah_bayaran - a.jumlah_bayaran;
+          });
+          console.log('Nranking', this.sortedcount);
         }
         resolve(true);
       });

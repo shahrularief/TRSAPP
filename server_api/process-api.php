@@ -851,15 +851,13 @@ elseif($postjson['aksi']=='getsumship'){
 ///////////GET PRODUCT PRODUCTION/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getchoosenproductProd'){
   $data = array();
-  $produk =  $postjson['produk'];
-  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS mycount
-  FROM order_table
-  WHERE produk = '$produk' AND pengesahan = 'sah'");
-
-  $countresult = mysqli_fetch_array($query); 
-  $data[] = array(
-    'sum' => $countresult['mycount']
-  );
+  $query = mysqli_query($mysqli, "SELECT jumProduk,produk FROM order_table WHERE pengesahan = 'sah'");
+  while($row = mysqli_fetch_array($query)){
+    $data[] = array(
+      'produk' => $row['produk'],
+      'jumProduk' => $row['jumProduk']
+    );
+  }
   if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
     else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
   echo $result;
@@ -868,15 +866,14 @@ elseif($postjson['aksi']=='getchoosenproductProd'){
 ///////////GET PRODUCT account/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getchoosenproductAcc'){
   $data = array();
-  $produk =  $postjson['produk'];
-  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS mycount
-  FROM order_table
-  WHERE produk = '$produk' AND pengesahan = 'belum disahkan'");
+  $query = mysqli_query($mysqli, "SELECT jumProduk,produk FROM order_table WHERE pengesahan = 'belum disahkan'");
 
-  $countresult = mysqli_fetch_array($query); 
-  $data[] = array(
-    'sum' => $countresult['mycount']
-  );
+  while($row = mysqli_fetch_array($query)){
+    $data[] = array(
+      'produk' => $row['produk'],
+      'jumProduk' => $row['jumProduk']
+    );
+  }
   if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
     else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
   echo $result;

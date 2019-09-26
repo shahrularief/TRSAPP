@@ -25,10 +25,8 @@
         </ion-card-subtitle>
 </ion-card>
 <ion-item>
-        <ion-select [interfaceOptions]='{ showBackdrop: false }' interface="popover" placeholder="Select One" (ionChange)="getProduct($event)">
-                <ion-select-option *ngFor="let prod of products" [value]="prod.prodName">{{ prod.prodName }}</ion-select-option>
-        </ion-select>
-        <ion-card *ngFor="let c of count" class=count-card>{{c.sum}}</ion-card>
+        <ion-button (click)="totalProductModal()">Jumlah Produk</ion-button>
+     
 </ion-item>
 
 <table>

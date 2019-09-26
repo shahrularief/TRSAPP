@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { CalendarModal, CalendarModalOptions, CalendarResult } from 'ion2-calendar';
 import { PostProvider } from '../../../providers/post-provider';
+import { ProdProductPage } from '../../modals/prod-product/prod-product.page';
 
 @Component({
   selector: 'app-production',
@@ -26,7 +27,7 @@ export class ProductionPage implements OnInit {
   total: number;
   sales;
   chProduk;
-
+  sortedcount: any = [];
   customers: any = [];
   unverifiedprod: any = [];
   products: any[];
@@ -58,9 +59,10 @@ export class ProductionPage implements OnInit {
     this.loadProduct();
     this.products = [];
     this.count = [];
-    this.sums= [];
+    this.sums = [];
     this.getSum();
-
+    this.sortedcount = [];
+    this.getProduct();
   }
 
   onSearchTerm(ev: CustomEvent) {
@@ -339,14 +341,10 @@ export class ProductionPage implements OnInit {
     });
   }
 
-  getProduct(event) {
-    console.log(event.detail.value);
-    this.count = [];
-    const chProduk = event.detail.value;
+  getProduct() {
     return new Promise(resolve => {
       const body = {
         aksi: 'getchoosenproductProd',
-        produk: chProduk,
         limit: this.limit,
         start: this.start,
       };
@@ -355,12 +353,41 @@ export class ProductionPage implements OnInit {
         for (const choose of data.result) {
           this.count.push(choose);
           console.log(this.count);
+          let ch = [];
 
+          this.count.forEach(function (a) {
+            if (!this[a.produk]) {
+              this[a.produk] = { produk: a.produk, jumProduk: 0 };
+              ch.push(this[a.produk]);
+            }
+            this[a.produk].jumProduk += +a.jumProduk;
+          }, Object.create(null));
+          console.log('chranking', ch);
+          this.sortedcount = ch.concat();
+          this.sortedcount.sort(function (a, b) {
+            return b.jumlah_bayaran - a.jumlah_bayaran;
+          });
+          console.log('Nranking', this.sortedcount);
         }
         resolve(true);
       });
     });
   }
+
+  async totalProductModal() {
+    let count = this.sortedcount;
+    const modal = await this.modalController.create({
+      component: ProdProductPage,
+      componentProps: {
+        counted: count,
+      }
+    });
+    return await modal.present().then(_ => {
+      // triggered when opening the modal
+      console.log('Sending data ');
+    });
+  }
+
 
   //GET TOTAL PAYMENT
   getSum() {

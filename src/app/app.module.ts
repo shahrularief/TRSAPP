@@ -21,6 +21,8 @@ import { FilePath } from '@ionic-native/file-path/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 import { ImageModalPageModule } from './modals/image-modal/image-modal.module';
 import { ModalpopupPageModule } from './modals/modalpopup/modalpopup.module';
+import { VerifyproductPageModule } from './modals/verifyproduct/verifyproduct.module';
+import { ProdProductPageModule } from './modals/prod-product/prod-product.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,6 +36,8 @@ import { ModalpopupPageModule } from './modals/modalpopup/modalpopup.module';
     AppRoutingModule,
     ImageModalPageModule,
     ModalpopupPageModule,
+    VerifyproductPageModule,
+    ProdProductPageModule,
     IonicStorageModule.forRoot(),
   ],
   providers: [

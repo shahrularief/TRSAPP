@@ -1,0 +1,23 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-title>Jumlah Produk</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+  <table>
+    <thead>
+      <tr>
+        <th>Produk</th>
+        <th>Jumlah</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ch of counted">
+        <td>{{ch.produk}}</td>
+        <td>{{ch.jumProduk}}</td>
+      </tr>
+    </tbody>
+  </table>
+  </ion-content>
+  

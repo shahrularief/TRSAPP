@@ -41,6 +41,8 @@ const routes: Routes = [
   { path: 'viewcompany', loadChildren: './admin/viewcompany/viewcompany.module#ViewcompanyPageModule' },
   { path: 'salesteam', loadChildren: './admin/salesteam/salesteam.module#SalesteamPageModule' },
   { path: 'salesmember', loadChildren: './admin/salesmember/salesmember.module#SalesmemberPageModule' },
+  { path: 'verifyproduct', loadChildren: './modals/verifyproduct/verifyproduct.module#VerifyproductPageModule' },
+  { path: 'prod-product', loadChildren: './modals/prod-product/prod-product.module#ProdProductPageModule' },
 
 
 
