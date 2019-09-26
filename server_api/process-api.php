@@ -41,7 +41,7 @@
       jumlah_bayaran = '$postjson[jumlah_bayaran]',
       nota_tambahan = '$postjson[nota_tambahan]',
       sales = '$postjson[sales]',
-      sales_team = '$postjson[sales_team]',
+      company = '$postjson[company]',
       fail_lampiran = '$directory',
       resit = '$postjson[resit]',
       day = '$day',
@@ -142,7 +142,7 @@
       'jumProduk' => $row['jumProduk'],
       'nota_tambahan' => $row['nota_tambahan'],
       'sales' => $row['sales'],
-      'sales_team' => $row['sales_team'],
+      'company' => $row['company'],
       'fail_lampiran' => $row['fail_lampiran'],
       'resit' => $row['resit'],
       'day' => $row['day'],
@@ -180,7 +180,7 @@ elseif($postjson['aksi']=='getdataverified'){
       'pengesahan' => $row['pengesahan'],
       'sales' => $row['sales'],
       'tracking' => $row['tracking'],
-      'sales_team' => $row['sales_team'],
+      'company' => $row['company'],
       'day' => $row['day'],
       'month' => $row['month'],
       'year' => $row['year']
@@ -218,7 +218,7 @@ elseif($postjson['aksi']=='getdatashipped'){
       'day' => $row['day'],
       'month' => $row['month'],
       'year' => $row['year'],
-      'sales_team' => $row['sales_team']
+      'company' => $row['company']
     );
   }
 
@@ -429,7 +429,7 @@ elseif($postjson['aksi']=='getdatashipped'){
 
   }
 
-  // graph month team sales ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // graph month company sales ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=='getgraphmonthsales'){
     $data = array();
@@ -508,16 +508,16 @@ elseif($postjson['aksi']=='getgraphproductsoldall'){
 
 }
 
-  // graph TEAM admin///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // graph company admin///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  elseif($postjson['aksi']=='getgraphmonthbyteam'){
+  elseif($postjson['aksi']=='getgraphmonthbycompany'){
     $data = array();
-    $query = mysqli_query($mysqli, "SELECT jumlah_bayaran,month,sales_team FROM order_table ORDER BY sales_team ASC");
+    $query = mysqli_query($mysqli, "SELECT jumlah_bayaran,month,company FROM order_table ORDER BY company ASC");
   
     while($row = mysqli_fetch_array($query)){
       $data[] = array(
         'month' => $row['month'],
-        'sales_team' => $row['sales_team'],
+        'company' => $row['company'],
         'jumlah_bayaran' => $row['jumlah_bayaran']
       );
     }
@@ -702,48 +702,113 @@ elseif($postjson['aksi']=='getsumship'){
 
   }
 
-
+ 
   // login admin///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  elseif($postjson['aksi']=="loginadmin"){
+  // elseif($postjson['aksi']=="loginadmin"){
+  //   $password = md5($postjson['password']);
+  //   $query = mysqli_query($mysqli, "SELECT * FROM employee_table WHERE username='$postjson[username]' AND password='$password'");
+  //   $check = mysqli_num_rows($query);
+
+  //   if($check>0){
+  //     $data = mysqli_fetch_array($query);
+  //     $datauser = array(
+  //       'userID' => $data['userID'],
+  //       'username' => $data['username'],
+  //       'password' => $data['password'],
+  //       'role' => $data['role']
+  //     );
+
+  //     if($data['status']=='y'){
+  //       $result = json_encode(array('success'=>true, 'result'=>$datauser));
+  //     }else{
+  //       $result = json_encode(array('success'=>false, 'msg'=>'Account Inactive')); 
+  //     }
+
+  //   }else{
+  //     $result = json_encode(array('success'=>false, 'msg'=>'Unregistered Account'));
+  //   }
+
+  //   echo $result;
+  // }
+
+  //  // login accprod///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //  elseif($postjson['aksi']=="loginaccprod"){
+  //   $password = md5($postjson['password']);
+  //   $query = mysqli_query($mysqli, "SELECT * FROM employee_table WHERE username ='$postjson[username]' AND password='$password'");
+  //   $check = mysqli_num_rows($query);
+
+  //   if($check>0){
+  //     $data = mysqli_fetch_array($query);
+  //     $datauser = array(
+  //       'userID' => $data['userID'],
+  //       'username' => $data['username'],
+  //       'password' => $data['password'],
+  //       'role' => $data['role']
+  //     );
+
+  //     if($data['status']=='y'){
+  //       $result = json_encode(array('success'=>true, 'result'=>$datauser));
+  //     }else{
+  //       $result = json_encode(array('success'=>false, 'msg'=>'Account Inactive')); 
+  //     }
+
+  //   }else{
+  //     $result = json_encode(array('success'=>false, 'msg'=>'Unregistered Account'));
+  //   }
+
+  //   echo $result;
+  // }
+
+  // // login sales///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // elseif($postjson['aksi']=="loginsales"){
+  //   $password = md5($postjson['password']);
+  //   $query = mysqli_query($mysqli, "SELECT * FROM employee_table WHERE username='$postjson[username]' AND password='$password'");
+  //   $check = mysqli_num_rows($query);
+
+  //   if($check>0){
+  //     $data = mysqli_fetch_array($query);
+  //     $datauser = array(
+  //       'userID' => $data['userID'],
+  //       'username' => $data['username'],
+  //       'password' => $data['password'],
+  //       'role' => $data['role'],
+  //       'company' => $data['company']
+  //     );
+
+  //     if($data['status']=='y'){
+  //       $result = json_encode(array('success'=>true, 'result'=>$datauser));
+  //     }else{
+  //       $result = json_encode(array('success'=>false, 'msg'=>'Account Inactive')); 
+  //     }
+
+  //   }else{
+  //     $result = json_encode(array('success'=>false, 'msg'=>'Unregister Account'));
+  //   }
+
+  //   echo $result;
+  // }
+
+  //// LOGIN EMPLOYEE ///////////////////////////////////////////////////////////////////////////////////
+
+  elseif($postjson['aksi']=="loginemployee"){
     $password = md5($postjson['password']);
-    $query = mysqli_query($mysqli, "SELECT * FROM user_table WHERE username='$postjson[username]' AND password='$password'");
+    $query = mysqli_query($mysqli, "SELECT * FROM employee_table WHERE username='$postjson[username]' AND password='$password'");
     $check = mysqli_num_rows($query);
 
     if($check>0){
       $data = mysqli_fetch_array($query);
       $datauser = array(
-        'user_id' => $data['user_id'],
+        'userID' => $data['userID'],
         'username' => $data['username'],
         'password' => $data['password'],
-        'role' => $data['role']
-      );
-
-      if($data['status']=='y'){
-        $result = json_encode(array('success'=>true, 'result'=>$datauser));
-      }else{
-        $result = json_encode(array('success'=>false, 'msg'=>'Account Inactive')); 
-      }
-
-    }else{
-      $result = json_encode(array('success'=>false, 'msg'=>'Unregister Account'));
-    }
-
-    echo $result;
-  }
-
-   // login accprod///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   elseif($postjson['aksi']=="loginaccprod"){
-    $password = md5($postjson['accprod_password']);
-    $query = mysqli_query($mysqli, "SELECT * FROM acc_prod_table WHERE accprod_username='$postjson[accprod_username]' AND accprod_password='$password'");
-    $check = mysqli_num_rows($query);
-
-    if($check>0){
-      $data = mysqli_fetch_array($query);
-      $datauser = array(
-        'accprod_id' => $data['accprod_id'],
-        'accprod_username' => $data['accprod_username'],
-        'accprod_password' => $data['accprod_password'],
-        'accprod_role' => $data['accprod_role']
+        'role' => $data['role'],
+        'fullname' => $data['fullname'],
+        'nickname' => $data['nickname'],
+        'userhp' => $data['userhp'],
+        'userEmail' => $data['userEmail'],
+        'company' => $data['company'],
+        'created_at' => $data['created_at'],
+        'status' => $data['status'],
       );
 
       if($data['status']=='y'){
@@ -759,46 +824,21 @@ elseif($postjson['aksi']=='getsumship'){
     echo $result;
   }
 
-  // login sales///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  elseif($postjson['aksi']=="loginsales"){
-    $password = md5($postjson['sales_password']);
-    $query = mysqli_query($mysqli, "SELECT * FROM sales_table WHERE sales_username='$postjson[sales_username]' AND sales_password='$password'");
-    $check = mysqli_num_rows($query);
+  ////REGISTRATION EMPLOYEE///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    if($check>0){
-      $data = mysqli_fetch_array($query);
-      $datauser = array(
-        'sales_id' => $data['sales_id'],
-        'sales_username' => $data['sales_username'],
-        'sales_password' => $data['sales_password'],
-        'sales_role' => $data['sales_role'],
-        'sales_team' => $data['sales_team']
-      );
-
-      if($data['status']=='y'){
-        $result = json_encode(array('success'=>true, 'result'=>$datauser));
-      }else{
-        $result = json_encode(array('success'=>false, 'msg'=>'Account Inactive')); 
-      }
-
-    }else{
-      $result = json_encode(array('success'=>false, 'msg'=>'Unregister Account'));
-    }
-
-    echo $result;
-  }
-
-//REGISTRATION ADMIN///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  elseif($postjson['aksi']=="registeradmin"){
+  elseif($postjson['aksi']=="registeremployee"){
     $today = date('Y-m-d h:m:s');
     $password = md5($postjson['password']);
     $query = mysqli_query($mysqli, "INSERT INTO user_table SET
+      fullname = '$postjson[fullname]',
+      nickname = '$postjson[nickname]',
       username = '$postjson[username]',
-      role = '$postjson[role]',
-      company = '$postjson[company]',
       password = '$password',
-      created_at	  = '$today',
+      userhp = '$postjson[userhp]',
+      role = '$postjson[role]'
+      userEmail = '$postjson[userEmail]',
+      company = '$postjson[company]',
+      created_at	= '$today',
       status   = 'y'
     ");
 
@@ -807,44 +847,63 @@ elseif($postjson['aksi']=='getsumship'){
 
     echo $result;
   }
+//REGISTRATION ADMIN///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  //REGISTRATION ACCOUNT & PRODUCTION///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // elseif($postjson['aksi']=="registeradmin"){
+  //   $today = date('Y-m-d h:m:s');
+  //   $password = md5($postjson['password']);
+  //   $query = mysqli_query($mysqli, "INSERT INTO user_table SET
+  //     username = '$postjson[username]',
+  //     role = '$postjson[role]',
+  //     company = '$postjson[company]',
+  //     password = '$password',
+  //     created_at	  = '$today',
+  //     status   = 'y'
+  //   ");
 
-  elseif($postjson['aksi']=="registeraccprod"){
-    $password = md5($postjson['accprod_password']);
-    $query = mysqli_query($mysqli, "INSERT INTO acc_prod_table SET
-      accprod_username = '$postjson[accprod_username]',
-      accprod_role = '$postjson[accprod_role]',
-      accprod_hp = '$postjson[accprod_hp]',
-      accprod_email = '$postjson[accprod_email]',
-      accprod_password = '$password',
-      status   = 'y'
-    ");
+  //   if($query) $result = json_encode(array('success'=>true));
+  //   else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
 
-    if($query) $result = json_encode(array('success'=>true));
-    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  //   echo $result;
+  // }
 
-    echo $result;
-  }
+  // //REGISTRATION ACCOUNT & PRODUCTION///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  //REGISTER SALES///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  elseif($postjson['aksi']=="registersales"){
-    $password = md5($postjson['sales_password']);
-    $query = mysqli_query($mysqli, "INSERT INTO sales_table SET
-      sales_username = '$postjson[sales_username]',
-      sales_role = '$postjson[sales_role]',
-      sales_team = '$postjson[sales_company]',
-      sales_hp = '$postjson[sales_hp]',
-      sales_email = '$postjson[sales_email]',
-      sales_password = '$password',
-      status   = 'y'
-    ");
+  // elseif($postjson['aksi']=="registeraccprod"){
+  //   $password = md5($postjson['accprod_password']);
+  //   $query = mysqli_query($mysqli, "INSERT INTO acc_prod_table SET
+  //     accprod_username = '$postjson[accprod_username]',
+  //     accprod_role = '$postjson[accprod_role]',
+  //     accprod_hp = '$postjson[accprod_hp]',
+  //     accprod_email = '$postjson[accprod_email]',
+  //     accprod_password = '$password',
+  //     status   = 'y'
+  //   ");
 
-    if($query) $result = json_encode(array('success'=>true));
-    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  //   if($query) $result = json_encode(array('success'=>true));
+  //   else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
 
-    echo $result;
-  }
+  //   echo $result;
+  // }
+
+  // //REGISTER SALES///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // elseif($postjson['aksi']=="registersales"){
+  //   $password = md5($postjson['sales_password']);
+  //   $query = mysqli_query($mysqli, "INSERT INTO sales_table SET
+  //     sales_username = '$postjson[sales_username]',
+  //     sales_role = '$postjson[sales_role]',
+  //     company = '$postjson[sales_company]',
+  //     sales_hp = '$postjson[sales_hp]',
+  //     sales_email = '$postjson[sales_email]',
+  //     sales_password = '$password',
+  //     status   = 'y'
+  //   ");
+
+  //   if($query) $result = json_encode(array('success'=>true));
+  //   else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+  //   echo $result;
+  // }
 
 
  
@@ -882,8 +941,8 @@ elseif($postjson['aksi']=='getchoosenproductAcc'){
 // get sales ranking///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getrankingsales'){
   $data = array();
-  $salesteam=$postjson['sales_team'];
-  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE sales_team='$salesteam' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $company=$postjson['company'];
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE company='$company' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -903,11 +962,11 @@ elseif($postjson['aksi']=='getrankingsales'){
   // get sales ranking all///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getrankingall'){
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales_team,jumlah_bayaran,jumProduk FROM order_table ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
-      'sales_team' => $row['sales_team'],
+      'company' => $row['company'],
       'jumProduk' => $row['jumProduk'],
       'jumlah_bayaran' => $row['jumlah_bayaran']
     );
@@ -918,19 +977,19 @@ elseif($postjson['aksi']=='getrankingall'){
 
     echo $result;
   }
-// get sales ranking by team daily ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-elseif($postjson['aksi']=='getrankingteamdaily'){
+// get sales ranking by company daily ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getrankingcompanydaily'){
 
   $month = date('m');
   $year = date('Y');
   $week = date('W');
   $datetoday = date('d');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales_team,jumlah_bayaran,jumProduk FROM order_table WHERE day='$datetoday' AND week='$week' AND month='$month' AND year='$year' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE day='$datetoday' AND week='$week' AND month='$month' AND year='$year' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
-      'sales_team' => $row['sales_team'],
+      'company' => $row['company'],
       'jumProduk' => $row['jumProduk'],
       'jumlah_bayaran' => $row['jumlah_bayaran']
     );
@@ -942,18 +1001,18 @@ elseif($postjson['aksi']=='getrankingteamdaily'){
     echo $result;
   }
 
-  // get sales ranking by team weekly///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-elseif($postjson['aksi']=='getrankingteamweekly'){
+  // get sales ranking by company weekly///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getrankingcompanyweekly'){
  
   $month = date('m');
   $year = date('Y');
   $weeknow = date('W');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales_team,jumlah_bayaran,jumProduk FROM order_table WHERE week='$weeknow' AND month='$month' AND year='$year' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE week='$weeknow' AND month='$month' AND year='$year' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
-      'sales_team' => $row['sales_team'],
+      'company' => $row['company'],
       'jumProduk' => $row['jumProduk'],
       'jumlah_bayaran' => $row['jumlah_bayaran']
     );
@@ -965,17 +1024,17 @@ elseif($postjson['aksi']=='getrankingteamweekly'){
     echo $result;
   }
 
-   // get sales ranking by team MONTHLY///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-elseif($postjson['aksi']=='getrankingteammonthly'){
+   // get sales ranking by company MONTHLY///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getrankingcompanymonthly'){
 
   $year = date('Y');
   $monthnow = date('m');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales_team,jumlah_bayaran,jumProduk FROM order_table WHERE month='$monthnow' AND year='$year' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE month='$monthnow' AND year='$year' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
-      'sales_team' => $row['sales_team'],
+      'company' => $row['company'],
       'jumProduk' => $row['jumProduk'],
       'jumlah_bayaran' => $row['jumlah_bayaran']
     );
@@ -993,9 +1052,9 @@ elseif($postjson['aksi']=='getrankingteammonthly'){
   $month = date('m');
   $year = date('Y');
   $week = date('W');
-  $salesteam = $postjson['sales_team'];
+  $company = $postjson['company'];
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE day='$day' AND week='$week' AND month='$month' AND year='$year' AND sales_team='$salesteam' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE day='$day' AND week='$week' AND month='$month' AND year='$year' AND company='$company' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1016,9 +1075,9 @@ elseif($postjson['aksi']=='getrankingteammonthly'){
   $month = date('m');
   $year = date('Y');
   $week = date('W');
-  $salesteam = $postjson['sales_team'];
+  $company = $postjson['company'];
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE week='$week' AND month='$month' AND year='$year' AND sales_team='$salesteam' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE week='$week' AND month='$month' AND year='$year' AND company='$company' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1039,9 +1098,9 @@ elseif($postjson['aksi']=='getrankingteammonthly'){
   $month = date('m');
   $year = date('Y');
   
-  $salesteam = $postjson['sales_team'];
+  $company = $postjson['company'];
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE month='$month' AND year='$year' AND sales_team='$salesteam' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE month='$month' AND year='$year' AND company='$company' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(

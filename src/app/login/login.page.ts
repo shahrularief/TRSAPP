@@ -12,23 +12,9 @@ import { MenuController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
   avatarimage: any;
-  slider1 = {
-    initialSlide: 0,
-    slidesPerView: 1,
-    spaceBetween: 0,
-    centeredSlides: true,
-  };
-  user = {
-    username: '',
-    password: '',
-    role: ''
-  };
 
-  accprod_username = '';
-  accprod_password = '';
-
-  sales_username = '';
-  sales_password = '';
+  username = '';
+  password = '';
 
   constructor(
     private router: Router,
@@ -47,151 +33,50 @@ export class LoginPage implements OnInit {
     this.menu.swipeGesture(false);
   }
 
-  // LOGIN ADMIN
-  async processLoginAdmin() {
-    if (this.user.username !== '' && this.user.password !== '') {
-      const body = {
 
-        username: this.user.username,
-        password: this.user.password,
-        aksi: 'loginadmin'
-      };
+ // LOGIN Employee
+ async processLoginEmployee() {
+  if (this.username !== '' && this.password !== '') {
+    const body = {
 
-      this.postPvdr.postData(body, 'process-api.php').subscribe(async data => {
-        const alertmessage = data.msg;
-        if (data.success) {
-          this.signInAdmin(data.result);
-          const toast = await this.toastCtrl.create({
-            message: 'Log masuk berjaya!',
-            duration: 2000
-          });
-          toast.present();
-          this.user.username = '';
-          this.user.password = '';
-          console.log(data);
-        } else {
-          const toast = await this.toastCtrl.create({
-            message: alertmessage,
-            duration: 2000
-          });
-          toast.present();
-        }
-      });
+      username: this.username,
+      password: this.password,
+      aksi: 'loginemployee'
+    };
 
-    } else {
-      const toast = await this.toastCtrl.create({
-        message: 'ID Pengguna atau kata laluan salah',
-        duration: 2000
-      });
-      toast.present();
-    }
-
-  }
-  signInAdmin(data) {
-    this.auth.signInAdmin(data).subscribe(user => {
-      console.log(user);
-    });
-  }
-  // LOGIN ACC & PROD
-  async processLoginAccProd() {
-    if (this.accprod_username !== '' && this.accprod_username !== '') {
-      const body = {
-
-        accprod_username: this.accprod_username,
-        accprod_password: this.accprod_password,
-        aksi: 'loginaccprod'
-      };
-
-      this.postPvdr.postData(body, 'process-api.php').subscribe(async data => {
-        const alertmessage = data.msg;
-        if (data.success) {
-          this.signInAccProd(data.result);
-          const toast = await this.toastCtrl.create({
-            message: 'Log masuk berjaya!',
-            duration: 2000
-          });
-          toast.present();
-          this.user.username = '';
-          this.user.password = '';
-          console.log(data);
-        } else {
-          const toast = await this.toastCtrl.create({
-            message: alertmessage,
-            duration: 2000
-          });
-          toast.present();
-        }
-      });
-
-    } else {
-      const toast = await this.toastCtrl.create({
-        message: 'ID Pengguna atau kata laluan salah',
-        duration: 2000
-      });
-      toast.present();
-    }
-
-  }
-
-  signInAccProd(data) {
-    this.auth.signInAccProd(data).subscribe(user => {
-      console.log(user);
-     
-    });
-  }
-
-  // LOGIN SALES
-  async processLoginSales() {
-    if (this.sales_username !== '' && this.sales_password !== '') {
-      const body = {
-
-        sales_username: this.sales_username,
-        sales_password: this.sales_password,
-        aksi: 'loginsales'
-      };
-
-      this.postPvdr.postData(body, 'process-api.php').subscribe(async data => {
-        const alertmessage = data.msg;
-        if (data.success) {
-          this.signInSales(data.result);
-          const toast = await this.toastCtrl.create({
-            message: 'Log masuk berjaya!',
-            duration: 2000
-          });
-          toast.present();
-          this.sales_username = '';
-          this.sales_password = '';
-          console.log(data);
-        } else {
-          const toast = await this.toastCtrl.create({
-            message: alertmessage,
-            duration: 2000
-          });
-          toast.present();
-        }
-      });
-
-    } else {
-      const toast = await this.toastCtrl.create({
-        message: 'ID Pengguna atau kata laluan salah',
-        duration: 2000
-      });
-      toast.present();
-    }
-
-  }
-  signInSales(data) {
-    
-    this.auth.signInSales(data).subscribe(user => {
-      const role = user.role;
-      if (role === 'TEAM SALES') {
-        this.router.navigateByUrl('/home');
-      } else if (role === 'SALES LEADER') {
-        this.router.navigateByUrl('/home');
+    this.postPvdr.postData(body, 'process-api.php').subscribe(async data => {
+      const alertmessage = data.msg;
+      if (data.success) {
+        this.signInEmployee(data.result);
+        const toast = await this.toastCtrl.create({
+          message: 'Log masuk berjaya!',
+          duration: 2000
+        });
+        toast.present();
+        this.username = '';
+        this.password = '';
+        console.log(data);
+      } else {
+        const toast = await this.toastCtrl.create({
+          message: alertmessage,
+          duration: 2000
+        });
+        toast.present();
       }
     });
+
+  } else {
+    const toast = await this.toastCtrl.create({
+      message: 'ID Pengguna atau kata laluan salah',
+      duration: 2000
+    });
+    toast.present();
   }
 
-
-
+}
+signInEmployee(data) {
+  this.auth.signInEmployee(data).subscribe(user => {
+    console.log(user);
+  });
+}
 }

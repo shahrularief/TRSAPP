@@ -127,7 +127,7 @@ export class AppComponent {
         console.log("appcomp", this.username);
         console.log("appcomp", this.role);
 
-        if (this.res !== null && this.role === 'TEAM SALES') {
+        if (this.res !== null && this.role === 'SALES') {
           this.router.navigate(['/home']);
 
           this.appSales = [
@@ -203,7 +203,7 @@ export class AppComponent {
           ];
           this.appAdmin = [];
 
-        } else if (this.res !== null && this.role === 'CEO' || this.role === 'BOD') {
+        } else if (this.res !== null && this.role === 'CEO' || this.role === 'BOD' || this.role === 'DEV') {
           this.router.navigate(['/home']);
 
           this.appSales = [

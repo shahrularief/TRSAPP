@@ -23,9 +23,9 @@ export class HomePage implements OnInit {
     slidesPerView: 1,
     spaceBetween: 0,
     centeredSlides: true,
-    observer: true, 
+    observer: true,
     observeParents: true,
-   
+
   };
 
   private barChartT: Chart;
@@ -40,7 +40,7 @@ export class HomePage implements OnInit {
   showSaleOnly: boolean = false;
   username: string;
   users: any;
-  team: string;
+  company: string;
 
   totalsum: any[];
   todaysum: any[];
@@ -63,7 +63,7 @@ export class HomePage implements OnInit {
   role: string;
   salesranking: any[];
   ranking: any[];
-  ranksales:any[];
+  ranksales: any[];
   nameranking: any[];
   allranking: any[];
   rankingall: any[];
@@ -77,7 +77,7 @@ export class HomePage implements OnInit {
   limit = 13; // LIMIT GET PERDATA
   start = 0;
   customers: any = [];
-  
+
   constructor(
     private postPrvdr: PostProvider,
     private storage: Storage,
@@ -87,7 +87,15 @@ export class HomePage implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    this.auth.authState.subscribe(state => {
+      this.users = state;
+      this.username = this.users.username;
+      this.company = this.users.company;
+      this.role = this.users.role;
+      console.log(this.company);
+      console.log(this.users);
+      console.log(this.role);
+    });
   }
 
 
@@ -122,15 +130,7 @@ export class HomePage implements OnInit {
     this.unverifiedprod = [];
     this.unverifys = [];
     this.ranksales = [];
-    this.storage.get(TOKEN_KEY).then((res) => {
-      this.users = res;
-      this.username = this.users.username;
-      this.team = this.users.team;
-      this.role = this.users.role;
-      console.log(res);
-      console.log(this.role);
-      this.checkUser();
-    });
+    this.checkUser();
   }
 
   processLogout() {
@@ -145,7 +145,7 @@ export class HomePage implements OnInit {
   }
 
   checkUser() {
-    if (this.role === 'TEAM SALES') {
+    if (this.role === 'SALES') {
       this.showSale = true;
       this.showSaleOnly = true;
       this.loadTotalSale();
@@ -914,7 +914,7 @@ export class HomePage implements OnInit {
                 spanGaps: false
               }
             ]
-            
+
           }
         });
       });
@@ -926,7 +926,7 @@ export class HomePage implements OnInit {
   loadTeamSales() {
     return new Promise(resolve => {
       const body = {
-        sales_team: this.team,
+        company: this.company,
         aksi: 'getrankingsales',
         limit: this.limit,
         start: this.start,

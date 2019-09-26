@@ -36,73 +36,31 @@ export class AuthService {
       }
     });
   }
-  signInAdmin(credentials) {
-   
-    const username = credentials.username;
-    const password = credentials.password;
-    const role = credentials.role;
+
+  signInEmployee(credentials) {
+
+    let username = credentials.username;
+    let password = credentials.password;
+    let role = credentials.role;
+    let fullname = credentials.fullname;
+    let userhp = credentials.userhp;
+    let userEmail = credentials.userEmail;
+    let company = credentials.company;
+    let nickname = credentials.nickname;
+
     let user = null;
 
     if (username !== '' && password !== '') {
-      user = { username, password, role };
+      user = { nickname, fullname, userhp, username, password, role, userEmail, company };
       this.router.navigateByUrl('/home');
-    } else {
-      console.log('no data');
-
-    }
-    
-    this.authState.next(user);
-
-    // Normally you would store e.g. JWT
-    this.storage.set(TOKEN_KEY, user);
-
-    // Normally you would have a real user object at this point
-    return of(user);
-  }
-
-  signInAccProd(credentials) {
-    const username = credentials.accprod_username;
-    const password = credentials.accprod_password;
-    const role = credentials.accprod_role;
-    let user = null;
-
-    if (username !== '' && password !== '') {
-      user = { username, password, role };
-      if (role === 'ACCOUNT') {
-        this.router.navigateByUrl('/account-verify');
-      } else if (role === 'PRODUCTION') {
-        this.router.navigateByUrl('/production');
-      }
-    } else {
-      console.log('no data');
-
-    }
-
-   
-    this.authState.next(user);
-    
-    // Normally you would store e.g. JWT
-    this.storage.set(TOKEN_KEY, user);
-
-    // Normally you would have a real user object at this point
-    return of(user);
-  }
-
-  signInSales(credentials) {
-    const username = credentials.sales_username;
-    const password = credentials.sales_password;
-    const role = credentials.sales_role;
-    const team = credentials.sales_team;
-    let user = null;
-
-    if (username !== '' && password !== '') {
-      user = { username, password, role, team };
+      console.log(user);
     } else {
       console.log('no data');
 
     }
 
     this.authState.next(user);
+
     // Normally you would store e.g. JWT
     this.storage.set(TOKEN_KEY, user);
 
