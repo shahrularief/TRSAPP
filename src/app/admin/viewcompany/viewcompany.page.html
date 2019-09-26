@@ -1,9 +1,56 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>viewcompany</ion-title>
+      <ion-buttons slot="start">
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
+    <ion-title>Syarikat</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-searchbar placeholder="Search by company" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar>
+  <table>
+    <thead>
+      <tr>
+        <th>Nama Syarikat</th>
+        <th>No. Syarikat</th>
+        <th>Alamat</th>
+        <th>Bandar</th>
+        <th>Poskod</th>
+        <th>Negeri</th>
+        <th>No. Telefon</th>
+        <th>Kitaran Bulanan (Mula)</th>
+        <th>Kitaran Bulanan (Akhir)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let com of companies">
+        <td>
+          <ion-text>{{com.compName}}</ion-text>
+        </td>
+        <td>
+          <ion-text>{{com.compReg}}</ion-text>
+        </td>
+        <td>
+          <ion-text>{{com.compAddr}}</ion-text>
+        </td>
+        <td>
+          <ion-text>{{com.compCity}}</ion-text>
+        </td>
+        <td>
+          <ion-text>{{com.compPostcode}}</ion-text>
+        </td>
+        <td>
+          <ion-text>{{com.compState}}</ion-text>
+        </td>
+        <td>
+          <ion-text>{{com.compHP}}</ion-text>
+        </td>
+        <td>
+          <ion-text>{{com.compMonthS}}</ion-text>
+        </td>
+        <td>
+          <ion-text>{{com.compMonthE}}</ion-text>
+        </td>
+  </table>
 </ion-content>

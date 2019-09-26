@@ -109,6 +109,7 @@
           'compCity' => $row['compCity'],
           'compPostcode' => $row['compPostcode'],
           'compHP' => $row['compHP'],
+          'compState' => $row['compState'],
           'compMonthS' => $row['compMonthS'],
           'compMonthE' => $row['compMonthE']
         );
@@ -1060,7 +1061,76 @@ elseif($postjson['aksi']=='getrankingteammonthly'){
   }
 
   // DISPLAY Shipping Dashboard///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-elseif($postjson['aksi']=='getshippingdashboard'){
+elseif($postjson['aksi']=='getshippingdaily'){
+  $day = date('d');
+  $month = date('m');
+  $year = date('Y');
+  $week = date('W');
+  $data = array();
+  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS jumProduk, (COUNT(nama_pelanggan)) AS Total FROM order_table WHERE pengesahan='shipping' AND day='$day' AND week='$week' AND month='$month' AND year='$year' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
+
+  while($row = mysqli_fetch_array($query)){
+    $data[] = array(
+      'jumProduk' => $row['jumProduk'],
+      'Total' => $row['Total']
+    );
+  }
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+  	else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+  	echo $result;
+
+  }
+
+  // DISPLAY Shipping Dashboard///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getshippingweekly'){
+  $day = date('d');
+  $month = date('m');
+  $year = date('Y');
+  $week = date('W');
+  $data = array();
+  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS jumProduk, (COUNT(nama_pelanggan)) AS Total FROM order_table WHERE pengesahan='shipping' AND week='$week' AND month='$month' AND year='$year' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
+
+  while($row = mysqli_fetch_array($query)){
+    $data[] = array(
+      'jumProduk' => $row['jumProduk'],
+      'Total' => $row['Total']
+    );
+  }
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+  	else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+  	echo $result;
+
+  }
+
+  // DISPLAY Shipping Dashboard///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getshippingmonthly'){
+  $day = date('d');
+  $month = date('m');
+  $year = date('Y');
+  $week = date('W');
+  $data = array();
+  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS jumProduk, (COUNT(nama_pelanggan)) AS Total FROM order_table WHERE pengesahan='shipping' AND month='$month' AND year='$year' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
+
+  while($row = mysqli_fetch_array($query)){
+    $data[] = array(
+      'jumProduk' => $row['jumProduk'],
+      'Total' => $row['Total']
+    );
+  }
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+  	else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+  	echo $result;
+
+  }
+
+  // DISPLAY Shipping Dashboard///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getshippingtotal'){
   $data = array();
   $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS jumProduk, (COUNT(nama_pelanggan)) AS Total FROM order_table WHERE pengesahan='shipping' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
 

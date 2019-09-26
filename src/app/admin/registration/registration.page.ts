@@ -9,7 +9,12 @@ import { ToastController } from '@ionic/angular';
 })
 export class RegistrationPage implements OnInit {
   registrationSegment: string;
-
+  slider1 = {
+    initialSlide: 0,
+    slidesPerView: 1,
+    spaceBetween: 10,
+    centeredSlides: true,
+  };
   username = '';
   password = '';
   confirm_password = '';

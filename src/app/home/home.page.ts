@@ -23,9 +23,9 @@ export class HomePage implements OnInit {
     slidesPerView: 1,
     spaceBetween: 0,
     centeredSlides: true,
-    autoplay: {
-      delay: 5000,
-    },
+    observer: true, 
+    observeParents: true,
+   
   };
 
   private barChartT: Chart;
@@ -37,7 +37,7 @@ export class HomePage implements OnInit {
   showProd: boolean = false;
   showSale: boolean = false;
   showAcc: boolean = false;
-
+  showSaleOnly: boolean = false;
   username: string;
   users: any;
   team: string;
@@ -68,6 +68,9 @@ export class HomePage implements OnInit {
   allranking: any[];
   rankingall: any[];
   shippingdashboard: any[];
+  shippingtoday: any[];
+  shippingweekly: any[];
+  shippingmonthly: any[];
   unverifiedprod: any[];
   unverifys: any[];
 
@@ -113,6 +116,9 @@ export class HomePage implements OnInit {
     this.rankingall = [];
     this.nameranking = [];
     this.shippingdashboard = [];
+    this.shippingtoday = [];
+    this.shippingweekly = [];
+    this.shippingmonthly = [];
     this.unverifiedprod = [];
     this.unverifys = [];
     this.ranksales = [];
@@ -141,6 +147,7 @@ export class HomePage implements OnInit {
   checkUser() {
     if (this.role === 'TEAM SALES') {
       this.showSale = true;
+      this.showSaleOnly = true;
       this.loadTotalSale();
       this.loadSaleToday();
       this.loadMonthGraphSales();
@@ -161,7 +168,9 @@ export class HomePage implements OnInit {
       this.loadAllSalesRanking();
       this.loadMonthGraphByProductSoldALL();
       this.loadAllShipping();
-      this.loadTeamSales();
+      this.loadAllShippingToday();
+      this.loadAllShippingWeekly();
+      this.loadAllShippingMonthly();
     } else if (this.role === 'ACCOUNT') {
       this.showAcc = true;
       this.loadUnverifyAcc();
@@ -489,6 +498,7 @@ export class HomePage implements OnInit {
             ]
           },
           options: {
+            maintainAspectRatio: false,
             scales: {
               yAxes: [
                 {
@@ -505,7 +515,7 @@ export class HomePage implements OnInit {
                 {
                   scaleLabel: {
                     display: true,
-                    labelString: 'Team'
+                    labelString: 'Sale'
                   },
                   ticks: {
                     beginAtZero: true
@@ -620,6 +630,7 @@ export class HomePage implements OnInit {
 
           },
           options: {
+            maintainAspectRatio: false,
             scales: {
               yAxes: [
                 {
@@ -655,7 +666,7 @@ export class HomePage implements OnInit {
   loadAllShipping() {
     return new Promise(resolve => {
       const body = {
-        aksi: 'getshippingdashboard',
+        aksi: 'getshippingtotal',
         limit: this.limit,
         start: this.start,
       };
@@ -663,6 +674,57 @@ export class HomePage implements OnInit {
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
         for (const ship of data.result) {
           this.shippingdashboard.push(ship);
+        }
+        resolve(true);
+        console.log(this.shippingdashboard);
+      });
+    });
+  }
+  loadAllShippingToday() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getshippingtoday',
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (const ship of data.result) {
+          this.shippingtoday.push(ship);
+        }
+        resolve(true);
+        console.log(this.shippingdashboard);
+      });
+    });
+  }
+  loadAllShippingWeekly() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getshippingweekly',
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (const ship of data.result) {
+          this.shippingweekly.push(ship);
+        }
+        resolve(true);
+        console.log(this.shippingdashboard);
+      });
+    });
+  }
+  loadAllShippingMonthly() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getshippingmonthly',
+        limit: this.limit,
+        start: this.start,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (const ship of data.result) {
+          this.shippingmonthly.push(ship);
         }
         resolve(true);
         console.log(this.shippingdashboard);
@@ -850,6 +912,7 @@ export class HomePage implements OnInit {
                 spanGaps: false
               }
             ]
+            
           }
         });
       });

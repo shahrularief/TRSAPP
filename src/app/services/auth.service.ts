@@ -12,7 +12,7 @@ const TOKEN_KEY = 'user-access-token';
 export class AuthService {
 
   user: Observable<any>;
-  private authState = new BehaviorSubject(null);
+  public authState = new BehaviorSubject(null);
   users: any;
   sales: string;
   isLogged: boolean;
@@ -37,6 +37,7 @@ export class AuthService {
     });
   }
   signInAdmin(credentials) {
+   
     const username = credentials.username;
     const password = credentials.password;
     const role = credentials.role;
@@ -44,12 +45,14 @@ export class AuthService {
 
     if (username !== '' && password !== '') {
       user = { username, password, role };
+      this.router.navigateByUrl('/home');
     } else {
       console.log('no data');
 
     }
-
+    
     this.authState.next(user);
+
     // Normally you would store e.g. JWT
     this.storage.set(TOKEN_KEY, user);
 
@@ -65,12 +68,19 @@ export class AuthService {
 
     if (username !== '' && password !== '') {
       user = { username, password, role };
+      if (role === 'ACCOUNT') {
+        this.router.navigateByUrl('/account-verify');
+      } else if (role === 'PRODUCTION') {
+        this.router.navigateByUrl('/production');
+      }
     } else {
       console.log('no data');
 
     }
 
+   
     this.authState.next(user);
+    
     // Normally you would store e.g. JWT
     this.storage.set(TOKEN_KEY, user);
 

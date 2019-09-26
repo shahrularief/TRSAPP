@@ -96,10 +96,10 @@
     </ion-row>
   </ion-grid>
 
-  <ion-slides [options]="slider1">
+  <ion-slides [options]="slider1" pager="true">
       <ion-slide>
           <ion-col *ngIf="showSale">
-              <ion-card>
+              <ion-card class="graph-card">
                 <ion-card-header>
                   <ion-label>
                     Total Sale Performance
@@ -113,7 +113,7 @@
       </ion-slide>
       <ion-slide>
           <ion-col *ngIf="showAdmin">
-              <ion-card>
+              <ion-card class="graph-card">
                 <ion-card-header>
                   <ion-label>
                     Total Sale By Team
@@ -129,7 +129,7 @@
         </ion-slide>
         <ion-slide>
             <ion-col *ngIf="showAdmin">
-                <ion-card>
+                <ion-card class="graph-card">
                   <ion-card-header>
                     <ion-label>
                       Total Sale By Product
@@ -144,7 +144,7 @@
           </ion-slide>
           <ion-slide>
               <ion-col *ngIf="showSale">
-                  <ion-card>
+                  <ion-card class="graph-card">
                     <ion-card-header>
                       <ion-label>
                         Total Unit Sold
@@ -159,11 +159,12 @@
     </ion-slides>
     
 <ion-grid>
-<ion-row>
-      <ion-col *ngIf="showProd">
+  <ion-slides [options]="slider1">
+<ion-slide>
+    <ion-col *ngIf="showProd">
         <ion-card>
           <ion-card-header>
-            Shipping Transaction
+            Shipping Transaction (Total)
           </ion-card-header>
           <ion-card-content>
             <table>
@@ -191,7 +192,109 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
-      <ion-col *ngIf="showSale">
+</ion-slide>
+<ion-slide>
+    <ion-col *ngIf="showProd">
+        <ion-card>
+          <ion-card-header>
+            Shipping Transaction (Today)
+          </ion-card-header>
+          <ion-card-content>
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Unit</th>
+                  <th>Customer</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let sdb of shippingtoday">
+                  <td>
+                    <ion-text>Total</ion-text>
+                  </td>
+                  <td>
+                    <ion-text>{{sdb.jumProduk}}</ion-text>
+                  </td>
+                  <td>
+                    <ion-text>{{sdb.Total}}</ion-text>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+</ion-slide>
+<ion-slide>
+    <ion-col *ngIf="showProd">
+        <ion-card>
+          <ion-card-header>
+            Shipping Transaction (Week)
+          </ion-card-header>
+          <ion-card-content>
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Unit</th>
+                  <th>Customer</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let sdb of shippingweekly">
+                  <td>
+                    <ion-text>Total</ion-text>
+                  </td>
+                  <td>
+                    <ion-text>{{sdb.jumProduk}}</ion-text>
+                  </td>
+                  <td>
+                    <ion-text>{{sdb.Total}}</ion-text>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+</ion-slide>
+<ion-slide>
+    <ion-col *ngIf="showProd">
+        <ion-card>
+          <ion-card-header>
+            Shipping Transaction (Month)
+          </ion-card-header>
+          <ion-card-content>
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Unit</th>
+                  <th>Customer</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let sdb of shippingmonthly">
+                  <td>
+                    <ion-text>Total</ion-text>
+                  </td>
+                  <td>
+                    <ion-text>{{sdb.jumProduk}}</ion-text>
+                  </td>
+                  <td>
+                    <ion-text>{{sdb.Total}}</ion-text>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+</ion-slide>
+  </ion-slides>
+<ion-row>
+      <ion-col *ngIf="showSaleOnly">
           <ion-card>
             <ion-card-header>
               Sales Team Ranking

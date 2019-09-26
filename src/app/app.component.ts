@@ -20,6 +20,7 @@ export class AppComponent {
   users: any;
   items: any;
   username: string;
+  res: any;
 
   // public appAdmin = [];
   // public appAccount = [];
@@ -91,7 +92,7 @@ export class AppComponent {
   ];
 
   public appPerform = [
-  
+
   ];
 
   constructor(
@@ -116,161 +117,166 @@ export class AppComponent {
   }
 
   loadUser() {
-    this.storage.get(TOKEN_KEY).then((res) => {
-      this.users = res;
-      this.role = this.users.role;
-      this.username = this.users.username;
-      console.log(this.role);
-      console.log(this.username);
+    this.auth.authState.subscribe(state => {
+      if (state) {
+        this.router.navigate(['home']);
+        this.res = state;
+        this.username = state.username;
+        this.role = state.role;
+        console.log("appcomp", this.res);
+        console.log("appcomp", this.username);
+        console.log("appcomp", this.role);
 
-      if (res == null) {
-        this.router.navigate(['/login']);
-        this.appProduction = [];
-        this.appAccount = [];
-        this.appAdmin = [];
-        this.appSales = [];
-      } else if (res !== null && this.role === 'TEAM SALES') {
-        this.router.navigate(['/home']);
+        if (this.res !== null && this.role === 'TEAM SALES') {
+          this.router.navigate(['/home']);
 
-        this.appSales = [
-          {
-            title: 'Tempahan Baru',
-            url: '/new-order',
-            icon: 'add'
-          },
-          {
-            title: 'Rekod Tempahan',
-            url: '/rekod-order',
-            icon: 'cart'
-          },
-        ];
-        this.appPerform = [];
-        this.appAccount = [];
-        this.appProduction = [];
-        this.appAdmin = [];
+          this.appSales = [
+            {
+              title: 'Tempahan Baru',
+              url: '/new-order',
+              icon: 'add'
+            },
+            {
+              title: 'Rekod Tempahan',
+              url: '/rekod-order',
+              icon: 'cart'
+            },
+          ];
+          this.appPerform = [];
+          this.appAccount = [];
+          this.appProduction = [];
+          this.appAdmin = [];
 
-      } else if (res !== null && this.role === 'ACCOUNT') {
-        this.router.navigate(['/home']);
-        this.appSales = [];
-        this.appPerform = [];
-        this.appAccount = [{
-          title: 'Pengesahan',
-          url: '/account-verify',
-          icon: 'people'
-        },
-        {
-          title: 'Shipping',
-          url: '/shipping',
-          icon: 'train'
-        },
-        ];
-        this.appProduction = [
-        ];
-        this.appAdmin = [];
-
-      } else if (res !== null && this.role === 'PRODUCTION') {
-        this.router.navigate(['/home']);
-        this.appPerform = [];
-        this.appSales = [
-          {
-            title: 'Tempahan Baru',
-            url: '/new-order',
-            icon: 'add'
-          },
-          {
-            title: 'Rekod Tempahan',
-            url: '/rekod-order',
-            icon: 'cart'
-          },
-        ];
-
-        this.appAccount = [];
-        this.appProduction = [
-          {
-            title: 'Production',
-            url: '/production',
-            icon: 'cube'
-          },
-          {
-            title: 'Shipping',
-            url: '/shipping',
-            icon: 'train'
-          },
-
-          {
-            title: 'Stok',
-            url: '/stock',
-            icon: 'filing'
-          },
-        ];
-        this.appAdmin = [];
-
-      } else if (res !== null && this.role === 'CEO' || this.role === 'BOD') {
-        this.router.navigate(['/home']);
-        
-        this.appSales = [
-          {
-            title: 'Tempahan Baru',
-            url: '/new-order',
-            icon: 'add'
-          },
-          {
-            title: 'Rekod Tempahan',
-            url: '/rekod-order',
-            icon: 'cart'
-          },
-        ];
-
-        this.appPerform = [ {
-          title: 'Sales by Team',
-          url: '/salesteam',
-          icon: 'people'
-        },
-        {
-          title: 'Sales by Member',
-          url: '/salesmember',
-          icon: 'body'
-        },
-      ];
-        this.appAccount = [
-          {
+        } else if (this.res !== null && this.role === 'ACCOUNT') {
+          this.router.navigate(['/home']);
+          this.appSales = [];
+          this.appPerform = [];
+          this.appAccount = [{
             title: 'Pengesahan',
             url: '/account-verify',
             icon: 'people'
           },
-        ];
-
-        this.appProduction = [
-          {
-            title: 'Production',
-            url: '/production',
-            icon: 'cube'
-          },
           {
             title: 'Shipping',
             url: '/shipping',
             icon: 'train'
           },
+          ];
+          this.appProduction = [
+          ];
+          this.appAdmin = [];
 
-          {
-            title: 'Stok',
-            url: '/stock',
-            icon: 'filing'
+        } else if (this.res !== null && this.role === 'PRODUCTION') {
+          this.router.navigate(['/home']);
+          this.appPerform = [];
+          this.appSales = [
+            {
+              title: 'Tempahan Baru',
+              url: '/new-order',
+              icon: 'add'
+            },
+            {
+              title: 'Rekod Tempahan',
+              url: '/rekod-order',
+              icon: 'cart'
+            },
+          ];
+
+          this.appAccount = [];
+          this.appProduction = [
+            {
+              title: 'Production',
+              url: '/production',
+              icon: 'cube'
+            },
+            {
+              title: 'Shipping',
+              url: '/shipping',
+              icon: 'train'
+            },
+
+            {
+              title: 'Stok',
+              url: '/stock',
+              icon: 'filing'
+            },
+          ];
+          this.appAdmin = [];
+
+        } else if (this.res !== null && this.role === 'CEO' || this.role === 'BOD') {
+          this.router.navigate(['/home']);
+
+          this.appSales = [
+            {
+              title: 'Tempahan Baru',
+              url: '/new-order',
+              icon: 'add'
+            },
+            {
+              title: 'Rekod Tempahan',
+              url: '/rekod-order',
+              icon: 'cart'
+            },
+          ];
+
+          this.appPerform = [{
+            title: 'Sales by Team',
+            url: '/salesteam',
+            icon: 'people'
           },
-        ];
-        this.appAdmin = [
           {
-            title: 'Pendaftaran',
-            url: '/registration',
-            icon: 'add'
+            title: 'Sales by Member',
+            url: '/salesmember',
+            icon: 'body'
           },
-          {
-            title: 'Syarikat',
-            url: '/company',
-            icon: 'business'
-          },
-        ];
+          ];
+          this.appAccount = [
+            {
+              title: 'Pengesahan',
+              url: '/account-verify',
+              icon: 'people'
+            },
+          ];
+
+          this.appProduction = [
+            {
+              title: 'Production',
+              url: '/production',
+              icon: 'cube'
+            },
+            {
+              title: 'Shipping',
+              url: '/shipping',
+              icon: 'train'
+            },
+
+            {
+              title: 'Stok',
+              url: '/stock',
+              icon: 'filing'
+            },
+          ];
+          this.appAdmin = [
+            {
+              title: 'Pendaftaran',
+              url: '/registration',
+              icon: 'add'
+            },
+            {
+              title: 'Syarikat',
+              url: '/company',
+              icon: 'business'
+            },
+          ];
+        }
+      } else {
+        this.router.navigate(['login']);
+        this.appProduction = [];
+        this.appAccount = [];
+        this.appAdmin = [];
+        this.appSales = [];
       }
     });
   }
 }
+

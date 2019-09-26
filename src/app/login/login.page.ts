@@ -11,16 +11,12 @@ import { MenuController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  loginsegment: string;
   avatarimage: any;
   slider1 = {
     initialSlide: 0,
     slidesPerView: 1,
     spaceBetween: 0,
     centeredSlides: true,
-    autoplay: {
-      delay: 5000,
-    },
   };
   user = {
     username: '',
@@ -48,7 +44,6 @@ export class LoginPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.loginsegment = 'admin';
     this.menu.swipeGesture(false);
   }
 
@@ -94,12 +89,7 @@ export class LoginPage implements OnInit {
   }
   signInAdmin(data) {
     this.auth.signInAdmin(data).subscribe(user => {
-      const role = user.role;
-      if (role === 'BOD') {
-        this.router.navigateByUrl('/home');
-      } else if (role === 'CEO') {
-        this.router.navigateByUrl('/home');
-      }
+      console.log(user);
     });
   }
   // LOGIN ACC & PROD
@@ -145,12 +135,8 @@ export class LoginPage implements OnInit {
 
   signInAccProd(data) {
     this.auth.signInAccProd(data).subscribe(user => {
-      const role = user.role;
-      if (role === 'ACCOUNT') {
-        this.router.navigateByUrl('/account-verify');
-      } else if (role === 'PRODUCTION') {
-        this.router.navigateByUrl('/production');
-      }
+      console.log(user);
+     
     });
   }
 
@@ -195,6 +181,7 @@ export class LoginPage implements OnInit {
 
   }
   signInSales(data) {
+    
     this.auth.signInSales(data).subscribe(user => {
       const role = user.role;
       if (role === 'TEAM SALES') {

@@ -66,4 +66,12 @@ export class CompanyPage implements OnInit {
       });
     }
   }
+
+  viewCompany(){
+    this.router.navigate(['/viewcompany']);
+  }
+
+  
+
+
 }
