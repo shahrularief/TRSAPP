@@ -74,8 +74,7 @@ export class HomePage implements OnInit {
   unverifiedprod: any[];
   unverifys: any[];
 
-  limit = 13; // LIMIT GET PERDATA
-  start = 0;
+ 
   customers: any = [];
 
   constructor(
@@ -155,7 +154,7 @@ export class HomePage implements OnInit {
       this.loadMonthGraphByTeam();
       this.loadMonthGraphByProductSold();
       this.loadTeamSales();
-      this.loadAllSalesRanking();
+    
 
     } else if (this.role === 'CEO' || this.role === 'BOD') {
       this.showAdmin = true;
@@ -180,6 +179,35 @@ export class HomePage implements OnInit {
       this.showProd = true;
       this.loadUnverifyProduction();
       this.loadAllShipping();
+    } else if (this.role === 'DEV') {
+      this.showAdmin = true;
+      this.showSale = true;
+      this.showProd = true;
+      this.showAcc = true;
+      this.showSaleOnly = true;
+      this.loadAllSale();
+      this.loadAllTodaySale();
+      this.loadAllMonthSale();
+      this.loadMonthGraph();
+      this.loadMonthGraphByProduct();
+      this.loadMonthGraphByTeam();
+      this.loadAllSalesRanking();
+      this.loadMonthGraphByProductSoldALL();
+      this.loadAllShipping();
+      this.loadAllShippingToday();
+      this.loadAllShippingWeekly();
+      this.loadAllShippingMonthly();
+      this.loadUnverifyAcc();
+      this.loadUnverifyProduction();
+      this.loadAllShipping();
+      this.loadTotalSale();
+      this.loadSaleToday();
+      this.loadMonthGraphSales();
+      this.loadMonthSale();
+      this.loadMonthGraphByTeam();
+      this.loadMonthGraphByProductSold();
+      this.loadTeamSales();
+      this.loadAllSalesRanking();
     }
 
   }
@@ -435,7 +463,7 @@ export class HomePage implements OnInit {
 
     return new Promise(resolve => {
       const body = {
-        aksi: 'getgraphmonthbyteam',
+        aksi: 'getgraphmonthbycompany',
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -447,16 +475,16 @@ export class HomePage implements OnInit {
         const teamteam = [];
 
         this.monthgraphT.forEach(function (a) {
-          if (!this[a.sales_team]) {
-            this[a.sales_team] = { sales_team: a.sales_team, jumlah_bayaran: 0 };
-            teamteam.push(this[a.sales_team]);
+          if (!this[a.company]) {
+            this[a.company] = { company: a.company, jumlah_bayaran: 0 };
+            teamteam.push(this[a.company]);
           }
-          this[a.sales_team].jumlah_bayaran += +a.jumlah_bayaran;
+          this[a.company].jumlah_bayaran += +a.jumlah_bayaran;
         }, Object.create(null));
 
 
         for (const tm of teamteam) {
-          this.Tteam.push(tm.sales_team);
+          this.Tteam.push(tm.company);
           this.Tjb.push(tm.jumlah_bayaran);
         }
         console.log('Tteam', this.Tteam);
@@ -537,8 +565,7 @@ export class HomePage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getrankingall',
-        limit: this.limit,
-        start: this.start,
+       
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -550,12 +577,12 @@ export class HomePage implements OnInit {
         let ranking = [];
 
         this.salesranking.forEach(function (a) {
-          if (!this[a.sales_team]) {
-            this[a.sales_team] = { sales_team: a.sales_team, jumlah_bayaran: 0, jumProduk: 0 };
-            ranking.push(this[a.sales_team]);
+          if (!this[a.company]) {
+            this[a.company] = { company: a.company, jumlah_bayaran: 0, jumProduk: 0 };
+            ranking.push(this[a.company]);
           }
-          this[a.sales_team].jumlah_bayaran += +a.jumlah_bayaran;
-          this[a.sales_team].jumProduk += +a.jumProduk;
+          this[a.company].jumlah_bayaran += +a.jumlah_bayaran;
+          this[a.company].jumProduk += +a.jumProduk;
         }, Object.create(null));
         console.log('ranking', ranking);
         this.ranking = ranking.concat();
@@ -563,7 +590,7 @@ export class HomePage implements OnInit {
           return b.jumlah_bayaran - a.jumlah_bayaran;
         });
 
-        console.log('Nranking', this.ranking);
+        console.log('Team rank', this.ranking);
       });
     });
   }
@@ -669,8 +696,7 @@ export class HomePage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getshippingtotal',
-        limit: this.limit,
-        start: this.start,
+       
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -686,8 +712,7 @@ export class HomePage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getshippingtoday',
-        limit: this.limit,
-        start: this.start,
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -703,8 +728,7 @@ export class HomePage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getshippingweekly',
-        limit: this.limit,
-        start: this.start,
+       
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -720,8 +744,7 @@ export class HomePage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getshippingmonthly',
-        limit: this.limit,
-        start: this.start,
+       
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -844,6 +867,10 @@ export class HomePage implements OnInit {
                 spanGaps: false
               }
             ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
           }
         });
       });
@@ -914,7 +941,10 @@ export class HomePage implements OnInit {
                 spanGaps: false
               }
             ]
-
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
           }
         });
       });
@@ -928,8 +958,7 @@ export class HomePage implements OnInit {
       const body = {
         company: this.company,
         aksi: 'getrankingsales',
-        limit: this.limit,
-        start: this.start,
+      
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -965,8 +994,7 @@ export class HomePage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getunverifyproduction',
-        limit: this.limit,
-        start: this.start,
+      
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {
@@ -986,8 +1014,7 @@ export class HomePage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getunverify',
-        limit: this.limit,
-        start: this.start,
+    
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {

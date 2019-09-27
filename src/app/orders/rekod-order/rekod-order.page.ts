@@ -29,9 +29,7 @@ export class RekodOrderPage implements OnInit {
 
 
   customers: any = [];
-  limit: number = 13; // LIMIT GET PERDATA
-  start: number = 0;
-
+ 
   constructor(
     private router: Router,
     private postPvdr: PostProvider,
@@ -70,7 +68,7 @@ export class RekodOrderPage implements OnInit {
 
   ionViewWillEnter() {
     this.customers = [];
-    this.start = 0; 
+    
     this.loadCustomer();
   }
 
@@ -107,17 +105,9 @@ export class RekodOrderPage implements OnInit {
 
   doRefresh(event) {
     setTimeout(() => {
+      this.customers = [];
       this.ionViewWillEnter();
       event.target.complete();
-    }, 500);
-  }
-
-  loadData(event: any) {
-    this.start += this.limit;
-    setTimeout(() => {
-      this.loadCustomer().then(() => {
-        event.target.complete();
-      });
     }, 500);
   }
 
@@ -137,8 +127,7 @@ export class RekodOrderPage implements OnInit {
     return new Promise(resolve => {
       let body = {
         aksi: 'getdataall',
-        limit: this.limit,
-        start: this.start,
+      
       };
 
       this.postPvdr.postData(body, 'process-api.php').subscribe(data => {

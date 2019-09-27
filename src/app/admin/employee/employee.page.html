@@ -1,0 +1,57 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+          </ion-buttons>
+      <ion-title>Senarai Pekerja</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <ion-searchbar placeholder="Search by name" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar>
+     <!-- fab placed to the bottom end -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button (click)="goList()">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+              <tr>
+                <th>Nama Penuh</th>
+                <th>Nama Panggilan</th>
+                <th>Username</th>
+                <th>No Telefon</th>
+                <th>Emel</th>
+                <th>Peranan</th>
+                <th>Syarikat</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let em of employees">
+                <td>
+                  <ion-text>{{em.fullname}}</ion-text>
+                </td>
+                <td>
+                  <ion-text>{{em.nickname}}</ion-text>
+                </td>
+                <td>
+                  <ion-text>{{em.username}}</ion-text>
+                </td>
+                <td>
+                  <ion-text>{{em.userhp}}</ion-text>
+                </td>
+                <td>
+                  <ion-text>{{em.userEmail}}</ion-text>
+                </td>
+                <td>
+                  <ion-text>{{em.role}}</ion-text>
+                </td>
+                <td>
+                  <ion-text>{{em.company}}</ion-text>
+                </td>
+          </table>
+        </div>
+    
+  </ion-content>

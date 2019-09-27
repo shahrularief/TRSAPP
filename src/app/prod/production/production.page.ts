@@ -34,9 +34,7 @@ export class ProductionPage implements OnInit {
   stock: any[];
   sums: any[];
   count: any[];
-  limit = 13; // LIMIT GET PERDATA
-  start = 0;
-
+ 
 
   constructor(
     private router: Router,
@@ -52,7 +50,7 @@ export class ProductionPage implements OnInit {
 
   ionViewWillEnter() {
     this.customers = [];
-    this.start = 0;
+    
     this.loadCustomer();
     this.unverifiedprod = [];
     this.loadUnverify();
@@ -70,7 +68,7 @@ export class ProductionPage implements OnInit {
 
     if (val && val.trim() !== '') {
       this.customers = this.customers.filter(term => {
-        return term.sales_team.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
+        return term.company.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
       });
     } else {
       this.customers = [];
@@ -80,7 +78,6 @@ export class ProductionPage implements OnInit {
 
 
   loadData(event: any) {
-    this.start += this.limit;
     setTimeout(() => {
       this.loadCustomer().then(() => {
         event.target.complete();
@@ -92,8 +89,7 @@ export class ProductionPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getdataverified',
-        limit: this.limit,
-        start: this.start,
+       
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -108,8 +104,7 @@ export class ProductionPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getunverifyproduction',
-        limit: this.limit,
-        start: this.start,
+       
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {
@@ -326,8 +321,7 @@ export class ProductionPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getproduct',
-        limit: this.limit,
-        start: this.start,
+        
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -345,8 +339,7 @@ export class ProductionPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getchoosenproductProd',
-        limit: this.limit,
-        start: this.start,
+       
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -394,8 +387,6 @@ export class ProductionPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getsumproduction',
-        limit: this.limit,
-        start: this.start,
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {

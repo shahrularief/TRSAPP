@@ -15,7 +15,7 @@
           <ion-label position="floating"> Team </ion-label>
          
           <ion-select placeholder="Pilih team" type="text" (ionChange)="loadSalesRankWeekly($event)" (ionChange)="loadSalesRankToday($event)" (ionChange)="loadSalesRankMonthly($event)">
-              <ion-select-option *ngFor="let td of teams" [value]="td.compName">{{ td.compName }}</ion-select-option>
+              <ion-select-option *ngFor="let td of companies" [value]="td.compName">{{ td.compName }}</ion-select-option>
           </ion-select>
         </ion-item>
   </ion-row>
@@ -28,7 +28,8 @@
                   <ion-label>Today Performance</ion-label>
                 </ion-row>
                 <ion-row> 
-                    <ion-card>
+                    <ion-card><div style="overflow-x:auto;">
+                      
                         <table>
                             <thead>
                               <tr>
@@ -58,8 +59,9 @@
                               </tr>
                             </tbody>
                           </table>
+                        </div>
                     </ion-card>
-              
+                 
                 </ion-row>
               </ion-grid> 
             </ion-slide>
@@ -72,6 +74,7 @@
                 </ion-row>
                 <ion-row>
                     <ion-card>
+                        <div style="overflow-x:auto;">
                         <table>
                             <thead>
                               <tr>
@@ -101,6 +104,7 @@
                               </tr>
                             </tbody>
                           </table>
+                        </div>
                     </ion-card>
                 </ion-row>
               </ion-grid>
@@ -114,6 +118,7 @@
                   </ion-row>
                 <ion-row>
                     <ion-card>
+                        <div style="overflow-x:auto;">
                         <table>
                             <thead>
                               <tr>
@@ -143,6 +148,7 @@
                               </tr>
                             </tbody>
                           </table>
+                        </div>
                     </ion-card>
                 </ion-row>
               </ion-grid>

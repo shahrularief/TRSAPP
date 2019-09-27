@@ -9,8 +9,7 @@ import { PostProvider } from '../../../providers/post-provider';
 })
 export class StockPage implements OnInit {
   products: any[];
-  limit = 20; // LIMIT GET PERDATA
-  start = 0;
+ 
   dinner: any;
   constructor(
     private router: Router,
@@ -24,7 +23,7 @@ export class StockPage implements OnInit {
 
   ionViewWillEnter() {
     this.products = [];
-    this.start = 0;
+    
     this.loadProduct();
   }
 
@@ -46,8 +45,7 @@ export class StockPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getproduct',
-        limit: this.limit,
-        start: this.start
+        
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {

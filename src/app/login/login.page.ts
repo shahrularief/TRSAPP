@@ -12,7 +12,7 @@ import { MenuController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
   avatarimage: any;
-
+  image: string;
   username = '';
   password = '';
 
@@ -24,7 +24,7 @@ export class LoginPage implements OnInit {
     private auth: AuthService,
     private menu: MenuController,
 
-  ) { }
+  ) { this.image = '../assets/trs.png'; }
 
   ngOnInit() {
   }
@@ -34,49 +34,49 @@ export class LoginPage implements OnInit {
   }
 
 
- // LOGIN Employee
- async processLoginEmployee() {
-  if (this.username !== '' && this.password !== '') {
-    const body = {
+  // LOGIN Employee
+  async processLoginEmployee() {
+    if (this.username !== '' && this.password !== '') {
+      const body = {
 
-      username: this.username,
-      password: this.password,
-      aksi: 'loginemployee'
-    };
+        username: this.username,
+        password: this.password,
+        aksi: 'loginemployee'
+      };
 
-    this.postPvdr.postData(body, 'process-api.php').subscribe(async data => {
-      const alertmessage = data.msg;
-      if (data.success) {
-        this.signInEmployee(data.result);
-        const toast = await this.toastCtrl.create({
-          message: 'Log masuk berjaya!',
-          duration: 2000
-        });
-        toast.present();
-        this.username = '';
-        this.password = '';
-        console.log(data);
-      } else {
-        const toast = await this.toastCtrl.create({
-          message: alertmessage,
-          duration: 2000
-        });
-        toast.present();
-      }
-    });
+      this.postPvdr.postData(body, 'process-api.php').subscribe(async data => {
+        const alertmessage = data.msg;
+        if (data.success) {
+          this.signInEmployee(data.result);
+          const toast = await this.toastCtrl.create({
+            message: 'Log masuk berjaya!',
+            duration: 2000
+          });
+          toast.present();
+          this.username = '';
+          this.password = '';
+          console.log(data);
+        } else {
+          const toast = await this.toastCtrl.create({
+            message: alertmessage,
+            duration: 2000
+          });
+          toast.present();
+        }
+      });
 
-  } else {
-    const toast = await this.toastCtrl.create({
-      message: 'ID Pengguna atau kata laluan salah',
-      duration: 2000
-    });
-    toast.present();
+    } else {
+      const toast = await this.toastCtrl.create({
+        message: 'ID Pengguna atau kata laluan salah',
+        duration: 2000
+      });
+      toast.present();
+    }
+
   }
-
-}
-signInEmployee(data) {
-  this.auth.signInEmployee(data).subscribe(user => {
-    console.log(user);
-  });
-}
+  signInEmployee(data) {
+    this.auth.signInEmployee(data).subscribe(user => {
+      console.log(user);
+    });
+  }
 }

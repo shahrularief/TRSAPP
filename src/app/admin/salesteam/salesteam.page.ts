@@ -19,9 +19,7 @@ export class SalesteamPage implements OnInit {
   salesrankingM: any[];
   rankingM: any[];
   sliderOne: any;
-  limit = 13; // LIMIT GET PERDATA
-  start = 0;
-
+ 
   slider1 = {
     initialSlide: 0,
     slidesPerView: 1,
@@ -51,9 +49,8 @@ export class SalesteamPage implements OnInit {
   loadSalesRankToday() {
     return new Promise(resolve => {
       const body = {
-        aksi: 'getrankingteamdaily',
-        limit: this.limit,
-        start: this.start,
+        aksi: 'getrankingcompanydaily',
+     
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -65,12 +62,12 @@ export class SalesteamPage implements OnInit {
         let ranking = [];
 
         this.salesranking.forEach(function (a) {
-          if (!this[a.sales_team]) {
-            this[a.sales_team] = { sales_team: a.sales_team, jumlah_bayaran: 0, jumProduk: 0 };
-            ranking.push(this[a.sales_team]);
+          if (!this[a.company]) {
+            this[a.company] = { company: a.company, jumlah_bayaran: 0, jumProduk: 0 };
+            ranking.push(this[a.company]);
           }
-          this[a.sales_team].jumlah_bayaran += +a.jumlah_bayaran;
-          this[a.sales_team].jumProduk += +a.jumProduk;
+          this[a.company].jumlah_bayaran += +a.jumlah_bayaran;
+          this[a.company].jumProduk += +a.jumProduk;
         }, Object.create(null));
         console.log('ranking', ranking);
         this.ranking = ranking.concat();
@@ -86,9 +83,8 @@ export class SalesteamPage implements OnInit {
   loadSalesRankWeekly() {
     return new Promise(resolve => {
       const body = {
-        aksi: 'getrankingteamweekly',
-        limit: this.limit,
-        start: this.start,
+        aksi: 'getrankingcompanyweekly',
+      
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -100,12 +96,12 @@ export class SalesteamPage implements OnInit {
         let rankingW = [];
 
         this.salesrankingW.forEach(function (a) {
-          if (!this[a.sales_team]) {
-            this[a.sales_team] = { sales_team: a.sales_team, jumlah_bayaran: 0, jumProduk: 0 };
-            rankingW.push(this[a.sales_team]);
+          if (!this[a.company]) {
+            this[a.company] = { company: a.company, jumlah_bayaran: 0, jumProduk: 0 };
+            rankingW.push(this[a.company]);
           }
-          this[a.sales_team].jumlah_bayaran += +a.jumlah_bayaran;
-          this[a.sales_team].jumProduk += +a.jumProduk;
+          this[a.company].jumlah_bayaran += +a.jumlah_bayaran;
+          this[a.company].jumProduk += +a.jumProduk;
         }, Object.create(null));
         console.log('ranking', rankingW);
         this.rankingW = rankingW.concat();
@@ -121,9 +117,8 @@ export class SalesteamPage implements OnInit {
   loadSalesRankMonthly() {
     return new Promise(resolve => {
       const body = {
-        aksi: 'getrankingteammonthly',
-        limit: this.limit,
-        start: this.start,
+        aksi: 'getrankingcompanymonthly',
+    
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -135,12 +130,12 @@ export class SalesteamPage implements OnInit {
         let rankingM = [];
 
         this.salesrankingM.forEach(function (a) {
-          if (!this[a.sales_team]) {
-            this[a.sales_team] = { sales_team: a.sales_team, jumlah_bayaran: 0, jumProduk: 0 };
-            rankingM.push(this[a.sales_team]);
+          if (!this[a.company]) {
+            this[a.company] = { company: a.company, jumlah_bayaran: 0, jumProduk: 0 };
+            rankingM.push(this[a.company]);
           }
-          this[a.sales_team].jumlah_bayaran += +a.jumlah_bayaran;
-          this[a.sales_team].jumProduk += +a.jumProduk;
+          this[a.company].jumlah_bayaran += +a.jumlah_bayaran;
+          this[a.company].jumProduk += +a.jumProduk;
         }, Object.create(null));
         console.log('ranking', rankingM);
         this.rankingM = rankingM.concat();

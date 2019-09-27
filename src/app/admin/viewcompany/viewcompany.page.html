@@ -7,9 +7,17 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content scrollX="true">
   <ion-searchbar placeholder="Search by company" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar>
-  <table>
+  <!-- fab placed to the bottom end -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button (click)="viewCompany()">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+  
+  <table >
     <thead>
       <tr>
         <th>Nama Syarikat</th>

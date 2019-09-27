@@ -32,11 +32,10 @@ export class NewOrderPage implements OnInit {
   id: number;
   userData: any;
   sales_username: string;
-  sales_team: string;
+  company: string;
   users: any;
   products: any[];
-  limit: number = 13; // LIMIT GET PERDATA
-  start: number = 0;
+
 
   constructor(
     private postPrvdr: PostProvider,
@@ -53,7 +52,7 @@ export class NewOrderPage implements OnInit {
     this.storage.get(TOKEN_KEY).then((res) => {
       this.users = res;
       this.sales_username = this.users.username;
-      this.sales_team = this.users.team;
+      this.company = this.users.company;
       console.log(res);
     });
 
@@ -81,7 +80,7 @@ export class NewOrderPage implements OnInit {
         images: this.cameraData,
         resit: this.base64Image,
         sales: this.sales_username,
-        sales_team: this.sales_team,
+        company: this.company,
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(async data => {
@@ -152,8 +151,7 @@ export class NewOrderPage implements OnInit {
     return new Promise(resolve => {
       let body = {
         aksi: 'getproduct',
-        limit: this.limit,
-        start: this.start,
+       
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {

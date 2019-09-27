@@ -90,7 +90,7 @@
       compMonthE = '$enddate'
     ");
 
-    if($query) $result = json_encode(array('success'=>true));
+    if($query) $result = json_encode(array('success'=>true, 'msg'=>'Berjaya ditambah'));
     else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
 
     echo $result;
@@ -99,7 +99,7 @@
     // get company///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     elseif($postjson['aksi']=='getcompany'){
       $data = array();
-      $query = mysqli_query($mysqli, "SELECT * FROM company_table ORDER BY compName DESC LIMIT $postjson[start],$postjson[limit]");
+      $query = mysqli_query($mysqli, "SELECT * FROM company_table ORDER BY compName DESC ");
     
       while($row = mysqli_fetch_array($query)){
         $data[] = array(
@@ -121,10 +121,34 @@
         echo $result;
     
       }
+
+      // get employee///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    elseif($postjson['aksi']=='getemployee'){
+      $data = array();
+      $query = mysqli_query($mysqli, "SELECT * FROM employee_table ORDER BY role ASC ");
+    
+      while($row = mysqli_fetch_array($query)){
+        $data[] = array(
+          'username' => $row['username'],
+          'fullname' => $row['fullname'],
+          'nickname' => $row['nickname'],
+          'userhp' => $row['userhp'],
+          'userEmail' => $row['userEmail'],
+          'role' => $row['role'],
+          'company' => $row['company']
+        );
+      }
+    
+      if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+        else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    
+        echo $result;
+    
+      }
   ///// DISPLAY DATA UNVERIFIED///////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=='getdataunverified'){
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='belum disahkan' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='belum disahkan' ORDER BY order_id DESC ");
 
   while($row = mysqli_fetch_array($query)){
 
@@ -162,7 +186,7 @@
 // DISPLAY DATA VERIFIED///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getdataverified'){
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='sah'OR pengesahan='tracking' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='sah'OR pengesahan='tracking' ORDER BY order_id DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -197,7 +221,7 @@ elseif($postjson['aksi']=='getdataverified'){
   // DISPLAY DATA SHIPPED///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getdatashipped'){
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='shipping' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='shipping' ORDER BY order_id DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -231,7 +255,7 @@ elseif($postjson['aksi']=='getdatashipped'){
   // DISPLAY DATA ALL///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=='getdataall'){
     $data = array();
-    $query = mysqli_query($mysqli, "SELECT * FROM order_table ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table ORDER BY order_id DESC ");
   
     while($row = mysqli_fetch_array($query)){
       $data[] = array(
@@ -265,7 +289,7 @@ elseif($postjson['aksi']=='getdatashipped'){
     // get products///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=='getproduct'){
     $data = array();
-    $query = mysqli_query($mysqli, "SELECT * FROM product_table ORDER BY prodID DESC LIMIT $postjson[start],$postjson[limit]");
+    $query = mysqli_query($mysqli, "SELECT * FROM product_table ORDER BY prodID DESC ");
   
     while($row = mysqli_fetch_array($query)){
       $data[] = array(
@@ -702,92 +726,6 @@ elseif($postjson['aksi']=='getsumship'){
 
   }
 
- 
-  // login admin///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // elseif($postjson['aksi']=="loginadmin"){
-  //   $password = md5($postjson['password']);
-  //   $query = mysqli_query($mysqli, "SELECT * FROM employee_table WHERE username='$postjson[username]' AND password='$password'");
-  //   $check = mysqli_num_rows($query);
-
-  //   if($check>0){
-  //     $data = mysqli_fetch_array($query);
-  //     $datauser = array(
-  //       'userID' => $data['userID'],
-  //       'username' => $data['username'],
-  //       'password' => $data['password'],
-  //       'role' => $data['role']
-  //     );
-
-  //     if($data['status']=='y'){
-  //       $result = json_encode(array('success'=>true, 'result'=>$datauser));
-  //     }else{
-  //       $result = json_encode(array('success'=>false, 'msg'=>'Account Inactive')); 
-  //     }
-
-  //   }else{
-  //     $result = json_encode(array('success'=>false, 'msg'=>'Unregistered Account'));
-  //   }
-
-  //   echo $result;
-  // }
-
-  //  // login accprod///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //  elseif($postjson['aksi']=="loginaccprod"){
-  //   $password = md5($postjson['password']);
-  //   $query = mysqli_query($mysqli, "SELECT * FROM employee_table WHERE username ='$postjson[username]' AND password='$password'");
-  //   $check = mysqli_num_rows($query);
-
-  //   if($check>0){
-  //     $data = mysqli_fetch_array($query);
-  //     $datauser = array(
-  //       'userID' => $data['userID'],
-  //       'username' => $data['username'],
-  //       'password' => $data['password'],
-  //       'role' => $data['role']
-  //     );
-
-  //     if($data['status']=='y'){
-  //       $result = json_encode(array('success'=>true, 'result'=>$datauser));
-  //     }else{
-  //       $result = json_encode(array('success'=>false, 'msg'=>'Account Inactive')); 
-  //     }
-
-  //   }else{
-  //     $result = json_encode(array('success'=>false, 'msg'=>'Unregistered Account'));
-  //   }
-
-  //   echo $result;
-  // }
-
-  // // login sales///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // elseif($postjson['aksi']=="loginsales"){
-  //   $password = md5($postjson['password']);
-  //   $query = mysqli_query($mysqli, "SELECT * FROM employee_table WHERE username='$postjson[username]' AND password='$password'");
-  //   $check = mysqli_num_rows($query);
-
-  //   if($check>0){
-  //     $data = mysqli_fetch_array($query);
-  //     $datauser = array(
-  //       'userID' => $data['userID'],
-  //       'username' => $data['username'],
-  //       'password' => $data['password'],
-  //       'role' => $data['role'],
-  //       'company' => $data['company']
-  //     );
-
-  //     if($data['status']=='y'){
-  //       $result = json_encode(array('success'=>true, 'result'=>$datauser));
-  //     }else{
-  //       $result = json_encode(array('success'=>false, 'msg'=>'Account Inactive')); 
-  //     }
-
-  //   }else{
-  //     $result = json_encode(array('success'=>false, 'msg'=>'Unregister Account'));
-  //   }
-
-  //   echo $result;
-  // }
-
   //// LOGIN EMPLOYEE ///////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=="loginemployee"){
@@ -829,15 +767,15 @@ elseif($postjson['aksi']=='getsumship'){
   elseif($postjson['aksi']=="registeremployee"){
     $today = date('Y-m-d h:m:s');
     $password = md5($postjson['password']);
-    $query = mysqli_query($mysqli, "INSERT INTO user_table SET
+    $query = mysqli_query($mysqli, "INSERT INTO employee_table SET
       fullname = '$postjson[fullname]',
       nickname = '$postjson[nickname]',
       username = '$postjson[username]',
-      password = '$password',
       userhp = '$postjson[userhp]',
-      role = '$postjson[role]'
+      role = '$postjson[role]',
       userEmail = '$postjson[userEmail]',
       company = '$postjson[company]',
+      password = '$password',
       created_at	= '$today',
       status   = 'y'
     ");
@@ -847,64 +785,6 @@ elseif($postjson['aksi']=='getsumship'){
 
     echo $result;
   }
-//REGISTRATION ADMIN///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // elseif($postjson['aksi']=="registeradmin"){
-  //   $today = date('Y-m-d h:m:s');
-  //   $password = md5($postjson['password']);
-  //   $query = mysqli_query($mysqli, "INSERT INTO user_table SET
-  //     username = '$postjson[username]',
-  //     role = '$postjson[role]',
-  //     company = '$postjson[company]',
-  //     password = '$password',
-  //     created_at	  = '$today',
-  //     status   = 'y'
-  //   ");
-
-  //   if($query) $result = json_encode(array('success'=>true));
-  //   else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
-
-  //   echo $result;
-  // }
-
-  // //REGISTRATION ACCOUNT & PRODUCTION///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // elseif($postjson['aksi']=="registeraccprod"){
-  //   $password = md5($postjson['accprod_password']);
-  //   $query = mysqli_query($mysqli, "INSERT INTO acc_prod_table SET
-  //     accprod_username = '$postjson[accprod_username]',
-  //     accprod_role = '$postjson[accprod_role]',
-  //     accprod_hp = '$postjson[accprod_hp]',
-  //     accprod_email = '$postjson[accprod_email]',
-  //     accprod_password = '$password',
-  //     status   = 'y'
-  //   ");
-
-  //   if($query) $result = json_encode(array('success'=>true));
-  //   else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
-
-  //   echo $result;
-  // }
-
-  // //REGISTER SALES///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // elseif($postjson['aksi']=="registersales"){
-  //   $password = md5($postjson['sales_password']);
-  //   $query = mysqli_query($mysqli, "INSERT INTO sales_table SET
-  //     sales_username = '$postjson[sales_username]',
-  //     sales_role = '$postjson[sales_role]',
-  //     company = '$postjson[sales_company]',
-  //     sales_hp = '$postjson[sales_hp]',
-  //     sales_email = '$postjson[sales_email]',
-  //     sales_password = '$password',
-  //     status   = 'y'
-  //   ");
-
-  //   if($query) $result = json_encode(array('success'=>true));
-  //   else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
-
-  //   echo $result;
-  // }
-
 
  
 ///////////GET PRODUCT PRODUCTION/////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -942,7 +822,7 @@ elseif($postjson['aksi']=='getchoosenproductAcc'){
 elseif($postjson['aksi']=='getrankingsales'){
   $data = array();
   $company=$postjson['company'];
-  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE company='$company' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE company='$company' ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -962,7 +842,7 @@ elseif($postjson['aksi']=='getrankingsales'){
   // get sales ranking all///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getrankingall'){
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -985,7 +865,7 @@ elseif($postjson['aksi']=='getrankingcompanydaily'){
   $week = date('W');
   $datetoday = date('d');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE day='$datetoday' AND week='$week' AND month='$month' AND year='$year' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE day='$datetoday' AND week='$week' AND month='$month' AND year='$year' ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1008,7 +888,7 @@ elseif($postjson['aksi']=='getrankingcompanyweekly'){
   $year = date('Y');
   $weeknow = date('W');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE week='$weeknow' AND month='$month' AND year='$year' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE week='$weeknow' AND month='$month' AND year='$year' ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1030,7 +910,7 @@ elseif($postjson['aksi']=='getrankingcompanymonthly'){
   $year = date('Y');
   $monthnow = date('m');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE month='$monthnow' AND year='$year' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE month='$monthnow' AND year='$year' ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1054,7 +934,7 @@ elseif($postjson['aksi']=='getrankingcompanymonthly'){
   $week = date('W');
   $company = $postjson['company'];
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE day='$day' AND week='$week' AND month='$month' AND year='$year' AND company='$company' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE day='$day' AND week='$week' AND month='$month' AND year='$year' AND company='$company' ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1077,7 +957,7 @@ elseif($postjson['aksi']=='getrankingcompanymonthly'){
   $week = date('W');
   $company = $postjson['company'];
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE week='$week' AND month='$month' AND year='$year' AND company='$company' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE week='$week' AND month='$month' AND year='$year' AND company='$company' ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1100,7 +980,7 @@ elseif($postjson['aksi']=='getrankingcompanymonthly'){
   
   $company = $postjson['company'];
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE month='$month' AND year='$year' AND company='$company' ORDER BY sales DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE month='$month' AND year='$year' AND company='$company' ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1123,7 +1003,7 @@ elseif($postjson['aksi']=='getshippingdaily'){
   $year = date('Y');
   $week = date('W');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS jumProduk, (COUNT(nama_pelanggan)) AS Total FROM order_table WHERE pengesahan='shipping' AND day='$day' AND week='$week' AND month='$month' AND year='$year' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS jumProduk, (COUNT(nama_pelanggan)) AS Total FROM order_table WHERE pengesahan='shipping' AND day='$day' AND week='$week' AND month='$month' AND year='$year' ORDER BY order_id DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1146,7 +1026,7 @@ elseif($postjson['aksi']=='getshippingweekly'){
   $year = date('Y');
   $week = date('W');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS jumProduk, (COUNT(nama_pelanggan)) AS Total FROM order_table WHERE pengesahan='shipping' AND week='$week' AND month='$month' AND year='$year' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS jumProduk, (COUNT(nama_pelanggan)) AS Total FROM order_table WHERE pengesahan='shipping' AND week='$week' AND month='$month' AND year='$year' ORDER BY order_id DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1169,7 +1049,7 @@ elseif($postjson['aksi']=='getshippingmonthly'){
   $year = date('Y');
   $week = date('W');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS jumProduk, (COUNT(nama_pelanggan)) AS Total FROM order_table WHERE pengesahan='shipping' AND month='$month' AND year='$year' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS jumProduk, (COUNT(nama_pelanggan)) AS Total FROM order_table WHERE pengesahan='shipping' AND month='$month' AND year='$year' ORDER BY order_id DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1188,7 +1068,7 @@ elseif($postjson['aksi']=='getshippingmonthly'){
   // DISPLAY Shipping Dashboard///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getshippingtotal'){
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS jumProduk, (COUNT(nama_pelanggan)) AS Total FROM order_table WHERE pengesahan='shipping' ORDER BY order_id DESC LIMIT $postjson[start],$postjson[limit]");
+  $query = mysqli_query($mysqli, "SELECT SUM(jumProduk) AS jumProduk, (COUNT(nama_pelanggan)) AS Total FROM order_table WHERE pengesahan='shipping' ORDER BY order_id DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(

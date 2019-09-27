@@ -16,29 +16,17 @@ export class RegistrationPage implements OnInit {
     centeredSlides: true,
   };
   username = '';
+  fullname = '';
+  nickname = '';
+  userhp = '';
+  userEmail = '';
   password = '';
   confirm_password = '';
   role = '';
   company = '';
 
-  accprod_username = '';
-  accprod_role = '';
-  accprod_password = '';
-  confirm_accprod_password = '';
-  accprod_hp = '';
-  accprod_email = '';
-
-  sales_username = '';
-  sales_password = '';
-  confirm_sales_password = '';
-  sales_role = '';
-  sales_company = '';
-  sales_hp = '';
-  sales_email = '';
-
-  teams: any[];
-  limit = 20; // LIMIT GET PERDATA
-  start = 0;
+  companies: any[];
+ 
   constructor(
     private router: Router,
     private postPvdr: PostProvider,
@@ -48,22 +36,21 @@ export class RegistrationPage implements OnInit {
   ngOnInit() {
   }
   ionViewWillEnter() {
-    this.registrationSegment = 'admin';
     this.loadTeam();
-    this.teams = [];
+    this.companies = [];
   }
 
-  async processRegisterAdmin() {
+  async processRegisterEmployee() {
     // validation done
     if (this.username === '') {
       const toast = await this.toastCtrl.create({
-        message: 'Username is required',
+        message: '*Username',
         duration: 3000
       });
       toast.present();
     } else if (this.password === '') {
       const toast = await this.toastCtrl.create({
-        message: 'Password is required',
+        message: '*Password',
         duration: 3000
       });
       toast.present();
@@ -76,11 +63,16 @@ export class RegistrationPage implements OnInit {
     } else {
 
       const body = {
+        aksi: 'registeremployee',
         username: this.username,
         password: this.password,
+        fullname: this.fullname,
+        nickname: this.nickname,
+        userhp: this.userhp,
+        userEmail: this.userEmail,
         role: this.role,
         company: this.company,
-        aksi: 'registeradmin'
+
       };
 
       this.postPvdr.postData(body, 'process-api.php').subscribe(async data => {
@@ -108,126 +100,18 @@ export class RegistrationPage implements OnInit {
     return new Promise(resolve => {
       let body = {
         aksi: 'getcompany',
-        limit: this.limit,
-        start: this.start,
+      
       };
 
       this.postPvdr.postData(body, 'process-api.php').subscribe(data => {
         for (let comp of data.result) {
-          this.teams.push(comp);
+          this.companies.push(comp);
         }
-        console.log(this.teams);
+        console.log(this.companies);
         resolve(true);
       });
     });
   }
 
-
-  async processRegisterAccProd() {
-    // validation done
-    if (this.accprod_username === '') {
-      const toast = await this.toastCtrl.create({
-        message: 'Username is required',
-        duration: 3000
-      });
-      toast.present();
-    } else if (this.accprod_password === '') {
-      const toast = await this.toastCtrl.create({
-        message: 'Password is required',
-        duration: 3000
-      });
-      toast.present();
-    } else if (this.accprod_password !== this.confirm_accprod_password) {
-      const toast = await this.toastCtrl.create({
-        message: 'Invalid password',
-        duration: 3000
-      });
-      toast.present();
-    } else {
-
-      const body = {
-        accprod_username: this.accprod_username,
-        accprod_password: this.accprod_password,
-        accprod_role: this.accprod_role,
-        accprod_hp: this.accprod_hp,
-        accprod_email: this.accprod_email,
-        aksi: 'registeraccprod'
-      };
-
-      this.postPvdr.postData(body, 'process-api.php').subscribe(async data => {
-        let alertpesan = data.msg;
-        if (data.success) {
-          this.router.navigate(['/login']);
-          const toast = await this.toastCtrl.create({
-            message: 'Register succesful',
-            duration: 3000
-          });
-          toast.present();
-        } else {
-          const toast = await this.toastCtrl.create({
-            message: alertpesan,
-            duration: 3000
-          });
-          toast.present();
-        }
-      });
-
-    }
-
-  }
-
-  async processRegisterSales() {
-    // validation done
-    if (this.sales_username === '') {
-      const toast = await this.toastCtrl.create({
-        message: 'Username is required',
-        duration: 3000
-      });
-      toast.present();
-    } else if (this.sales_password === '') {
-      const toast = await this.toastCtrl.create({
-        message: 'Password is required',
-        duration: 3000
-      });
-      toast.present();
-    } else if (this.sales_password !== this.confirm_sales_password) {
-      const toast = await this.toastCtrl.create({
-        message: 'Invalid password',
-        duration: 3000
-      });
-      toast.present();
-    } else {
-
-      const body = {
-        sales_username: this.sales_username,
-        sales_password: this.sales_password,
-        sales_role: this.sales_role,
-        sales_company: this.sales_company,
-        sales_hp: this.sales_hp,
-        sales_email: this.sales_email,
-        aksi: 'registersales'
-      };
-
-      this.postPvdr.postData(body, 'process-api.php').subscribe(async data => {
-        let alertpesan = data.msg;
-        if (data.success) {
-          this.router.navigate(['/login']);
-          const toast = await this.toastCtrl.create({
-            message: 'Register succesful',
-            duration: 3000
-          });
-          toast.present();
-        } else {
-          const toast = await this.toastCtrl.create({
-            message: alertpesan,
-            duration: 3000
-          });
-          toast.present();
-        }
-      });
-
-    }
-
-  }
-
+ 
 }

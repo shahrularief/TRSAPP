@@ -258,13 +258,13 @@ export class AppComponent {
           ];
           this.appAdmin = [
             {
-              title: 'Pendaftaran',
-              url: '/registration',
+              title: 'Staff Syarikat',
+              url: '/employee',
               icon: 'add'
             },
             {
               title: 'Syarikat',
-              url: '/company',
+              url: '/viewcompany',
               icon: 'business'
             },
           ];

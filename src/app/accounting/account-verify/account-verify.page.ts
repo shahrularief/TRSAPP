@@ -42,8 +42,6 @@ export class AccountVerifyPage implements OnInit {
   query: any = [];
   count: any = [];
   products: any = [];
-  limit = 20; // LIMIT GET PERDATA
-  start = 0;
 
   public searchTerm = '';
   server: string;
@@ -68,7 +66,6 @@ export class AccountVerifyPage implements OnInit {
     this.count = [];
     this.sortedcount = [];
     this.products = [];
-    this.start = 0;
     this.loadCustomer();
     this.loadUnverify();
     this.loadProduct();
@@ -81,7 +78,7 @@ export class AccountVerifyPage implements OnInit {
 
     if (val && val.trim() !== '') {
       this.customers = this.customers.filter(term => {
-        return term.sales_team.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
+        return term.company.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
       });
     } else {
       this.customers = [];
@@ -91,7 +88,7 @@ export class AccountVerifyPage implements OnInit {
 
 
   loadData(event: any) {
-    this.start += this.limit;
+
     setTimeout(() => {
       this.loadCustomer().then(() => {
         event.target.complete();
@@ -104,8 +101,7 @@ export class AccountVerifyPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getdataunverified',
-        limit: this.limit,
-        start: this.start,
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -122,8 +118,7 @@ export class AccountVerifyPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getunverify',
-        limit: this.limit,
-        start: this.start,
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {
@@ -246,7 +241,7 @@ export class AccountVerifyPage implements OnInit {
     const modal = await this.modalController.create({
       component: VerifyproductPage,
       componentProps: {
-          counted: count,
+        counted: count,
       }
     });
     return await modal.present().then(_ => {
@@ -297,33 +292,31 @@ export class AccountVerifyPage implements OnInit {
     this.unverifys = [];
     this.loadUnverify();
   }
-//get product array
-loadProduct() {
-  return new Promise(resolve => {
-    let body = {
-      aksi: 'getproduct',
-      limit: this.limit,
-      start: this.start,
-    };
+  //get product array
+  loadProduct() {
+    return new Promise(resolve => {
+      let body = {
+        aksi: 'getproduct',
 
-    this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
-      for (let product of data.result) {
-        this.products.push(product);
-        console.log(this.products);
+      };
 
-      }
-      resolve(true);
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (let product of data.result) {
+          this.products.push(product);
+          console.log(this.products);
+
+        }
+        resolve(true);
+      });
     });
-  });
-}
+  }
 
   getProduct() {
-    
+
     return new Promise(resolve => {
       let body = {
         aksi: 'getchoosenproductAcc',
-        limit: this.limit,
-        start: this.start,
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {

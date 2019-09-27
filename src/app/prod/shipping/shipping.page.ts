@@ -29,8 +29,7 @@ export class ShippingPage implements OnInit {
 
   customers: any = [];
   shipCount: any = [];
-  limit = 13; // LIMIT GET PERDATA
-  start = 0;
+
 
   constructor(
     private router: Router,
@@ -47,14 +46,14 @@ export class ShippingPage implements OnInit {
     this.shipCount = [];
     this.customers = [];
     this.sums = [];
-    this.start = 0;
+    
     this.loadCustomer();
     this.loadShipped();
     this.getSum();
   }
 
   loadData(event: any) {
-    this.start += this.limit;
+    
     setTimeout(() => {
       this.loadCustomer().then(() => {
         event.target.complete();
@@ -66,8 +65,7 @@ export class ShippingPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getdatashipped',
-        limit: this.limit,
-        start: this.start,
+     
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -83,8 +81,7 @@ export class ShippingPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getshippedcount',
-        limit: this.limit,
-        start: this.start,
+   
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {
@@ -103,7 +100,7 @@ export class ShippingPage implements OnInit {
 
     if (val && val.trim() !== '') {
       this.customers = this.customers.filter(term => {
-        return term.sales_team.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
+        return term.company.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
       });
     } else {
       this.customers = [];
@@ -200,8 +197,7 @@ export class ShippingPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getsumship',
-        limit: this.limit,
-        start: this.start,
+       
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {

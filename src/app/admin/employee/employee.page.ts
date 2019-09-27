@@ -4,13 +4,13 @@ import { AlertController, ModalController, ToastController } from '@ionic/angula
 import { PostProvider } from '../../../providers/post-provider';
 
 @Component({
-  selector: 'app-viewcompany',
-  templateUrl: './viewcompany.page.html',
-  styleUrls: ['./viewcompany.page.scss'],
+  selector: 'app-employee',
+  templateUrl: './employee.page.html',
+  styleUrls: ['./employee.page.scss'],
 })
-export class ViewcompanyPage implements OnInit {
+export class EmployeePage implements OnInit {
 
-  companies: any[];
+  employees: any[];
  
   constructor(
     private router: Router,
@@ -24,22 +24,20 @@ export class ViewcompanyPage implements OnInit {
   }
 
   ionViewWillEnter() {
-   this.companies = [];
+    this.employees = [];
    
-   this.loadCompany();
-  }
-
-  loadCompany() {
+    this.loadEmployee();
+   }
+   loadEmployee() {
     return new Promise(resolve => {
       const body = {
-        aksi: 'getcompany',
-     
+        aksi: 'getemployee',
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
         for (const comp of data.result) {
-          this.companies.push(comp);
-          console.log('Products:' + this.companies);
+          this.employees.push(comp);
+          console.log('Employee:' + this.employees);
         }
         resolve(true);
       });
@@ -51,17 +49,16 @@ export class ViewcompanyPage implements OnInit {
     const val = ev.detail.value;
 
     if (val && val.trim() !== '') {
-      this.companies = this.companies.filter(term => {
-        return term.compName.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
+      this.employees = this.employees.filter(term => {
+        return term.fullname.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
       });
     } else {
-      this.companies = [];
-      this.loadCompany();
+      this.employees = [];
+      this.loadEmployee();
     }
   }
-
-  viewCompany(){
-    this.router.navigate(['/company']);
+  goList(){
+    this.router.navigateByUrl('/registration');
   }
 
 }

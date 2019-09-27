@@ -16,9 +16,6 @@ export class CompanyPage implements OnInit {
   comppostcode = '';
   compstate = '';
   comphp = '';
- 
-  limit: number = 13; // LIMIT GET PERDATA
-  start: number = 0;
 
   constructor(
     private postPrvdr: PostProvider,
@@ -67,9 +64,7 @@ export class CompanyPage implements OnInit {
     }
   }
 
-  viewCompany(){
-    this.router.navigate(['/viewcompany']);
-  }
+ 
 
   
 

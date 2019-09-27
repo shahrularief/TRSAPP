@@ -16,10 +16,9 @@ export class SalesmemberPage implements OnInit {
   rankingW: any[];
   salesrankingM: any[];
   rankingM: any[];
-  teams: any[];
+  companies: any[];
   salesteam: string;
-  limit = 13; // LIMIT GET PERDATA
-  start = 0;
+ 
 
   slider1 = {
     initialSlide: 0,
@@ -41,7 +40,7 @@ export class SalesmemberPage implements OnInit {
     this.rankingW = [];
     this.salesrankingM = [];
     this.rankingM = [];
-    this.teams = [];
+    this.companies = [];
     this.loadTeam();
   }
   loadSalesRankToday(ev: CustomEvent) {
@@ -51,9 +50,8 @@ export class SalesmemberPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getrankingmemberstoday',
-        sales_team: val,
-        limit: this.limit,
-        start: this.start,
+        company: val,
+      
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -90,10 +88,7 @@ export class SalesmemberPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getrankingmembersweekly',
-        sales_team: val,
-
-        limit: this.limit,
-        start: this.start,
+        company: val,
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -130,10 +125,8 @@ export class SalesmemberPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getrankingmembersmonthly',
-        sales_team: val,
+        company: val,
 
-        limit: this.limit,
-        start: this.start,
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -178,17 +171,16 @@ export class SalesmemberPage implements OnInit {
     return new Promise(resolve => {
       let body = {
         aksi: 'getcompany',
-        limit: this.limit,
-        start: this.start,
+      
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
         for (let comp of data.result) {
-          this.teams.push(comp);
+          this.companies.push(comp);
           
 
         }
-        console.log(this.teams);
+        console.log(this.companies);
         resolve(true);
       });
     });

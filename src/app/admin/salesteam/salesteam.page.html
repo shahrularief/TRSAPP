@@ -23,6 +23,7 @@
                 </ion-row>
                 <ion-row>
                     <ion-card>
+                        <div style="overflow-x:auto;">
                         <table>
                             <thead>
                               <tr>
@@ -40,7 +41,7 @@
                             <tbody>
                               <tr *ngFor="let name of ranking">
                                 <td>
-                                  <ion-text>{{name.sales_team}}</ion-text>
+                                  <ion-text>{{name.company}}</ion-text>
                                 </td>
                                 <td>
                                   <ion-text>{{name.jumlah_bayaran}}</ion-text>
@@ -52,6 +53,7 @@
                               </tr>
                             </tbody>
                           </table>
+                          </div>
                     </ion-card>
               
                 </ion-row>
@@ -66,6 +68,7 @@
                 </ion-row>
                 <ion-row>
                     <ion-card>
+                        <div style="overflow-x:auto;">
                         <table>
                             <thead>
                               <tr>
@@ -83,7 +86,7 @@
                             <tbody>
                               <tr *ngFor="let name of rankingW">
                                 <td>
-                                  <ion-text>{{name.sales_team}}</ion-text>
+                                  <ion-text>{{name.company}}</ion-text>
                                 </td>
                                 <td>
                                   <ion-text>{{name.jumlah_bayaran}}</ion-text>
@@ -95,6 +98,7 @@
                               </tr>
                             </tbody>
                           </table>
+                          </div>
                     </ion-card>
                 </ion-row>
               </ion-grid>
@@ -108,6 +112,7 @@
                 </ion-row>
                 <ion-row>
                     <ion-card>
+                        <div style="overflow-x:auto;">
                         <table>
                             <thead>
                               <tr>
@@ -125,7 +130,7 @@
                             <tbody>
                               <tr *ngFor="let name of rankingM">
                                 <td>
-                                  <ion-text>{{name.sales_team}}</ion-text>
+                                  <ion-text>{{name.company}}</ion-text>
                                 </td>
                                 <td>
                                   <ion-text>{{name.jumlah_bayaran}}</ion-text>
@@ -137,6 +142,7 @@
                               </tr>
                             </tbody>
                           </table>
+                          </div>
                     </ion-card>
                 </ion-row>
               </ion-grid>

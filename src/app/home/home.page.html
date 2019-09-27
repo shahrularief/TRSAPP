@@ -20,7 +20,7 @@
   <ion-item>
     <ion-text color="dark">
       <h1>Hi, {{username}}</h1>
-      <h3>{{team}}</h3>
+      <h3>{{company}}</h3>
     </ion-text>
   </ion-item>
 
@@ -112,6 +112,20 @@
             </ion-col>
       </ion-slide>
       <ion-slide>
+        <ion-col *ngIf="showSale">
+            <ion-card class="graph-card">
+              <ion-card-header>
+                <ion-label>
+                  Total Unit Sold
+                </ion-label>
+              </ion-card-header>
+              <ion-card-content>
+                <canvas #lineCanvasProductSold></canvas>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+      </ion-slide>
+      <ion-slide>
           <ion-col *ngIf="showAdmin">
               <ion-card class="graph-card">
                 <ion-card-header>
@@ -142,20 +156,6 @@
                 </ion-card>
               </ion-col>
           </ion-slide>
-          <ion-slide>
-              <ion-col *ngIf="showSale">
-                  <ion-card class="graph-card">
-                    <ion-card-header>
-                      <ion-label>
-                        Total Unit Sold
-                      </ion-label>
-                    </ion-card-header>
-                    <ion-card-content>
-                      <canvas #lineCanvasProductSold></canvas>
-                    </ion-card-content>
-                  </ion-card>
-                </ion-col>
-            </ion-slide>
     </ion-slides>
     
 <ion-grid>
@@ -167,6 +167,7 @@
             Shipping Transaction (Total)
           </ion-card-header>
           <ion-card-content>
+              <div style="overflow-x:auto;">
             <table>
               <thead>
                 <tr>
@@ -189,6 +190,7 @@
                 </tr>
               </tbody>
             </table>
+            </div>
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -200,6 +202,7 @@
             Shipping Transaction (Today)
           </ion-card-header>
           <ion-card-content>
+              <div style="overflow-x:auto;">
             <table>
               <thead>
                 <tr>
@@ -222,6 +225,7 @@
                 </tr>
               </tbody>
             </table>
+            </div>
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -233,6 +237,7 @@
             Shipping Transaction (Week)
           </ion-card-header>
           <ion-card-content>
+              <div style="overflow-x:auto;">
             <table>
               <thead>
                 <tr>
@@ -255,6 +260,7 @@
                 </tr>
               </tbody>
             </table>
+              </div>
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -266,6 +272,7 @@
             Shipping Transaction (Month)
           </ion-card-header>
           <ion-card-content>
+              <div style="overflow-x:auto;">
             <table>
               <thead>
                 <tr>
@@ -288,6 +295,7 @@
                 </tr>
               </tbody>
             </table>
+              </div>
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -300,6 +308,7 @@
               Sales Team Ranking
             </ion-card-header>
             <ion-card-content>
+                <div style="overflow-x:auto;">
               <table>
                 <thead>
                   <tr>
@@ -322,15 +331,17 @@
                   </tr>
                 </tbody>
               </table>
+                </div>
             </ion-card-content>
           </ion-card>
         </ion-col>
-        <ion-col *ngIf="showSale">
+        <ion-col *ngIf="showAdmin">
             <ion-card>
               <ion-card-header>
                 Team Ranking
               </ion-card-header>
               <ion-card-content>
+                  <div style="overflow-x:auto;">
                 <table>
                   <thead>
                     <tr>
@@ -342,7 +353,7 @@
                   <tbody>
                     <tr *ngFor="let name of ranking">
                       <td>
-                        <ion-text>{{name.sales_team}}</ion-text>
+                        <ion-text>{{name.company}}</ion-text>
                       </td>
                       <td>
                         <ion-text>{{name.jumlah_bayaran}}</ion-text>
@@ -353,6 +364,7 @@
                     </tr>
                   </tbody>
                 </table>
+                  </div>
               </ion-card-content>
             </ion-card>
           </ion-col>

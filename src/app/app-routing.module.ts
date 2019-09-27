@@ -43,6 +43,7 @@ const routes: Routes = [
   { path: 'salesmember', loadChildren: './admin/salesmember/salesmember.module#SalesmemberPageModule' },
   { path: 'verifyproduct', loadChildren: './modals/verifyproduct/verifyproduct.module#VerifyproductPageModule' },
   { path: 'prod-product', loadChildren: './modals/prod-product/prod-product.module#ProdProductPageModule' },
+  { path: 'employee', loadChildren: './admin/employee/employee.module#EmployeePageModule' },
 
 
 

@@ -28,7 +28,7 @@
         <ion-button (click)="totalProductModal()">Jumlah Produk</ion-button>
      
 </ion-item>
-
+<div style="overflow-x:auto;">
 <table>
 <thead>
 <tr>
@@ -94,7 +94,7 @@
         <ion-text>{{customer.sales}}</ion-text>
 </td>
 <td>
-        <ion-text>{{customer.sales_team}}</ion-text>
+        <ion-text>{{customer.company}}</ion-text>
 </td>
 
 <td>
@@ -113,4 +113,5 @@
 </ng-template>
 </tbody>
 </table>
+</div>
 </ion-content>

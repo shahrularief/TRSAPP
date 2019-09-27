@@ -33,6 +33,7 @@ export class AuthService {
         this.authState.next(data);
       } else {
         this.authState.next({ username: null, password: null, role: null });
+        this.router.navigateByUrl('/login');
       }
     });
   }
