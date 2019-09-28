@@ -1,34 +1,51 @@
 <ion-header>
-<ion-toolbar>
-        <ion-menu-button slot="start"></ion-menu-button>
-        <ion-title>Pengesahan</ion-title>
-</ion-toolbar>
+        <ion-toolbar>
+                <ion-menu-button slot="start"></ion-menu-button>
+                <ion-title>Pengesahan</ion-title>
+        </ion-toolbar>
 </ion-header>
 
 
 <ion-content scrollX="true">
+        <input type="text" style="padding:8px;margin:15px auto;width:30%;"
+                placeholder="Type to filter the name column..." (keyup)="updateFilter($event)" />
+        <!-- <ion-searchbar placeholder="Search by company" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar> -->
+        <ion-button (click)="openCalendar()">
+                <ion-icon name="calendar"></ion-icon> Search by Date
+        </ion-button>
+        <ion-button (click)="clearArrayCust()">
+                <ion-icon name="close"></ion-icon>Clear
+        </ion-button>
 
-        <ion-searchbar placeholder="Search by company" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar>
-        <ion-button (click)="openCalendar()"><ion-icon name="calendar"></ion-icon> Search by Date </ion-button>
-        <ion-button (click)="clearArrayCust()"><ion-icon name="close"></ion-icon>Clear </ion-button>
-        
 
-<ion-card color="tertiary" height="40px" >
-        <ion-card-subtitle>
-                <div class="ion-text-center">
-                        Total pending verification
-                </div>
-                <br>
-                <div class="ion-text-center" *ngFor="let ver of unverifys">
-                  {{ver.sum}}
-                </div>
-        </ion-card-subtitle>
-</ion-card>
-<ion-item>
-        <ion-button (click)="totalProductModal()">Jumlah Produk</ion-button>
-     
-</ion-item>
-<div style="overflow-x:auto;">
+        <ion-card color="tertiary" height="40px">
+                <ion-card-subtitle>
+                        <div class="ion-text-center">
+                                Total pending verification
+                        </div>
+                        <br>
+                        <div class="ion-text-center" *ngFor="let ver of unverifys">
+                                {{ver.sum}}
+                        </div>
+                </ion-card-subtitle>
+        </ion-card>
+        <ion-item>
+                <ion-button (click)="totalProductModal()">Jumlah Produk</ion-button>
+
+        </ion-item>
+<div> <ngx-datatable [ngClass]="tableStyle" [rows]="customers" [columns]="tableColumns" [scrollbarH]="true"
+        columnMode="force" [headerHeight]="50" [footerHeight]="0" [rowHeight]="'auto'">
+        <ngx-datatable-column *ngFor="let column of columns; let i = index;" name="{{column.name}}" prop="{{column.prop}}">
+                <ng-template let-value="value" let-row="row" *ngIf="column.name==='Actions'" ngx-datatable-cell-template>
+                  <span>
+                    <button style="background-color:red;height:15px;" (click)='onSelectRed(row)'><i class="rb-ic rb-ic-add-frame"></i></button>
+                    <button style="background-color:blue;height:15px;" class="btn" (click)='onSelectBlue(value)'><i class="rb-ic rb-ic-add-frame"></i></button>
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+</ngx-datatable></div>
+       
+        <!-- <div style="overflow-x:auto;">
 <table>
 <thead>
 <tr>
@@ -100,7 +117,7 @@
 <td>
         <ion-button (click)="openModal(customer.fail_lampiran, server,customer.resit)">Open</ion-button>
         <!-- <ion-button>Download</ion-button> -->
-</td>
+        <!-- </td>
 <td>
         <ion-text>{{customer.nota_tambahan}}</ion-text>
 </td>
@@ -113,5 +130,5 @@
 </ng-template>
 </tbody>
 </table>
-</div>
+</div> -->
 </ion-content>

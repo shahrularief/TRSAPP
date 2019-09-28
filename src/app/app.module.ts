@@ -22,6 +22,7 @@ import { Camera } from '@ionic-native/camera/ngx';
 import { ImageModalPageModule } from './modals/image-modal/image-modal.module';
 import { ModalpopupPageModule } from './modals/modalpopup/modalpopup.module';
 import { VerifyproductPageModule } from './modals/verifyproduct/verifyproduct.module';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ProdProductPageModule } from './modals/prod-product/prod-product.module';
 
 @NgModule({
@@ -38,6 +39,7 @@ import { ProdProductPageModule } from './modals/prod-product/prod-product.module
     ModalpopupPageModule,
     VerifyproductPageModule,
     ProdProductPageModule,
+    NgxDatatableModule,
     IonicStorageModule.forRoot(),
   ],
   providers: [

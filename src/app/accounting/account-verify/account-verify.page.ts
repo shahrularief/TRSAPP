@@ -11,6 +11,7 @@ import {
   DayConfig,
   CalendarResult
 } from 'ion2-calendar';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: 'app-account-verify',
@@ -42,6 +43,8 @@ export class AccountVerifyPage implements OnInit {
   query: any = [];
   count: any = [];
   products: any = [];
+  tableColumns: any[];
+  tableStyle = 'bootstrap'
 
   public searchTerm = '';
   server: string;
@@ -54,6 +57,8 @@ export class AccountVerifyPage implements OnInit {
     public toastCtrl: ToastController,
     public alertCtrl: AlertController,
     private modalController: ModalController,
+    public datatable: NgxDatatableModule,
+
 
   ) { this.server = postPrvdr.server; }
 
@@ -110,6 +115,70 @@ export class AccountVerifyPage implements OnInit {
           console.log('customers:' + this.customers);
         }
         resolve(true);
+        this.customers = this.customers.map(row => ({
+          tarikh_order: row['tarikh_order'],
+          nama_pelanggan: row['nama_pelanggan'],
+          alamat_pelanggan: row['alamat_pelanggan'],
+          nombor_hp: row['nombor_hp'],
+          akaun: row['akaun'],
+          produk: row['produk'],
+          penghantaran: row['penghantaran'],
+          jumlah_bayaran: row['jumlah_bayaran'],
+          jumProduk: row['jumProduk'],
+          nota_tambahan: row['nota_tambahan'],
+          sales: row['sales'],
+          company: row['company'],
+          fail_lampiran: row['fail_lampiran'],
+          resit: row['resit'],
+          pengesahan: row['pengesahan']
+        }));
+        this.tableColumns = [
+          {
+            prop: 'tarikh_order',
+            name: 'Tarikh Order'
+          },
+          {
+            prop: 'nama_pelanggan',
+            name: 'Nama Pelanggan'
+          },
+          {
+            prop: 'alamat_pelanggan',
+            name: 'Alamat Pelanggan'
+          },
+
+          {
+            prop: 'nombor_hp',
+            name: 'Nombor Telefon'
+          },
+          {
+            prop: 'akaun',
+            name: 'Akaun'
+          },
+          {
+            prop: 'produk',
+            name: 'Produk'
+          },
+          {
+            prop: 'jumProduk',
+            name: 'Jumlah Produk'
+          },
+          {
+            prop: 'jumlah_bayaran',
+            name: 'Jumlah Bayaran'
+          },
+          {
+            prop: 'sales',
+            name: 'Sales'
+          },
+          {
+            prop: 'company',
+            name: 'Team'
+          },
+          {
+            prop: 'pengesahan',
+            name: 'Status'
+          },
+        ]
       });
     });
   }
@@ -132,6 +201,18 @@ export class AccountVerifyPage implements OnInit {
     });
   }
 
+  updateFilter(event) {
+    const val = event.target.value.toLowerCase();
+    if (val && val.trim() !== '') {
+    const temp = this.customers.filter(function(d) {
+      return d.fullname.toLowerCase().indexOf(val) !== -1 || !val;
+    });
+    this.customers = temp;
+  } else {
+    this.customers = [];
+    this.loadCustomer();
+  }
+}
   updateOrder(id, nama, tarikh, alamat, hp, akaun, produk, penghantaran, bayaran, nota) {
     this.router.navigate(['/update-order/' + id + '/' + tarikh + '/' + nama + '/' + alamat + '/' + hp + '/' + akaun + '/'
       + produk + '/' + penghantaran + '/' + bayaran + '/' + nota]);

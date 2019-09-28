@@ -1,21 +1,24 @@
 <ion-header>
     <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-back-button></ion-back-button>
-          </ion-buttons>
+        
+            <ion-menu-button  slot="start"></ion-menu-button>
+  
       <ion-title>Senarai Pekerja</ion-title>
+      <ion-icon slot="end" name="contrast" (click)="switchStyle()"></ion-icon>
     </ion-toolbar>
   </ion-header>
   
   <ion-content>
-    <ion-searchbar placeholder="Search by name" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar>
-     <!-- fab placed to the bottom end -->
+    <!-- <ion-searchbar placeholder="Search by name" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar> -->
+    
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button (click)="goList()">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-    <div style="overflow-x:auto;">
+
+
+    <!-- <div style="overflow-x:auto;">
         <table>
             <thead>
               <tr>
@@ -31,7 +34,7 @@
             <tbody>
               <tr *ngFor="let em of employees">
                 <td>
-                  <ion-text>{{em.fullname}}</ion-text>
+                  <ion-text>{{ em.fullname}}</ion-text>
                 </td>
                 <td>
                   <ion-text>{{em.nickname}}</ion-text>
@@ -52,6 +55,21 @@
                   <ion-text>{{em.company}}</ion-text>
                 </td>
           </table>
-        </div>
-    
+        </div> -->
+        
+
+        <input
+        type="text"
+        style="padding:8px;margin:15px auto;width:30%;"
+        placeholder="Type to filter the name column..."
+        (keyup)="updateFilter($event)"
+      />
+      
+        
+     
+        <ngx-datatable #table [ngClass]="tableStyle" [rows]="employees" [columns]="tableColumns" 
+        [scrollbarH]="true"  columnMode="force"
+        [headerHeight]="50"
+        [footerHeight]="0"
+        [rowHeight]="'auto'"></ngx-datatable>
   </ion-content>

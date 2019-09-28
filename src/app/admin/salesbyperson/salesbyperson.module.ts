@@ -4,13 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { EmployeePage } from './employee.page';
+
+import { SalesbypersonPage } from './salesbyperson.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: EmployeePage
+    component: SalesbypersonPage
   }
 ];
 
@@ -19,9 +19,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    NgxDatatableModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [EmployeePage]
+  declarations: [SalesbypersonPage]
 })
-export class EmployeePageModule {}
+export class SalesbypersonPageModule {}

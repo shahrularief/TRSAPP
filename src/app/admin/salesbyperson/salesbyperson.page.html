@@ -1,0 +1,161 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-menu-button slot="start"></ion-menu-button>
+    <ion-title>Performance</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <h1> Sales Performance by Individual</h1>
+  <ion-row>
+      <ion-item>
+          <ion-label position="floating"> Team </ion-label>
+         
+          <ion-select placeholder="Pilih team" type="text" (ionChange)="loadSalesRankWeekly($event)" (ionChange)="loadSalesRankToday($event)" (ionChange)="loadSalesRankMonthly($event)">
+              <ion-select-option *ngFor="let td of companies" [value]="td.compName">{{ td.compName }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+  </ion-row>
+ 
+        <ion-slides [options]="slider1" pager="true">
+         
+          <ion-slide>
+              <ion-grid>
+                <ion-row>
+                  <ion-label>Today Performance</ion-label>
+                </ion-row>
+                <ion-row> 
+                    <ion-card><div style="overflow-x:auto;">
+                      
+                        <table>
+                            <thead>
+                              <tr>
+                                <th>Nama</th>
+                                <th colspan="2">Daily</th>
+                               
+                              </tr>
+                              <tr>
+                                <th></th>
+                                <th>Sales (RM)</th>
+                                <th>Unit</th>
+                              
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let name of ranking">
+                                <td>
+                                  <ion-text>{{name.sales}}</ion-text>
+                                </td>
+                                <td>
+                                  <ion-text>{{name.jumlah_bayaran}}</ion-text>
+                                </td>
+                                <td>
+                                  <ion-text>{{name.jumProduk}}</ion-text>
+                                </td>
+                                
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                    </ion-card>
+                 
+                </ion-row>
+              </ion-grid> 
+            </ion-slide>
+
+
+            <ion-slide>
+              <ion-grid>
+                <ion-row>
+                  <ion-label>Weekly Performance</ion-label>
+                </ion-row>
+                <ion-row>
+                    <ion-card>
+                        <div style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                              <tr>
+                                <th>Nama</th>
+                                <th colspan="2">Weekly</th>
+                               
+                              </tr>
+                              <tr>
+                                <th></th>
+                                <th>Sales (RM)</th>
+                                <th>Unit</th>
+                              
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let name of rankingW">
+                                <td>
+                                  <ion-text>{{name.sales}}</ion-text>
+                                </td>
+                                <td>
+                                  <ion-text>{{name.jumlah_bayaran}}</ion-text>
+                                </td>
+                                <td>
+                                  <ion-text>{{name.jumProduk}}</ion-text>
+                                </td>
+                                
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                    </ion-card>
+                </ion-row>
+              </ion-grid>
+            </ion-slide>
+
+
+            <ion-slide>
+              <ion-grid>
+                <ion-row>
+                    <ion-label>Monthly Performance</ion-label>
+                  </ion-row>
+                <ion-row>
+                    <ion-card>
+                        <div style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                              <tr>
+                                <th>Nama</th>
+                                <th colspan="2">Monthly</th>
+                               
+                              </tr>
+                              <tr>
+                                <th></th>
+                                <th>Sales (RM)</th>
+                                <th>Unit</th>
+                              
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let name of rankingM">
+                                <td>
+                                  <ion-text>{{name.sales}}</ion-text>
+                                </td>
+                                <td>
+                                  <ion-text>{{name.jumlah_bayaran}}</ion-text>
+                                </td>
+                                <td>
+                                  <ion-text>{{name.jumProduk}}</ion-text>
+                                </td>
+                                
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                    </ion-card>
+                </ion-row>
+              </ion-grid>
+               
+               
+          
+            </ion-slide>
+          </ion-slides>
+
+</ion-content>
