@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { CalendarModule } from 'ion2-calendar';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 import { ProductionPage } from './production.page';
 
@@ -20,6 +21,7 @@ const routes: Routes = [
     CalendarModule,
     FormsModule,
     IonicModule,
+    NgxDatatableModule,
     RouterModule.forChild(routes)
   ],
   declarations: [ProductionPage],

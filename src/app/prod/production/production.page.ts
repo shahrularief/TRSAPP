@@ -35,7 +35,7 @@ export class ProductionPage implements OnInit {
   sums: any[];
   count: any[];
  
-
+  tableStyle = 'bootstrap';
   constructor(
     private router: Router,
     private postPrvdr: PostProvider,
@@ -63,19 +63,18 @@ export class ProductionPage implements OnInit {
     this.getProduct();
   }
 
-  onSearchTerm(ev: CustomEvent) {
-    const val = ev.detail.value;
-
+  updateFilter(event) {
+    const val = event.target.value.toLowerCase();
     if (val && val.trim() !== '') {
-      this.customers = this.customers.filter(term => {
-        return term.company.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
+      const temp = this.customers.filter(function (d) {
+        return d.nama_pelanggan.toLowerCase().indexOf(val) !== -1 || !val;
       });
+      this.customers = temp;
     } else {
       this.customers = [];
       this.loadCustomer();
     }
   }
-
 
   loadData(event: any) {
     setTimeout(() => {
@@ -97,6 +96,25 @@ export class ProductionPage implements OnInit {
           this.customers.push(customer);
         }
         resolve(true);
+        this.customers = this.customers.map(row => ({
+          order_id: row['order_id'],
+          tarikh_order: row['tarikh_order'],
+          nama_pelanggan: row['nama_pelanggan'],
+          alamat_pelanggan: row['alamat_pelanggan'],
+          nombor_hp: row['nombor_hp'],
+          akaun: row['akaun'],
+          produk: row['produk'],
+          penghantaran: row['penghantaran'],
+          jumlah_bayaran: row['jumlah_bayaran'],
+          jumProduk: row['jumProduk'],
+          nota_tambahan: row['nota_tambahan'],
+          sales: row['sales'],
+          company: row['company'],
+          fail_lampiran: row['fail_lampiran'],
+          resit: row['resit'],
+          pengesahan: row['pengesahan'],
+          tracking: row['tracking']
+        }));
       });
     });
   }

@@ -6,131 +6,84 @@
 </ion-header>
 
 <ion-content scrollX="true">
-        <ion-searchbar placeholder="Search by company" animated="true" (ionChange)="onSearchTerm($event)">
-        </ion-searchbar>
-        <ion-button (click)="openCalendar()">
-                <ion-icon name="calendar"></ion-icon> Search by Date
-        </ion-button>
-        <ion-button (click)="clearArrayCust()">
-                <ion-icon name="close"></ion-icon>Clear
-        </ion-button>
-
-        
-
-    <ion-grid>
-            <ion-row>
-                    <ion-col>
-                        <ion-card color="primary">
+        <ion-grid>
+                <ion-row>
+                        <ion-card color="tertiary" height="40px">
                                 <ion-card-subtitle>
                                         <div class="ion-text-center">
-                                                Total pending
+                                                Total pending verification
                                         </div>
-                                        <br />
+                                        <br>
                                         <div class="ion-text-center" *ngFor="let ver of unverifiedprod">
                                                 {{ver.sum}}
-                
                                         </div>
                                 </ion-card-subtitle>
                         </ion-card>
-                    </ion-col>
-                    <ion-col>
-                        <ion-card color="primary">
-                                <ion-card-subtitle>
-                                        <div class="ion-text-center">
-                                                Jumlah
-                                        </div>
-                                        <br />
-                                        <div class="ion-text-center" *ngFor="let ss of sums">
-                                                RM {{ss.sum}}
-                
-                                        </div>
-                                </ion-card-subtitle>
-                        </ion-card>
-                        
-                    </ion-col>
-            </ion-row>
-    </ion-grid>
-       
-        
 
-        <ion-item>
-                <ion-button (click)="totalProductModal()">Jumlah Produk</ion-button>
-        </ion-item>
-        <div style="overflow-x:auto;">
-        <table>
-                <thead>
-                        <tr>
-                                <th></th>
-                                <th>Tarikh</th>
-                                <th>Pelanggan</th>
-                                <th>Alamat</th>
-                                <th>Jumlah Bayaran</th>
-                                <th>Produk</th>
-                                <th>Person Incharge</th>
-                                <th>Nota</th>
-                        </tr>
-                </thead>
-                <tbody>
-                        <tr *ngFor="let customer of customers">
-                                <td>
-                                        <ion-button size="small" color="warning" (click)="
-              updateOrder(
-                customer.order_id,
-                customer.nama_pelanggan,
-                customer.tarikh_order,
-                customer.alamat_pelanggan,
-                customer.nombor_hp,
-                customer.akaun,
-                customer.produk,
-                customer.penghantaran,
-                customer.jumlah_bayaran,
-                customer.nota_tambahan
-              )
-            ">
-                                                <ion-icon name="create"></ion-icon>
-                                        </ion-button>
-                                        <ion-button size="small"
-                                                (click)="openTrackModal(customer.order_id, customer.pengesahan)">
-                                                <ion-icon name="keypad"></ion-icon>
-                                        </ion-button>
-                                        <ion-button size="small" (click)="openDeliveryModal(customer.order_id)">
-                                                <ion-icon name="airplane"></ion-icon>
-                                        </ion-button>
-                                        <ion-button size="small" color="danger"
-                                                (click)="deleteOrder(customer.order_id, customer.pengesahan)">
-                                                <ion-icon name="trash"></ion-icon>
-                                        </ion-button>
-                                </td>
-                                <td>
-                                        <ion-text color="success">{{ customer.pengesahan }}</ion-text><br />
-                                        <ion-text>{{ customer.tarikh_order }}</ion-text>
-                                </td>
-                                <td>
-                                        <ion-icon name="person"></ion-icon>
-                                        {{customer.nama_pelanggan}}<br>
-                                        <ion-icon name="call"></ion-icon>
-                                        0{{customer.nombor_hp}}<br>
-                                </td>
-                                <td>
-                                        <ion-icon name="home"></ion-icon>
-                                        <ion-text>{{ customer.alamat_pelanggan }}</ion-text>
-                                </td>
-                                <td>
-                                        <ion-text>RM {{ customer.jumlah_bayaran }}</ion-text>
-                                </td>
-                                <td>
-                                        <p style="font-weight: bold">{{ customer.produk }} - {{ customer.jumProduk }}
-                                        </p>
+                </ion-row>
+                <ion-row>
+                        <ion-col>
+                                <ion-button (click)="totalProductModal()" fill="outline">Jumlah Produk</ion-button>
+                                <ion-button (click)="openCalendar()" fill="outline">
+                                        <ion-icon name="calendar"></ion-icon>
+                                </ion-button>
+                                <ion-button (click)="clearArrayCust()" fill="outline" color="danger">
+                                        <ion-icon name="close"></ion-icon>
+                                </ion-button>
+                        </ion-col>
 
-                                </td>
-                                <td>
-                                        <ion-text>{{ customer.sales }}</ion-text>
-                                </td>
-                                <td>
-                                        <ion-text>{{ customer.nota_tambahan }}</ion-text>
-                                </td>
-                        </tr>
-                </tbody>
-        </table>
-</div>
+
+                </ion-row>
+
+                <ion-row>
+                        <ion-searchbar showCancelButton="always" (ionChange)="updateFilter($event)"></ion-searchbar>
+                </ion-row>
+        </ion-grid>
+
+
+
+        <ngx-datatable class="fullscreen" [ngClass]="tableStyle" [rows]="customers" [columnMode]="'force'"
+                [sortType]="'multi'" [reorderable]="false" [scrollbarH]="true" [rowHeight]="'auto'" [headerHeight]="100"
+                [footerHeight]="50" [limit]="10">
+                <ngx-datatable-column name="Tarikh Order" prop="tarikh_order"></ngx-datatable-column>
+                <ngx-datatable-column name="Nama Pelanggan" prop="nama_pelanggan"></ngx-datatable-column>
+                <ngx-datatable-column name="Alamat Pelanggan" prop="alamat_pelanggan"></ngx-datatable-column>
+                <ngx-datatable-column name="Nombor Telefon" prop="nombor_hp"></ngx-datatable-column>
+                <ngx-datatable-column name="Akaun" prop="akaun"></ngx-datatable-column>
+                <ngx-datatable-column name="Produk" prop="produk"></ngx-datatable-column>
+                <ngx-datatable-column name="Jumlah Produk" prop="jumProduk"></ngx-datatable-column>
+                <ngx-datatable-column name="Jumlah Bayaran" prop="jumlah_bayaran"></ngx-datatable-column>
+                <ngx-datatable-column name="Sales" prop="sales"></ngx-datatable-column>
+                <ngx-datatable-column name="Team" prop="company"></ngx-datatable-column>
+                <ngx-datatable-column name="Status" prop="pengesahan"></ngx-datatable-column>
+
+                <ngx-datatable-column name="id" [resizeable]="false">
+                        <ng-template ngx-datatable-header-template>
+                                
+                        </ng-template>
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                <button ion-button small color="light" (click)="deleteOrder(row.order_id)">
+                                        <ion-icon name="trash"></ion-icon>
+                                </button>
+                                <button ion-button small color="light" (click)="updateOrder(row.order_id,row.nama_pelanggan,
+                                  row.tarikh_order,
+                                  row.alamat_pelanggan,
+                                  row.nombor_hp,
+                                  row.akaun,
+                                  row.produk,
+                                  row.jumProduk,
+                                  row.jumlah_bayaran,
+                                  row.nota_tambahan)">
+                                        <ion-icon name="create"></ion-icon>
+                                </button>
+                                <button ion-button small outline color="light" (click)="openTrackModal(row.order_id,row.tracking)">
+                                        <ion-icon name="keypad"></ion-icon>
+                                </button>
+                                <button ion-button small outline color="light"
+                                        (click)="openDeliveryModal(row.order_id,row.penghantaran)">
+                                        <ion-icon name="image"></ion-icon>
+                                </button>
+                        </ng-template>
+                </ngx-datatable-column>
+        </ngx-datatable>
 </ion-content>

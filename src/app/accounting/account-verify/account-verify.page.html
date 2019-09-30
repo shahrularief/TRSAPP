@@ -7,128 +7,92 @@
 
 
 <ion-content scrollX="true">
-        <input type="text" style="padding:8px;margin:15px auto;width:30%;"
-                placeholder="Type to filter the name column..." (keyup)="updateFilter($event)" />
-        <!-- <ion-searchbar placeholder="Search by company" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar> -->
-        <ion-button (click)="openCalendar()">
-                <ion-icon name="calendar"></ion-icon> Search by Date
-        </ion-button>
-        <ion-button (click)="clearArrayCust()">
-                <ion-icon name="close"></ion-icon>Clear
-        </ion-button>
+        <ion-grid>
+                <ion-row>
+                        <ion-card color="tertiary" height="40px">
+                                <ion-card-subtitle>
+                                        <div class="ion-text-center">
+                                                Total pending verification
+                                        </div>
+                                        <br>
+                                        <div class="ion-text-center" *ngFor="let ver of unverifys">
+                                                {{ver.sum}}
+                                        </div>
+                                </ion-card-subtitle>
+                        </ion-card>
+
+                </ion-row>
+                <ion-row>
+                        <ion-col>
+                                <ion-button (click)="totalProductModal()" fill="outline">Jumlah Produk</ion-button>
+                                <ion-button (click)="openCalendar()" fill="outline">
+                                        <ion-icon name="calendar"></ion-icon>
+                                </ion-button>
+                                <ion-button (click)="clearArrayCust()" fill="outline" color="danger">
+                                        <ion-icon name="close"></ion-icon>
+                                </ion-button>
+                        </ion-col>
 
 
-        <ion-card color="tertiary" height="40px">
-                <ion-card-subtitle>
-                        <div class="ion-text-center">
-                                Total pending verification
-                        </div>
-                        <br>
-                        <div class="ion-text-center" *ngFor="let ver of unverifys">
-                                {{ver.sum}}
-                        </div>
-                </ion-card-subtitle>
-        </ion-card>
-        <ion-item>
-                <ion-button (click)="totalProductModal()">Jumlah Produk</ion-button>
+                </ion-row>
 
-        </ion-item>
-<div> <ngx-datatable [ngClass]="tableStyle" [rows]="customers" [columns]="tableColumns" [scrollbarH]="true"
-        columnMode="force" [headerHeight]="50" [footerHeight]="0" [rowHeight]="'auto'">
-        <ngx-datatable-column *ngFor="let column of columns; let i = index;" name="{{column.name}}" prop="{{column.prop}}">
-                <ng-template let-value="value" let-row="row" *ngIf="column.name==='Actions'" ngx-datatable-cell-template>
-                  <span>
-                    <button style="background-color:red;height:15px;" (click)='onSelectRed(row)'><i class="rb-ic rb-ic-add-frame"></i></button>
-                    <button style="background-color:blue;height:15px;" class="btn" (click)='onSelectBlue(value)'><i class="rb-ic rb-ic-add-frame"></i></button>
-                  </span>
-                </ng-template>
-              </ngx-datatable-column>
-</ngx-datatable></div>
-       
-        <!-- <div style="overflow-x:auto;">
-<table>
-<thead>
-<tr>
-        <th></th>
-        <th>Tarikh Bayaran</th>
-        <th>Pelanggan</th>
-        <th>Akaun</th>
-        <th>Jumlah Bayaran</th>
-        <th>Produk</th>
-        <th>Person Incharge</th>
-        <th>Team</th>
-        <th>Lampiran</th>
-        <th>Nota</th>
-        
-</tr>
-</thead>
-<tbody *ngIf="customers.length > 0; else noItems">
-<tr *ngFor="let customer of customers">
-        <td>
-                <ion-button size="small" color="warning" (click)="updateOrder(customer.order_id,customer.nama_pelanggan,
-                                customer.tarikh_order,
-                                customer.alamat_pelanggan,
-                                customer.nombor_hp,
-                                customer.akaun,
-                                customer.produk,
-                                customer.jumProduk,
-                                customer.jumlah_bayaran,
-                                customer.nota_tambahan)">
-                <ion-icon name="create"></ion-icon>
+                <ion-row>
+                        <ion-searchbar showCancelButton="always" (ionChange)="updateFilter($event)"></ion-searchbar>
+                </ion-row>
+        </ion-grid>
 
-        </ion-button>
-        <ion-button size="small" (click)="verifyAlert(customer.order_id)">
-                <ion-icon name="checkbox-outline"></ion-icon>
-        </ion-button>
-        <ion-button size="small" color="danger"
-                (click)="deleteOrder(customer.order_id,customer.pengesahan)">
-                <ion-icon name="trash"></ion-icon>
-        </ion-button>
-</td>
-<td>
-        <ion-text color="danger">{{customer.pengesahan}}</ion-text><br>
-        <ion-text>{{customer.tarikh_order}}</ion-text>
-</td>
-<td>
-        <ion-icon name="person"></ion-icon>
-        {{customer.nama_pelanggan}}<br>
-        <ion-icon name="call"></ion-icon>
-        0{{customer.nombor_hp}}<br>
-        <ion-icon name="home"></ion-icon>
-        {{customer.alamat_pelanggan}}
-</td>
-<td>
-        <ion-text>{{customer.akaun}}</ion-text>
-</td>
-<td>
-        <ion-text>RM {{customer.jumlah_bayaran}}</ion-text>
-</td>
-<td>
-        <p style="font-weight: bold">{{ customer.produk }} - {{ customer.jumProduk }}
-        </p>
-</td>
-<td>
-        <ion-text>{{customer.sales}}</ion-text>
-</td>
-<td>
-        <ion-text>{{customer.company}}</ion-text>
-</td>
 
-<td>
-        <ion-button (click)="openModal(customer.fail_lampiran, server,customer.resit)">Open</ion-button>
-        <!-- <ion-button>Download</ion-button> -->
-        <!-- </td>
-<td>
-        <ion-text>{{customer.nota_tambahan}}</ion-text>
-</td>
 
-</tr>
-<ng-template #noItems>
-<ion-item>
-        No items found.
-</ion-item>
-</ng-template>
-</tbody>
-</table>
-</div> -->
+
+
+
+
+
+
+        <ngx-datatable class="fullscreen" [ngClass]="tableStyle" [rows]="customers" [columnMode]="'force'"
+                [sortType]="'multi'" [reorderable]="false" [scrollbarH]="true" [rowHeight]="'auto'" [headerHeight]="100"
+                [footerHeight]="50" [limit]="10">
+                <ngx-datatable-column name="Tarikh Order" prop="tarikh_order"></ngx-datatable-column>
+                <ngx-datatable-column name="Nama Pelanggan" prop="nama_pelanggan"></ngx-datatable-column>
+                <ngx-datatable-column name="Alamat Pelanggan" prop="alamat_pelanggan"></ngx-datatable-column>
+                <ngx-datatable-column name="Nombor Telefon" prop="nombor_hp"></ngx-datatable-column>
+                <ngx-datatable-column name="Akaun" prop="akaun"></ngx-datatable-column>
+                <ngx-datatable-column name="Produk" prop="produk"></ngx-datatable-column>
+                <ngx-datatable-column name="Jumlah Produk" prop="jumProduk"></ngx-datatable-column>
+                <ngx-datatable-column name="Jumlah Bayaran" prop="jumlah_bayaran"></ngx-datatable-column>
+                <ngx-datatable-column name="Sales" prop="sales"></ngx-datatable-column>
+                <ngx-datatable-column name="Team" prop="company"></ngx-datatable-column>
+                <ngx-datatable-column name="Status" prop="pengesahan"></ngx-datatable-column>
+
+                <ngx-datatable-column name="id" [resizeable]="false">
+                        <ng-template ngx-datatable-header-template>
+                                
+                        </ng-template>
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                <button ion-button small color="light" (click)="deleteOrder(row.order_id)">
+                                        <ion-icon name="trash"></ion-icon>
+                                </button>
+                                <button ion-button small color="light" (click)="updateOrder(row.order_id,row.nama_pelanggan,
+                                  row.tarikh_order,
+                                  row.alamat_pelanggan,
+                                  row.nombor_hp,
+                                  row.akaun,
+                                  row.produk,
+                                  row.jumProduk,
+                                  row.jumlah_bayaran,
+                                  row.nota_tambahan)">
+                                        <ion-icon name="create"></ion-icon>
+                                </button>
+                                <button ion-button small outline color="light" (click)="verifyAlert(row.order_id)">
+                                        <ion-icon name="checkbox-outline"></ion-icon>
+                                </button>
+                                <button ion-button small outline color="light"
+                                        (click)="openModal(row.fail_lampiran, server,row.resit)">
+                                        <ion-icon name="image"></ion-icon>
+                                </button>
+                        </ng-template>
+                </ngx-datatable-column>
+        </ngx-datatable>
+
+
 </ion-content>

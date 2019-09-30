@@ -44,7 +44,7 @@ export class AccountVerifyPage implements OnInit {
   count: any = [];
   products: any = [];
   tableColumns: any[];
-  tableStyle = 'bootstrap'
+  tableStyle = 'bootstrap';
 
   public searchTerm = '';
   server: string;
@@ -77,21 +77,6 @@ export class AccountVerifyPage implements OnInit {
     this.getProduct();
   }
 
-
-  onSearchTerm(ev: CustomEvent) {
-    const val = ev.detail.value;
-
-    if (val && val.trim() !== '') {
-      this.customers = this.customers.filter(term => {
-        return term.company.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
-      });
-    } else {
-      this.customers = [];
-      this.loadCustomer();
-    }
-  }
-
-
   loadData(event: any) {
 
     setTimeout(() => {
@@ -116,6 +101,7 @@ export class AccountVerifyPage implements OnInit {
         }
         resolve(true);
         this.customers = this.customers.map(row => ({
+          order_id: row['order_id'],
           tarikh_order: row['tarikh_order'],
           nama_pelanggan: row['nama_pelanggan'],
           alamat_pelanggan: row['alamat_pelanggan'],
@@ -132,53 +118,6 @@ export class AccountVerifyPage implements OnInit {
           resit: row['resit'],
           pengesahan: row['pengesahan']
         }));
-        this.tableColumns = [
-          {
-            prop: 'tarikh_order',
-            name: 'Tarikh Order'
-          },
-          {
-            prop: 'nama_pelanggan',
-            name: 'Nama Pelanggan'
-          },
-          {
-            prop: 'alamat_pelanggan',
-            name: 'Alamat Pelanggan'
-          },
-
-          {
-            prop: 'nombor_hp',
-            name: 'Nombor Telefon'
-          },
-          {
-            prop: 'akaun',
-            name: 'Akaun'
-          },
-          {
-            prop: 'produk',
-            name: 'Produk'
-          },
-          {
-            prop: 'jumProduk',
-            name: 'Jumlah Produk'
-          },
-          {
-            prop: 'jumlah_bayaran',
-            name: 'Jumlah Bayaran'
-          },
-          {
-            prop: 'sales',
-            name: 'Sales'
-          },
-          {
-            prop: 'company',
-            name: 'Team'
-          },
-          {
-            prop: 'pengesahan',
-            name: 'Status'
-          },
-        ]
       });
     });
   }
@@ -204,15 +143,15 @@ export class AccountVerifyPage implements OnInit {
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
     if (val && val.trim() !== '') {
-    const temp = this.customers.filter(function(d) {
-      return d.fullname.toLowerCase().indexOf(val) !== -1 || !val;
-    });
-    this.customers = temp;
-  } else {
-    this.customers = [];
-    this.loadCustomer();
+      const temp = this.customers.filter(function (d) {
+        return d.nama_pelanggan.toLowerCase().indexOf(val) !== -1 || !val;
+      });
+      this.customers = temp;
+    } else {
+      this.customers = [];
+      this.loadCustomer();
+    }
   }
-}
   updateOrder(id, nama, tarikh, alamat, hp, akaun, produk, penghantaran, bayaran, nota) {
     this.router.navigate(['/update-order/' + id + '/' + tarikh + '/' + nama + '/' + alamat + '/' + hp + '/' + akaun + '/'
       + produk + '/' + penghantaran + '/' + bayaran + '/' + nota]);
@@ -266,7 +205,7 @@ export class AccountVerifyPage implements OnInit {
   }
 
   async deleteOrder(id) {
-
+    console.log(id);
     const alert = await this.alertCtrl.create({
       header: 'Delete!',
       message: 'Adakah anda pasti?',
