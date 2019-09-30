@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ToastController, ActionSheetController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 const TOKEN_KEY = 'user-access-token';
 
@@ -13,6 +14,9 @@ const TOKEN_KEY = 'user-access-token';
   styleUrls: ['./new-order.page.scss'],
 })
 export class NewOrderPage implements OnInit {
+
+  myForm: FormGroup;
+  private playerCount: number = 1;
 
   tarikh_order = '';
   nama_pelanggan = '';
@@ -44,10 +48,24 @@ export class NewOrderPage implements OnInit {
     public toastController: ToastController,
     private storage: Storage,
     private camera: Camera,
-    public actionSheetController: ActionSheetController
-  ) {
-
-  }
+    public actionSheetController: ActionSheetController,
+    private formBuilder: FormBuilder
+  ) 
+ 
+  {
+    this.myForm = this.formBuilder.group({
+      username: new FormControl('', Validators.required),
+      nombor_hp: new FormControl('', Validators.required),
+      alamat_pelanggan: new FormControl('', Validators.required),
+      tarikh_order: new FormControl('', Validators.required),
+      akaun: new FormControl('', Validators.required),
+      produk: new FormControl('', Validators.required),
+      jumProduk: new FormControl('', Validators.required),
+      jumlah_bayaran: new FormControl('', Validators.required),
+      nota_tambahan: new FormControl('', Validators.required),
+    });
+    console.log(this.myForm);
+}
   ionViewWillEnter() {
     this.storage.get(TOKEN_KEY).then((res) => {
       this.users = res;
@@ -62,6 +80,27 @@ export class NewOrderPage implements OnInit {
 
 
   ngOnInit() {
+  }
+
+  submit(){
+    console.log("username" , this.myForm.value.username);
+    console.log("alamat_pelanggan", this.myForm.value.alamat_pelanggan);
+    console.log("nombor_hp" , this.myForm.value.nombor_hp);
+    console.log("akaun", this.myForm.value.akaun);
+    console.log("produk" , this.myForm.value.produk);
+    console.log("jumProduk", this.myForm.value.jumProduk);
+    console.log("jumlah_bayaran" , this.myForm.value.jumlah_bayaran);
+    console.log("nota_tambahan", this.myForm.value.nota_tambahan);
+
+  }
+
+  addControl(){
+    this.playerCount++;
+    this.myForm.addControl('username' + this.playerCount, new FormControl('', Validators.required));
+   
+  }
+  removeControl(control){
+    this.myForm.removeControl(control.key);
   }
 
   async createdProcess() {

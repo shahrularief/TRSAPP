@@ -86,15 +86,7 @@ export class HomePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.auth.authState.subscribe(state => {
-      this.users = state;
-      this.username = this.users.username;
-      this.company = this.users.company;
-      this.role = this.users.role;
-      console.log(this.company);
-      console.log(this.users);
-      console.log(this.role);
-    });
+   
   }
 
 
@@ -129,7 +121,17 @@ export class HomePage implements OnInit {
     this.unverifiedprod = [];
     this.unverifys = [];
     this.ranksales = [];
-    this.checkUser();
+    
+    this.auth.authState.subscribe(state => {
+      this.users = state;
+      this.username = this.users.username;
+      this.company = this.users.company;
+      this.role = this.users.role;
+      console.log(this.company);
+      console.log(this.users);
+      console.log(this.role);
+      this.checkUser();
+    });
   }
 
   processLogout() {

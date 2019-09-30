@@ -29,6 +29,13 @@ table{
      font-size: 10pt;
      text-align: center;
    }
-  
+   ion-card{
+    display: block;
+    flex-direction: column;
+    width: 30% !important;
+    height: 10% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
 
 

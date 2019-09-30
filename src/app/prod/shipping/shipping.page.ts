@@ -29,7 +29,7 @@ export class ShippingPage implements OnInit {
 
   customers: any = [];
   shipCount: any = [];
-
+  tableStyle = 'bootstrap';
 
   constructor(
     private router: Router,
@@ -46,14 +46,14 @@ export class ShippingPage implements OnInit {
     this.shipCount = [];
     this.customers = [];
     this.sums = [];
-    
+
     this.loadCustomer();
     this.loadShipped();
     this.getSum();
   }
 
   loadData(event: any) {
-    
+
     setTimeout(() => {
       this.loadCustomer().then(() => {
         event.target.complete();
@@ -65,14 +65,34 @@ export class ShippingPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getdatashipped',
-     
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
         for (const customer of data.result) {
           this.customers.push(customer);
+
         }
         resolve(true);
+        this.customers = this.customers.map(row => ({
+          order_id: row['order_id'],
+          tarikh_order: row['tarikh_order'],
+          nama_pelanggan: row['nama_pelanggan'],
+          alamat_pelanggan: row['alamat_pelanggan'],
+          nombor_hp: row['nombor_hp'],
+          akaun: row['akaun'],
+          produk: row['produk'],
+          penghantaran: row['penghantaran'],
+          jumlah_bayaran: row['jumlah_bayaran'],
+          jumProduk: row['jumProduk'],
+          nota_tambahan: row['nota_tambahan'],
+          sales: row['sales'],
+          company: row['company'],
+          fail_lampiran: row['fail_lampiran'],
+          resit: row['resit'],
+          pengesahan: row['pengesahan'],
+          tracking: row['tracking']
+        }));
       });
     });
   }
@@ -81,7 +101,7 @@ export class ShippingPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getshippedcount',
-   
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {
@@ -95,13 +115,13 @@ export class ShippingPage implements OnInit {
     });
   }
 
-  onSearchTerm(ev: CustomEvent) {
-    const val = ev.detail.value;
-
+  updateFilter(event) {
+    const val = event.target.value.toLowerCase();
     if (val && val.trim() !== '') {
-      this.customers = this.customers.filter(term => {
-        return term.company.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
+      const temp = this.customers.filter(function (d) {
+        return d.nama_pelanggan.toLowerCase().indexOf(val) !== -1 || !val;
       });
+      this.customers = temp;
     } else {
       this.customers = [];
       this.loadCustomer();
@@ -197,7 +217,7 @@ export class ShippingPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getsumship',
-       
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {

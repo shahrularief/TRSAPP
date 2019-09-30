@@ -49,7 +49,7 @@ export class AuthService {
     let company = credentials.company;
     let nickname = credentials.nickname;
 
-    let user = null;
+    let user;
 
     if (username !== '' && password !== '') {
       user = { nickname, fullname, userhp, username, password, role, userEmail, company };

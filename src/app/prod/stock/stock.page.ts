@@ -103,6 +103,8 @@ export class StockPage implements OnInit {
               console.log('Confirm Ok');
               this.newProduct(data);
               console.log(data);
+              this.products = [];
+              this.loadProduct();
             } else {
               const toast = await this.toastCtrl.create({
                 message: 'Isi ruang kosong',

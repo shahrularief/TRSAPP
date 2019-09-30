@@ -8,10 +8,11 @@
 <ion-content scrollX="true">
         <ion-grid>
                 <ion-row>
-                        <ion-card color="tertiary" height="40px">
+
+                        <ion-card color="success">
                                 <ion-card-subtitle>
                                         <div class="ion-text-center">
-                                                Total pending verification
+                                                Jumlah belum selesai
                                         </div>
                                         <br>
                                         <div class="ion-text-center" *ngFor="let ver of unverifiedprod">
@@ -19,6 +20,21 @@
                                         </div>
                                 </ion-card-subtitle>
                         </ion-card>
+
+                        <ion-card color="tertiary">
+                                <ion-card-subtitle>
+                                        <div class="ion-text-center">
+                                                Jumlah bayaran belum selesai
+                                        </div>
+                                        <br>
+                                        <div class="ion-text-center" *ngFor="let ss of sums">
+                                                {{ss.sum}}
+                                        </div>
+                                </ion-card-subtitle>
+                        </ion-card>
+
+
+
 
                 </ion-row>
                 <ion-row>
@@ -43,23 +59,23 @@
 
 
         <ngx-datatable class="fullscreen" [ngClass]="tableStyle" [rows]="customers" [columnMode]="'force'"
-                [sortType]="'multi'" [reorderable]="false" [scrollbarH]="true" [rowHeight]="'auto'" [headerHeight]="100"
+                [sortType]="'single'" [reorderable]="false" [scrollbarH]="true" [rowHeight]="'auto'" [headerHeight]="100"
                 [footerHeight]="50" [limit]="10">
-                <ngx-datatable-column name="Tarikh Order" prop="tarikh_order"></ngx-datatable-column>
-                <ngx-datatable-column name="Nama Pelanggan" prop="nama_pelanggan"></ngx-datatable-column>
-                <ngx-datatable-column name="Alamat Pelanggan" prop="alamat_pelanggan"></ngx-datatable-column>
-                <ngx-datatable-column name="Nombor Telefon" prop="nombor_hp"></ngx-datatable-column>
-                <ngx-datatable-column name="Akaun" prop="akaun"></ngx-datatable-column>
-                <ngx-datatable-column name="Produk" prop="produk"></ngx-datatable-column>
-                <ngx-datatable-column name="Jumlah Produk" prop="jumProduk"></ngx-datatable-column>
-                <ngx-datatable-column name="Jumlah Bayaran" prop="jumlah_bayaran"></ngx-datatable-column>
-                <ngx-datatable-column name="Sales" prop="sales"></ngx-datatable-column>
-                <ngx-datatable-column name="Team" prop="company"></ngx-datatable-column>
-                <ngx-datatable-column name="Status" prop="pengesahan"></ngx-datatable-column>
+                <ngx-datatable-column width="100" name="Tarikh Order" prop="tarikh_order"></ngx-datatable-column>
+                <ngx-datatable-column width="100" name="Nama" prop="nama_pelanggan"></ngx-datatable-column>
+                <ngx-datatable-column width="100" name="Alamat" prop="alamat_pelanggan"></ngx-datatable-column>
+                <ngx-datatable-column width="100" name="Nombor Telefon" prop="nombor_hp"></ngx-datatable-column>
+                <ngx-datatable-column width="100" name="Akaun" prop="akaun"></ngx-datatable-column>
+                <ngx-datatable-column width="100" name="Produk" prop="produk"></ngx-datatable-column>
+                <ngx-datatable-column width="100" name="Jumlah Produk" prop="jumProduk"></ngx-datatable-column>
+                <ngx-datatable-column width="100" name="Jumlah Bayaran" prop="jumlah_bayaran"></ngx-datatable-column>
+                <ngx-datatable-column width="100" name="Sales" prop="sales"></ngx-datatable-column>
+                <ngx-datatable-column width="100" name="Team" prop="company"></ngx-datatable-column>
+                <ngx-datatable-column width="100" name="Status" prop="pengesahan"></ngx-datatable-column>
 
                 <ngx-datatable-column name="id" [resizeable]="false">
                         <ng-template ngx-datatable-header-template>
-                                
+
                         </ng-template>
                         <ng-template let-row="row" ngx-datatable-cell-template>
                                 <button ion-button small color="light" (click)="deleteOrder(row.order_id)">
@@ -76,12 +92,13 @@
                                   row.nota_tambahan)">
                                         <ion-icon name="create"></ion-icon>
                                 </button>
-                                <button ion-button small outline color="light" (click)="openTrackModal(row.order_id,row.tracking)">
+                                <button ion-button small outline color="light"
+                                        (click)="openTrackModal(row.order_id,row.tracking)">
                                         <ion-icon name="keypad"></ion-icon>
                                 </button>
                                 <button ion-button small outline color="light"
                                         (click)="openDeliveryModal(row.order_id,row.penghantaran)">
-                                        <ion-icon name="image"></ion-icon>
+                                        <ion-icon name="bus"></ion-icon>
                                 </button>
                         </ng-template>
                 </ngx-datatable-column>

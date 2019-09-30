@@ -19,6 +19,48 @@
   </ion-row> -->
 
   <!-- new order card -->
+
+ <form [formGroup] = "myForm">
+   <ion-item>
+      <ion-label position="floating">Nama Pelanggan</ion-label>
+     <ion-input formControlName="username" type="text" placeholder="username"></ion-input>
+   </ion-item>
+   <ion-item>
+      <ion-label position="floating">Alamat Pelanggan</ion-label>
+     <ion-input formControlName="alamat_pelanggan" type="text" placeholder="alamat_pelanggan"></ion-input>
+   </ion-item>
+   <ion-item>
+      <ion-label position="floating">Nombor Telefon</ion-label>
+     <ion-input formControlName="nombor_hp" type="number" placeholder="nombor_hp"></ion-input>
+   </ion-item>
+   <ion-item>
+      <ion-label position="floating">Akaun Bank</ion-label>
+      <ion-select placeholder="Pilih bank" type="text" formControlName="akaun">
+        <ion-select-option value="Maybank">Maybank</ion-select-option>
+        <ion-select-option value="CIMB">CIMB</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item> 
+        <ion-label position="floating" >Produk</ion-label>
+        <ion-select placeholder="Pilih produk" formControlName="produk"> 
+          <ion-select-option *ngFor="let prod of products" [value]="prod.prodName">{{ prod.prodName }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+          <ion-label position="floating">Jumlah Produk</ion-label>
+          <ion-input type="number" formControlName="jumProduk"></ion-input>
+      </ion-item>
+      <ion-item>
+          <ion-label position="floating">Bayaran (RM)</ion-label>
+          <ion-input type="number" formControlName="jumlah_bayaran"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-textarea type="text" formControlName="nota_tambahan" placeholder="Maklumat tambahan di sini...">
+            </ion-textarea>
+          </ion-item>
+
+    <ion-button type="submit" (click)=submit()></ion-button>
+ </form>
   <ion-card>
     <ion-card-header>
       <ion-card-title>
