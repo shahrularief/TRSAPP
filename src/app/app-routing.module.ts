@@ -45,7 +45,10 @@ const routes: Routes = [
   { path: 'prod-product', loadChildren: './modals/prod-product/prod-product.module#ProdProductPageModule' },
   { path: 'employee', loadChildren: './admin/employee/employee.module#EmployeePageModule' },
   { path: 'salesbyperson', loadChildren: './admin/salesbyperson/salesbyperson.module#SalesbypersonPageModule' },
+  { path: 'updatecomp', loadChildren: './admin/updatecomp/updatecomp.module#UpdatecompPageModule' },
 
+  { path: 'updatecomp/:id/:nama/:reg/:addr/:city/:pc/:stat/:hp/:ms/:me', 
+  loadChildren: './admin/updatecomp/updatecomp.module#UpdatecompPageModule' },
 
 
 ];

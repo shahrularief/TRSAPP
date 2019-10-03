@@ -24,6 +24,7 @@ import { ModalpopupPageModule } from './modals/modalpopup/modalpopup.module';
 import { VerifyproductPageModule } from './modals/verifyproduct/verifyproduct.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ProdProductPageModule } from './modals/prod-product/prod-product.module';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent],
@@ -51,7 +52,9 @@ import { ProdProductPageModule } from './modals/prod-product/prod-product.module
     File,
     FilePath,
     Camera,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
+
   ],
   bootstrap: [AppComponent]
 })

@@ -20,6 +20,7 @@
   <table >
     <thead>
       <tr>
+        <th> </th>
         <th>Nama Syarikat</th>
         <th>No. Syarikat</th>
         <th>Alamat</th>
@@ -29,10 +30,13 @@
         <th>No. Telefon</th>
         <th>Kitaran Bulanan (Mula)</th>
         <th>Kitaran Bulanan (Akhir)</th>
+
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let com of companies">
+        <td><button ion-button small (click)="updateCompany(com.compID,com.compName,com.compReg,com.compAddr,
+          com.compCity,com.compPostcode,com.compState,com.compHP,com.compMonthS,com.compMonthE)"><ion-icon small name="create"></ion-icon></button></td>
         <td>
           <ion-text>{{com.compName}}</ion-text>
         </td>
@@ -52,7 +56,7 @@
           <ion-text>{{com.compState}}</ion-text>
         </td>
         <td>
-          <ion-text>{{com.compHP}}</ion-text>
+          <ion-text>0{{com.compHP}}</ion-text>
         </td>
         <td>
           <ion-text>{{com.compMonthS}}</ion-text>

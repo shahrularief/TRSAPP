@@ -12,7 +12,7 @@ export class ModalpopupPage implements OnInit {
     private modalController: ModalController
   ) { }
 
-  public id: string;
+  public order_id: string;
   public nama_pelanggan: string;
   public tarikh_order: string;
   public alamat_pelanggan: string;

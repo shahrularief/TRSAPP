@@ -67,7 +67,7 @@ export class ProductionPage implements OnInit {
     const val = event.target.value.toLowerCase();
     if (val && val.trim() !== '') {
       const temp = this.customers.filter(function (d) {
-        return d.nama_pelanggan.toLowerCase().indexOf(val) !== -1 || !val;
+        return d.company.toLowerCase().indexOf(val) !== -1 || !val;
       });
       this.customers = temp;
     } else {
@@ -214,6 +214,18 @@ export class ProductionPage implements OnInit {
           type: 'radio',
           label: 'GDEX',
           value: 'GDEX'
+        },
+        {
+          name: 'dhl',
+          type: 'radio',
+          label: 'DHL',
+          value: 'DHL'
+        },
+        {
+          name: 'cod',
+          type: 'radio',
+          label: 'COD',
+          value: 'COD'
         },
       ],
       buttons: [

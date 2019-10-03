@@ -1,0 +1,83 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-back-button slot="start"></ion-back-button>
+      <ion-title>Kemaskini Syarikat</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+
+<ion-content>
+
+
+  <ion-card>  
+    <ion-card-content>
+        <ion-card-title> Maklumat Syarikat</ion-card-title>
+      <ion-item>
+        <ion-label position="floating"  >
+         Nama Syarikat
+        </ion-label>
+
+        <ion-input type="text" [(ngModel)]="compName" autocapitalize="characters"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating" >
+          Nombor Pendaftaran
+        </ion-label>
+
+        <ion-input type="text" [(ngModel)]="compReg"></ion-input>
+
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">
+          Alamat
+        </ion-label>
+
+        <ion-input type="text"  [(ngModel)]="compAddr"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating" >
+          Bandar
+        </ion-label>
+
+        <ion-input type="text" [(ngModel)]="compCity"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating" >
+          Poskod </ion-label>
+
+        <ion-input type="text" [(ngModel)]="compPostcode"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating" >
+          Negeri
+        </ion-label>
+
+        <ion-input type="text" [(ngModel)]="compState"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating" >
+          Nombor Telefon
+        </ion-label>
+        <ion-input type="text" [(ngModel)]="compHP"></ion-input>
+      </ion-item>
+      <ion-item>
+          <ion-label>Kitaran Bulanan (Mula)</ion-label>
+          <ion-datetime displayFormat="YYYY-MM-DD " placeholder="Select Date" [(ngModel)]="compMonthS"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label>Kitaran Bulanan (Akhir)</ion-label>
+            <ion-datetime displayFormat="YYYY-MM-DD " placeholder="Select Date" [(ngModel)]="compMonthE"></ion-datetime>
+          </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+<div class="ion-padding">
+    <ion-button expand="block" type="submit" class="ion-no-margin" shape="round" (click)="updatedProcess()">
+      Hantar
+      <ion-ripple-effect></ion-ripple-effect>
+    </ion-button>
+  </div>
+
+</ion-content>

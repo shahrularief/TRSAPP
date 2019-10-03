@@ -9,10 +9,10 @@
         <ion-grid>
                 <ion-row>
 
-                        <ion-card color="success">
+                        <ion-card color="primary">
                                 <ion-card-subtitle>
                                         <div class="ion-text-center">
-                                                Jumlah belum selesai
+                                                Pending
                                         </div>
                                         <br>
                                         <div class="ion-text-center" *ngFor="let ver of unverifiedprod">
@@ -21,10 +21,10 @@
                                 </ion-card-subtitle>
                         </ion-card>
 
-                        <ion-card color="tertiary">
+                        <ion-card color="primary">
                                 <ion-card-subtitle>
                                         <div class="ion-text-center">
-                                                Jumlah bayaran belum selesai
+                                                RM
                                         </div>
                                         <br>
                                         <div class="ion-text-center" *ngFor="let ss of sums">
@@ -52,7 +52,7 @@
                 </ion-row>
 
                 <ion-row>
-                        <ion-searchbar showCancelButton="always" (ionChange)="updateFilter($event)"></ion-searchbar>
+                        <ion-searchbar showCancelButton="always" (ionChange)="updateFilter($event)" placeholder="search by company"></ion-searchbar>
                 </ion-row>
         </ion-grid>
 

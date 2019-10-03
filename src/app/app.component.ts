@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-
 import { Router } from '@angular/router';
-import { Platform, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { MenuController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { AuthService } from './services/auth.service';
+
 
 const TOKEN_KEY = 'user-access-token';
 
@@ -21,6 +21,12 @@ export class AppComponent {
   items: any;
   username: string;
   res: any;
+
+  ordlabel = false;
+  acclabel = false;
+  prodlabel = false;
+  perflabel = false;
+  admlabel = false;
 
   // public appAdmin = [];
   // public appAccount = [];
@@ -129,7 +135,8 @@ export class AppComponent {
 
         if (this.res !== null && this.role === 'SALES') {
           this.router.navigate(['/home']);
-
+          
+          this.ordlabel = true;
           this.appSales = [
             {
               title: 'Tempahan Baru',
@@ -139,22 +146,29 @@ export class AppComponent {
             {
               title: 'Rekod Tempahan',
               url: '/rekod-order',
-              icon: 'cart'
+              icon: 'grid'
             },
           ];
           this.appPerform = [];
           this.appAccount = [];
           this.appProduction = [];
           this.appAdmin = [];
+          
 
         } else if (this.res !== null && this.role === 'ACCOUNT') {
           this.router.navigate(['/home']);
           this.appSales = [];
           this.appPerform = [];
+
+          this.acclabel = true;
+          this.ordlabel = false;
+          this.prodlabel = false;
+          this.perflabel = false;
+          this.admlabel = false;
           this.appAccount = [{
             title: 'Pengesahan',
             url: '/account-verify',
-            icon: 'people'
+            icon: 'checkmark-circle'
           },
           {
             title: 'Shipping',
@@ -169,6 +183,10 @@ export class AppComponent {
         } else if (this.res !== null && this.role === 'PRODUCTION') {
           this.router.navigate(['/home']);
           this.appPerform = [];
+          this.ordlabel = true;
+          this.acclabel = false;
+          this.perflabel = false;
+          this.admlabel = false;
           this.appSales = [
             {
               title: 'Tempahan Baru',
@@ -178,11 +196,12 @@ export class AppComponent {
             {
               title: 'Rekod Tempahan',
               url: '/rekod-order',
-              icon: 'cart'
+              icon: 'grid'
             },
           ];
 
           this.appAccount = [];
+          this.prodlabel = true;
           this.appProduction = [
             {
               title: 'Production',
@@ -205,7 +224,8 @@ export class AppComponent {
 
         } else if (this.res !== null && this.role === 'CEO' || this.role === 'BOD' || this.role === 'DEV') {
           this.router.navigate(['/home']);
-
+          this.ordlabel = true;
+          
           this.appSales = [
             {
               title: 'Tempahan Baru',
@@ -215,10 +235,10 @@ export class AppComponent {
             {
               title: 'Rekod Tempahan',
               url: '/rekod-order',
-              icon: 'cart'
+              icon: 'grid'
             },
           ];
-
+          this.perflabel = true;
           this.appPerform = [{
             title: 'Sales by Team',
             url: '/salesteam',
@@ -230,14 +250,15 @@ export class AppComponent {
             icon: 'body'
           },
           ];
+          this.acclabel = true;
           this.appAccount = [
             {
               title: 'Pengesahan',
               url: '/account-verify',
-              icon: 'people'
+              icon: 'checkmark-circle'
             },
           ];
-
+          this.prodlabel = true;
           this.appProduction = [
             {
               title: 'Production',
@@ -256,11 +277,12 @@ export class AppComponent {
               icon: 'filing'
             },
           ];
+          this.admlabel = true;
           this.appAdmin = [
             {
               title: 'Staff Syarikat',
               url: '/employee',
-              icon: 'add'
+              icon: 'person'
             },
             {
               title: 'Syarikat',

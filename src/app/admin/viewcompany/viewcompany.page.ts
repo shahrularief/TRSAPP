@@ -11,7 +11,7 @@ import { PostProvider } from '../../../providers/post-provider';
 export class ViewcompanyPage implements OnInit {
 
   companies: any[];
- 
+
   constructor(
     private router: Router,
     private postPrvdr: PostProvider,
@@ -24,16 +24,22 @@ export class ViewcompanyPage implements OnInit {
   }
 
   ionViewWillEnter() {
-   this.companies = [];
-   
-   this.loadCompany();
+    this.companies = [];
+
+    this.loadCompany();
   }
+
+  updateCompany(id, nama, reg , addr, city, pc,stat, hp, ms, me,) {
+    this.router.navigate(['/updatecomp/' + id + '/' + nama + '/' + reg + '/' + addr + '/' + city + '/' + pc + '/'
+    + stat + '/' + hp + '/' + ms + '/' + me]);
+  }
+
 
   loadCompany() {
     return new Promise(resolve => {
       const body = {
         aksi: 'getcompany',
-     
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -60,7 +66,7 @@ export class ViewcompanyPage implements OnInit {
     }
   }
 
-  viewCompany(){
+  viewCompany() {
     this.router.navigate(['/company']);
   }
 

@@ -30,7 +30,7 @@
                 </ion-item>
               </ion-menu-toggle>
 
-          <ion-item>
+          <ion-item *ngIf="ordlabel">
               <ion-label color="medium">Order</ion-label>
           </ion-item>
          
@@ -43,7 +43,7 @@
             </ion-item>
           </ion-menu-toggle>
 
-          <ion-item>
+          <ion-item *ngIf="acclabel">
               <ion-label  color="medium">Accounting</ion-label>
           </ion-item>
           
@@ -56,7 +56,7 @@
             </ion-item>
           </ion-menu-toggle>
 
-          <ion-item>
+          <ion-item *ngIf="prodlabel">
               <ion-label color="medium">Production</ion-label>
           </ion-item>
           
@@ -69,7 +69,7 @@
             </ion-item>
           </ion-menu-toggle>
 
-          <ion-item>
+          <ion-item *ngIf="perflabel">
               <ion-label color="medium">Performance</ion-label>
           </ion-item>
           
@@ -82,7 +82,7 @@
             </ion-item>
           </ion-menu-toggle>
 
-          <ion-item>
+          <ion-item *ngIf="admlabel">
               <ion-label color="medium">Administration</ion-label>
           </ion-item>
           

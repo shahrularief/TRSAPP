@@ -134,6 +134,7 @@ export class StockPage implements OnInit {
       console.log('OK');
       console.log(data);
 
+
       const toast = await this.toastCtrl.create({
         message: 'PRODUK telah disimpan',
         duration: 2000
@@ -203,7 +204,8 @@ export class StockPage implements OnInit {
           text: 'Ok',
           handler: add => {
             this.addStock(id, add.addstock, stock);
-
+            this.products = [];
+            this.loadProduct();
             console.log('Confirm Ok' + add.addstock);
           }
         }

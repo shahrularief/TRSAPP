@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { ModalpopupPage } from '../../modals/modalpopup/modalpopup.page';
 import { AlertController } from '@ionic/angular';
+import { AuthService } from '../../services/auth.service';
+import { LoadingController } from '@ionic/angular';
 
 
 
@@ -26,17 +28,22 @@ export class RekodOrderPage implements OnInit {
   nota_tambahan;
   pengesahan;
   id: number;
-
+  username;
+  role;
 
   customers: any = [];
- 
+  users: any = [];
   constructor(
     private router: Router,
     private postPvdr: PostProvider,
     public toastCtrl: ToastController,
     private modalController: ModalController,
     public alertCtrl: AlertController,
+    public auth: AuthService,
+    public loadingController: LoadingController,
   ) { }
+
+
 
   async openModal(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, resit, sah) {
     const modal = await this.modalController.create({
@@ -68,14 +75,26 @@ export class RekodOrderPage implements OnInit {
 
   ionViewWillEnter() {
     this.customers = [];
-    
-    this.loadCustomer();
+
+
+    this.auth.authState.subscribe(state => {
+      this.users = state;
+      this.username = this.users.username;
+      this.role = this.users.role;
+
+      if (this.role === "CEO" || this.role === "BOD") {
+        this.loadCustomerAll();
+      } else {
+        this.loadCustomer(this.username);
+      }
+
+    });
   }
 
   updateCustomer(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, resit) {
     this.router.navigate(['/update-order/' + id + '/' + tarikh + '/' + nama + '/' + alamat + '/' + hp + '/' + akaun + '/'
       + produk + '/' + jumProduk + '/' + bayaran + '/' + nota]);
-      resit;
+    resit;
   }
 
   async deleteAlert(id) {
@@ -121,13 +140,45 @@ export class RekodOrderPage implements OnInit {
     });
   }
 
+  
+  async loadCustomer(user) {
+    const loading = await this.loadingController.create({
+      duration: 2000,
+      showBackdrop: false,
+      
+    });
+    await loading.present();
+    return new Promise(resolve => {
 
+      let body = {
+        aksi: 'getdataallrecord',
+        username: user,
 
-  loadCustomer() {
+      };
+
+      this.postPvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (let customer of data.result) {
+          this.customers.push(customer);
+        }
+
+        resolve(true);
+      });
+    });
+  }
+
+  async loadCustomerAll() {
+    const loading = await this.loadingController.create({
+      duration: 2000,
+      showBackdrop: false,
+      spinner: "circles",
+      translucent: true,
+      message: "Loading",
+      cssClass: "load-class",
+        });
+    await loading.present();
     return new Promise(resolve => {
       let body = {
         aksi: 'getdataall',
-      
       };
 
       this.postPvdr.postData(body, 'process-api.php').subscribe(data => {

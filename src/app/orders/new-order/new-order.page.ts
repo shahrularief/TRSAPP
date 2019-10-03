@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ToastController, ActionSheetController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, FormArray, Validators } from '@angular/forms';
 
 const TOKEN_KEY = 'user-access-token';
 
@@ -21,7 +21,7 @@ export class NewOrderPage implements OnInit {
   tarikh_order = '';
   nama_pelanggan = '';
   alamat_pelanggan = '';
-  nombor_hp = '';
+  nombor_hp;
   akaun = '';
   produk = '';
   jumProduk = '';
@@ -50,22 +50,21 @@ export class NewOrderPage implements OnInit {
     private camera: Camera,
     public actionSheetController: ActionSheetController,
     private formBuilder: FormBuilder
-  ) 
- 
-  {
+  ) {
     this.myForm = this.formBuilder.group({
-      username: new FormControl('', Validators.required),
-      nombor_hp: new FormControl('', Validators.required),
+      nama_pelanggan: new FormControl('', Validators.required),
       alamat_pelanggan: new FormControl('', Validators.required),
+
+      nombor_hp: new FormControl('', Validators.required),
       tarikh_order: new FormControl('', Validators.required),
-      akaun: new FormControl('', Validators.required),
-      produk: new FormControl('', Validators.required),
+      akaun: new FormControl(''),
+      produk: new FormControl(''),
       jumProduk: new FormControl('', Validators.required),
       jumlah_bayaran: new FormControl('', Validators.required),
       nota_tambahan: new FormControl('', Validators.required),
     });
     console.log(this.myForm);
-}
+  }
   ionViewWillEnter() {
     this.storage.get(TOKEN_KEY).then((res) => {
       this.users = res;
@@ -82,39 +81,36 @@ export class NewOrderPage implements OnInit {
   ngOnInit() {
   }
 
-  submit(){
-    console.log("username" , this.myForm.value.username);
+
+  async submit() {
+    console.log("nama_pelanggan", this.myForm.value.nama_pelanggan);
     console.log("alamat_pelanggan", this.myForm.value.alamat_pelanggan);
-    console.log("nombor_hp" , this.myForm.value.nombor_hp);
+    console.log("nombor_hp", this.myForm.value.nombor_hp);
     console.log("akaun", this.myForm.value.akaun);
-    console.log("produk" , this.myForm.value.produk);
+    console.log("produk", this.myForm.value.produk);
     console.log("jumProduk", this.myForm.value.jumProduk);
-    console.log("jumlah_bayaran" , this.myForm.value.jumlah_bayaran);
+    console.log("jumlah_bayaran", this.myForm.value.jumlah_bayaran);
     console.log("nota_tambahan", this.myForm.value.nota_tambahan);
 
-  }
+    let hp = this.myForm.value.nombor_hp;
+    
 
-  addControl(){
-    this.playerCount++;
-    this.myForm.addControl('username' + this.playerCount, new FormControl('', Validators.required));
-   
-  }
-  removeControl(control){
-    this.myForm.removeControl(control.key);
-  }
 
-  async createdProcess() {
-    if (this.nama_pelanggan !== '' && this.alamat_pelanggan !== '') {
+    if (this.myForm.value.nama_pelanggan !== '' && this.myForm.value.alamat_pelanggan !== ''
+      && this.myForm.value.nombor_hp !== '' && this.myForm.value.akaun !== '' && this.myForm.value.produk !== ' '
+      && this.myForm.value.jumProduk !== ''
+      && this.myForm.value.jumlah_bayaran !== '' && this.myForm.value.nota_tambahan !== '') {
       let body = {
+
         aksi: 'add',
-        nama_pelanggan: this.nama_pelanggan,
-        alamat_pelanggan: this.alamat_pelanggan,
-        nombor_hp: this.nombor_hp,
-        akaun: this.akaun,
-        produk: this.produk,
-        jumProduk: this.jumProduk,
-        jumlah_bayaran: this.jumlah_bayaran,
-        nota_tambahan: this.nota_tambahan,
+        nama_pelanggan: this.myForm.value.nama_pelanggan,
+        alamat_pelanggan: this.myForm.value.alamat_pelanggan,
+        nombor_hp: this.myForm.value.nombor_hp,
+        akaun: this.myForm.value.akaun,
+        produk: this.myForm.value.produk,
+        jumProduk: this.myForm.value.jumProduk,
+        jumlah_bayaran: this.myForm.value.jumlah_bayaran,
+        nota_tambahan: this.myForm.value.nota_tambahan,
         pengesahan: this.pengesahan,
         images: this.cameraData,
         resit: this.base64Image,
@@ -123,30 +119,39 @@ export class NewOrderPage implements OnInit {
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(async data => {
-        this.router.navigate(['/new-order']);
+
         console.log('OK');
         console.log(data);
+        if (data.success) {
+          const toast = await this.toastController.create({
+            message: 'Tempahan telah di simpan',
+            duration: 2000
+          });
+          toast.present();
 
-        this.tarikh_order = '';
-        this.nama_pelanggan = '';
-        this.alamat_pelanggan = '';
-        this.nombor_hp = '';
-        this.akaun = '';
-        this.produk = '';
-        this.jumProduk = '';
-        this.jumlah_bayaran = '';
-        this.nota_tambahan = '';
-        this.cameraData = '';
+          this.myForm.reset();
+          this.router.navigate(['/new-order']);
+        } else {
+          const toast = await this.toastController.create({
+            message: 'Error db',
+            duration: 3000
+          });
+          toast.present();
+        }
 
-        const toast = await this.toastController.create({
-          message: 'Tempahan telah di simpan',
-          duration: 2000
-        });
-        toast.present();
       });
+    } else {
+      const toast = await this.toastController.create({
+        message: 'Isi maklumat pelanggan di atas',
+        duration: 3000
+      });
+      toast.present();
     }
+
   }
 
+
+  
   async presentActionSheet() {
     const actionSheet = await this.actionSheetController.create({
       header: 'Choose one',
@@ -190,7 +195,7 @@ export class NewOrderPage implements OnInit {
     return new Promise(resolve => {
       let body = {
         aksi: 'getproduct',
-       
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {

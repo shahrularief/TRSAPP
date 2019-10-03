@@ -144,7 +144,7 @@ export class AccountVerifyPage implements OnInit {
     const val = event.target.value.toLowerCase();
     if (val && val.trim() !== '') {
       const temp = this.customers.filter(function (d) {
-        return d.nama_pelanggan.toLowerCase().indexOf(val) !== -1 || !val;
+        return d.company.toLowerCase().indexOf(val) !== -1 || !val;
       });
       this.customers = temp;
     } else {

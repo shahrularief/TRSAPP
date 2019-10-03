@@ -103,6 +103,7 @@
     
       while($row = mysqli_fetch_array($query)){
         $data[] = array(
+          'compID' => $row['compID'],
           'compName' => $row['compName'],
           'compReg' => $row['compReg'],
           'compAddr' => $row['compAddr'],
@@ -285,6 +286,42 @@ elseif($postjson['aksi']=='getdatashipped'){
       echo $result;
   
     }
+
+     // DISPLAY DATA ALL///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='getdataallrecord'){
+    $username = $postjson['username'];
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE sales='$username' ORDER BY order_id DESC ");
+  
+    while($row = mysqli_fetch_array($query)){
+      $data[] = array(
+        'order_id' => $row['order_id'],
+        'tarikh_order' => $row['tarikh_order'],
+        'nama_pelanggan' => $row['nama_pelanggan'],
+        'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'nombor_hp' => $row['nombor_hp'],
+        'akaun' => $row['akaun'],
+        'produk' => $row['produk'],
+        'penghantaran' => $row['penghantaran'],
+        'jumlah_bayaran' => $row['jumlah_bayaran'],
+        'nota_tambahan' => $row['nota_tambahan'],
+        'sales' => $row['sales'],
+        'jumProduk' => $row['jumProduk'],
+        'resit' => $row['resit'],
+        'day' => $row['day'],
+        'month' => $row['month'],
+        'year' => $row['year'],
+        'pengesahan' => $row['pengesahan']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
+
 
     // get products///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=='getproduct'){
@@ -639,6 +676,28 @@ elseif($postjson['aksi']=='getsumship'){
       jumProduk = '$postjson[jumProduk]',
       jumlah_bayaran = '$postjson[jumlah_bayaran]',
       nota_tambahan = '$postjson[nota_tambahan]' WHERE order_id='$postjson[order_id]'");
+
+  	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
+  	else $result = json_encode(array('success'=>false, 'result'=>'error'));
+
+  	echo $result;
+
+  }
+
+   // UPDATE DATA///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+   elseif($postjson['aksi']=='updatecompany'){
+  	$query = mysqli_query($mysqli, "UPDATE company_table SET
+      compName = '$postjson[compName]',
+  		compReg = '$postjson[compReg]',
+  		compAddr = '$postjson[compAddr]',
+      compCity = '$postjson[compCity]',
+      compPostcode = '$postjson[compPostcode]',
+      compHP = '$postjson[compHP]',
+      compMonthS = '$postjson[compMonthS]',
+      compMonthE = '$postjson[compMonthE]'
+      WHERE compID='$postjson[compID]'");
 
   	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
   	else $result = json_encode(array('success'=>false, 'result'=>'error'));
