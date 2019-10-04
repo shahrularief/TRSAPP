@@ -31,6 +31,9 @@
                                 <ion-button (click)="clearArrayCust()" fill="outline" color="danger">
                                         <ion-icon name="close"></ion-icon>
                                 </ion-button>
+                                <ion-button (click)="downloadCSV()" fill="outline" color="tertiary">
+                                        <ion-icon name="download"></ion-icon>
+                                </ion-button>
                         </ion-col>
 
 
@@ -45,14 +48,10 @@
 
 
 
-
-
-
-
-        <ngx-datatable class="fullscreen" [ngClass]="tableStyle" [rows]="customers" [columnMode]="'force'"
-                [sortType]="'multi'" [reorderable]="false" [scrollbarH]="true" [rowHeight]="'auto'" [headerHeight]="100"
-                [footerHeight]="50" [limit]="10">
-                <ngx-datatable-column name="Tarikh Order" prop="tarikh_order"></ngx-datatable-column>
+        <ngx-datatable [ngClass]="tableStyle" [rows]="customers" [columnMode]="'force'"
+                [sortType]="'single'" [reorderable]="false" [scrollbarH]="true" [rowHeight]="'auto'" [headerHeight]="100"
+                [footerHeight]="50" [limit]="10" >
+                <ngx-datatable-column color="primary" name="Tarikh Order" prop="tarikh_order"></ngx-datatable-column>
                 <ngx-datatable-column name="Nama Pelanggan" prop="nama_pelanggan"></ngx-datatable-column>
                 <ngx-datatable-column name="Alamat Pelanggan" prop="alamat_pelanggan"></ngx-datatable-column>
                 <ngx-datatable-column name="Nombor Telefon" prop="nombor_hp"></ngx-datatable-column>
@@ -92,7 +91,8 @@
                                 </button>
                         </ng-template>
                 </ngx-datatable-column>
+               
         </ngx-datatable>
-
+  
 
 </ion-content>

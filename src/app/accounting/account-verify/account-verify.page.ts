@@ -12,6 +12,9 @@ import {
   CalendarResult
 } from 'ion2-calendar';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import * as papa from 'papaparse';
+
+
 
 @Component({
   selector: 'app-account-verify',
@@ -19,6 +22,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
   styleUrls: ['./account-verify.page.scss'],
 })
 export class AccountVerifyPage implements OnInit {
+  date: Date = new Date();
+
   tarikh_order;
   nama_pelanggan;
   alamat_pelanggan;
@@ -45,10 +50,9 @@ export class AccountVerifyPage implements OnInit {
   products: any = [];
   tableColumns: any[];
   tableStyle = 'bootstrap';
-
   public searchTerm = '';
   server: string;
-
+  headerRow
 
   constructor(
 
@@ -63,6 +67,7 @@ export class AccountVerifyPage implements OnInit {
   ) { this.server = postPrvdr.server; }
 
   ngOnInit() {
+    console.log(this.date);
   }
 
   ionViewWillEnter() {
@@ -363,5 +368,45 @@ export class AccountVerifyPage implements OnInit {
         resolve(true);
       });
     });
+  }
+
+  downloadCSV() {
+    let day = this.date.getDay();
+    let month = this.date.getMonth() + 1;
+    let year = this.date.getFullYear();
+  
+
+    console.log(day + '/' + month);
+    let customersCSV = this.customers.map(row => ({
+      order_id: row['order_id'],
+      tarikh_order: row['tarikh_order'],
+      nama_pelanggan: row['nama_pelanggan'],
+      alamat_pelanggan: row['alamat_pelanggan'],
+      nombor_hp: row['nombor_hp'],
+      akaun: row['akaun'],
+      produk: row['produk'],
+      penghantaran: row['penghantaran'],
+      jumlah_bayaran: row['jumlah_bayaran'],
+      jumProduk: row['jumProduk'],
+      nota_tambahan: row['nota_tambahan'],
+      sales: row['sales'],
+      company: row['company'],
+      pengesahan: row['pengesahan']
+    }));
+
+    console.log(customersCSV);
+    let csv = papa.unparse({
+      fields: this.headerRow,
+      data: customersCSV,
+    });
+
+    // Dummy implementation for Desktop download purpose
+    let blob = new Blob([csv]);
+    let a = window.document.createElement("a");
+    a.href = window.URL.createObjectURL(blob);
+    a.download = day + '/' +  month +  '/' +  year + '/' + "account.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 }

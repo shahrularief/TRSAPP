@@ -4,6 +4,7 @@ import { AlertController, ModalController, ToastController } from '@ionic/angula
 import { CalendarModal, CalendarModalOptions, CalendarResult } from 'ion2-calendar';
 import { PostProvider } from '../../../providers/post-provider';
 import { ProdProductPage } from '../../modals/prod-product/prod-product.page';
+import * as papa from 'papaparse';
 
 @Component({
   selector: 'app-production',
@@ -11,7 +12,7 @@ import { ProdProductPage } from '../../modals/prod-product/prod-product.page';
   styleUrls: ['./production.page.scss'],
 })
 export class ProductionPage implements OnInit {
-
+  date: Date = new Date();
   tarikh_order;
   nama_pelanggan;
   alamat_pelanggan;
@@ -34,7 +35,7 @@ export class ProductionPage implements OnInit {
   stock: any[];
   sums: any[];
   count: any[];
- 
+  headerRow
   tableStyle = 'bootstrap';
   constructor(
     private router: Router,
@@ -429,5 +430,44 @@ export class ProductionPage implements OnInit {
       });
     });
   }
+  downloadCSV() {
+    let day = this.date.getDay();
+    let month = this.date.getMonth() + 1;
+    let year = this.date.getFullYear();
+  
 
+    console.log(day + '/' + month);
+    let customersCSV = this.customers.map(row => ({
+      order_id: row['order_id'],
+      tarikh_order: row['tarikh_order'],
+      nama_pelanggan: row['nama_pelanggan'],
+      alamat_pelanggan: row['alamat_pelanggan'],
+      nombor_hp: row['nombor_hp'],
+      akaun: row['akaun'],
+      produk: row['produk'],
+      penghantaran: row['penghantaran'],
+      jumlah_bayaran: row['jumlah_bayaran'],
+      jumProduk: row['jumProduk'],
+      nota_tambahan: row['nota_tambahan'],
+      sales: row['sales'],
+      company: row['company'],
+      pengesahan: row['pengesahan'],
+      tracking: row['tracking']
+    }));
+
+    console.log(customersCSV);
+    let csv = papa.unparse({
+      fields: this.headerRow,
+      data: customersCSV,
+    });
+
+    // Dummy implementation for Desktop download purpose
+    let blob = new Blob([csv]);
+    let a = window.document.createElement("a");
+    a.href = window.URL.createObjectURL(blob);
+    a.download = day + '/' +  month +  '/' +  year + '/' + "production.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
 }

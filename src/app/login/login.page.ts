@@ -24,7 +24,7 @@ export class LoginPage implements OnInit {
     private auth: AuthService,
     private menu: MenuController,
 
-  ) { this.image = '../assets/trstraining.png'; 
+  ) { this.image = '../assets/trsgold.png'; 
 }
 
   ngOnInit() {

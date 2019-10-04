@@ -5,10 +5,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-
 import { AccountVerifyPage } from './account-verify.page';
 import { CalendarModule } from 'ion2-calendar';
-
 const routes: Routes = [
   {
     path: '',

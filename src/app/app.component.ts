@@ -5,6 +5,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { MenuController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { AuthService } from './services/auth.service';
+import {NgxSpinnerService} from 'ngx-spinner';
+
 
 
 const TOKEN_KEY = 'user-access-token';
@@ -109,6 +111,7 @@ export class AppComponent {
     private router: Router,
     private auth: AuthService,
     private menu: MenuController,
+    public spinner: NgxSpinnerService,
   ) {
     this.initializeApp();
     this.loadUser();
@@ -119,6 +122,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.spinner.show();
     });
   }
 

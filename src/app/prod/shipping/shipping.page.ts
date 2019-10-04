@@ -3,14 +3,14 @@ import { Router } from '@angular/router';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { CalendarModal, CalendarModalOptions, CalendarResult } from 'ion2-calendar';
 import { PostProvider } from '../../../providers/post-provider';
-
+import * as papa from 'papaparse';
 @Component({
   selector: 'app-shipping',
   templateUrl: './shipping.page.html',
   styleUrls: ['./shipping.page.scss'],
 })
 export class ShippingPage implements OnInit {
-
+  date: Date = new Date();
   tarikh_order;
   nama_pelanggan;
   alamat_pelanggan;
@@ -30,7 +30,7 @@ export class ShippingPage implements OnInit {
   customers: any = [];
   shipCount: any = [];
   tableStyle = 'bootstrap';
-
+  headerRow
   constructor(
     private router: Router,
     private postPrvdr: PostProvider,
@@ -119,7 +119,7 @@ export class ShippingPage implements OnInit {
     const val = event.target.value.toLowerCase();
     if (val && val.trim() !== '') {
       const temp = this.customers.filter(function (d) {
-        return d.nama_pelanggan.toLowerCase().indexOf(val) !== -1 || !val;
+        return d.company.toLowerCase().indexOf(val) !== -1 || !val;
       });
       this.customers = temp;
     } else {
@@ -229,5 +229,47 @@ export class ShippingPage implements OnInit {
         resolve(true);
       });
     });
+  }
+
+  downloadCSV() {
+    let day = this.date.getDay();
+    let month = this.date.getMonth() + 1;
+    let year = this.date.getFullYear();
+    let min = this.date.getMinutes();
+    let hours = this.date.getHours();
+  
+
+    console.log(day + '/' + month);
+    let customersCSV = this.customers.map(row => ({
+      order_id: row['order_id'],
+      tarikh_order: row['tarikh_order'],
+      nama_pelanggan: row['nama_pelanggan'],
+      alamat_pelanggan: row['alamat_pelanggan'],
+      nombor_hp: row['nombor_hp'],
+      akaun: row['akaun'],
+      produk: row['produk'],
+      penghantaran: row['penghantaran'],
+      jumlah_bayaran: row['jumlah_bayaran'],
+      jumProduk: row['jumProduk'],
+      nota_tambahan: row['nota_tambahan'],
+      sales: row['sales'],
+      company: row['company'],
+      pengesahan: row['pengesahan']
+    }));
+
+    console.log(customersCSV);
+    let csv = papa.unparse({
+      fields: this.headerRow,
+      data: customersCSV,
+    });
+
+    // Dummy implementation for Desktop download purpose
+    let blob = new Blob([csv]);
+    let a = window.document.createElement("a");
+    a.href = window.URL.createObjectURL(blob);
+    a.download = day + '/' +  month +  '/' +  year + '/' + 'shipping.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 }

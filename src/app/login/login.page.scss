@@ -21,7 +21,7 @@ ion-row {
 }
 
 ion-col {
-    border: 1px solid #488aff;
+    border: 3px solid #dac31b;
     background: $white-color;
 }
 
@@ -35,6 +35,7 @@ ion-button {
     }
 
     ion-col {
+       
         border: none;
     }
 }

@@ -6,7 +6,7 @@ import { ModalController } from '@ionic/angular';
 import { ModalpopupPage } from '../../modals/modalpopup/modalpopup.page';
 import { AlertController } from '@ionic/angular';
 import { AuthService } from '../../services/auth.service';
-import { LoadingController } from '@ionic/angular';
+import { LoadingService } from '../../services/loading.service';
 
 
 
@@ -30,7 +30,7 @@ export class RekodOrderPage implements OnInit {
   id: number;
   username;
   role;
-
+  loaderToShow: any;
   customers: any = [];
   users: any = [];
   constructor(
@@ -40,7 +40,7 @@ export class RekodOrderPage implements OnInit {
     private modalController: ModalController,
     public alertCtrl: AlertController,
     public auth: AuthService,
-    public loadingController: LoadingController,
+    public loadCtrl: LoadingService,
   ) { }
 
 
@@ -83,6 +83,7 @@ export class RekodOrderPage implements OnInit {
       this.role = this.users.role;
 
       if (this.role === "CEO" || this.role === "BOD") {
+      
         this.loadCustomerAll();
       } else {
         this.loadCustomer(this.username);
@@ -140,14 +141,8 @@ export class RekodOrderPage implements OnInit {
     });
   }
 
-  
+
   async loadCustomer(user) {
-    const loading = await this.loadingController.create({
-      duration: 2000,
-      showBackdrop: false,
-      
-    });
-    await loading.present();
     return new Promise(resolve => {
 
       let body = {
@@ -167,16 +162,8 @@ export class RekodOrderPage implements OnInit {
   }
 
   async loadCustomerAll() {
-    const loading = await this.loadingController.create({
-      duration: 2000,
-      showBackdrop: false,
-      spinner: "circles",
-      translucent: true,
-      message: "Loading",
-      cssClass: "load-class",
-        });
-    await loading.present();
     return new Promise(resolve => {
+      this.loadCtrl.present();
       let body = {
         aksi: 'getdataall',
       };
@@ -185,6 +172,7 @@ export class RekodOrderPage implements OnInit {
         for (let customer of data.result) {
           this.customers.push(customer);
         }
+        this.loadCtrl.dismiss();
         resolve(true);
       });
     });

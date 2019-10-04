@@ -25,6 +25,7 @@ import { VerifyproductPageModule } from './modals/verifyproduct/verifyproduct.mo
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ProdProductPageModule } from './modals/prod-product/prod-product.module';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [AppComponent],
@@ -41,6 +42,7 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
     VerifyproductPageModule,
     ProdProductPageModule,
     NgxDatatableModule,
+    NgxSpinnerModule,
     IonicStorageModule.forRoot(),
   ],
   providers: [

@@ -92,24 +92,28 @@ export class NewOrderPage implements OnInit {
     console.log("jumlah_bayaran", this.myForm.value.jumlah_bayaran);
     console.log("nota_tambahan", this.myForm.value.nota_tambahan);
 
-    let hp = this.myForm.value.nombor_hp;
-    
 
 
     if (this.myForm.value.nama_pelanggan !== '' && this.myForm.value.alamat_pelanggan !== ''
       && this.myForm.value.nombor_hp !== '' && this.myForm.value.akaun !== '' && this.myForm.value.produk !== ' '
       && this.myForm.value.jumProduk !== ''
       && this.myForm.value.jumlah_bayaran !== '' && this.myForm.value.nota_tambahan !== '') {
+
+      let hp = this.myForm.value.nombor_hp.toString();
+      let pro = this.myForm.value.jumProduk.toString();
+      let byr = this.myForm.value.jumlah_bayaran.toString();
+
+
       let body = {
 
         aksi: 'add',
         nama_pelanggan: this.myForm.value.nama_pelanggan,
         alamat_pelanggan: this.myForm.value.alamat_pelanggan,
-        nombor_hp: this.myForm.value.nombor_hp,
+        nombor_hp: hp,
         akaun: this.myForm.value.akaun,
         produk: this.myForm.value.produk,
-        jumProduk: this.myForm.value.jumProduk,
-        jumlah_bayaran: this.myForm.value.jumlah_bayaran,
+        jumProduk: pro,
+        jumlah_bayaran: byr,
         nota_tambahan: this.myForm.value.nota_tambahan,
         pengesahan: this.pengesahan,
         images: this.cameraData,
@@ -117,27 +121,21 @@ export class NewOrderPage implements OnInit {
         sales: this.sales_username,
         company: this.company,
       };
+      const toast = await this.toastController.create({
+        message: 'Tempahan telah di simpan',
+        duration: 2000
+      });
+      toast.present();
 
+      this.myForm.reset();
+      this.router.navigate(['/new-order']);
       this.postPrvdr.postData(body, 'process-api.php').subscribe(async data => {
 
         console.log('OK');
         console.log(data);
-        if (data.success) {
-          const toast = await this.toastController.create({
-            message: 'Tempahan telah di simpan',
-            duration: 2000
-          });
-          toast.present();
 
-          this.myForm.reset();
-          this.router.navigate(['/new-order']);
-        } else {
-          const toast = await this.toastController.create({
-            message: 'Error db',
-            duration: 3000
-          });
-          toast.present();
-        }
+
+
 
       });
     } else {
@@ -151,7 +149,7 @@ export class NewOrderPage implements OnInit {
   }
 
 
-  
+
   async presentActionSheet() {
     const actionSheet = await this.actionSheetController.create({
       header: 'Choose one',
@@ -168,16 +166,19 @@ export class NewOrderPage implements OnInit {
     await actionSheet.present();
   }
 
+
+
   openGallery() {
     const options: CameraOptions = {
       quality: 100,
-      targetWidth: 1000,
-      targetHeight: 1000,
+      // targetWidth: 1000,
+      // targetHeight: 1000,
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
-      correctOrientation: true
+      correctOrientation: true,
+      allowEdit: true,
     };
 
     this.camera.getPicture(options).then((imageData) => {
