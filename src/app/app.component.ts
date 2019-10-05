@@ -93,7 +93,7 @@ export class AppComponent {
     //   icon: 'business'
     // },
     // {
-    //   title: 'Sales by Team',
+    //   title: 'Jualan Team',
     //   url: '/team',
     //   icon: 'business'
     // },
@@ -244,12 +244,12 @@ export class AppComponent {
           ];
           this.perflabel = true;
           this.appPerform = [{
-            title: 'Sales by Team',
+            title: 'Jualan Team',
             url: '/salesteam',
             icon: 'people'
           },
           {
-            title: 'Sales by Member',
+            title: 'Jualan Ahli',
             url: '/salesmember',
             icon: 'body'
           },

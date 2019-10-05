@@ -12,7 +12,7 @@
                         <ion-card color="tertiary" height="40px">
                                 <ion-card-subtitle>
                                         <div class="ion-text-center">
-                                                Total pending verification
+                                                Belum selesai
                                         </div>
                                         <br>
                                         <div class="ion-text-center" *ngFor="let ver of unverifys">
@@ -31,7 +31,7 @@
                                 <ion-button (click)="clearArrayCust()" fill="outline" color="danger">
                                         <ion-icon name="close"></ion-icon>
                                 </ion-button>
-                                <ion-button (click)="downloadCSV()" fill="outline" color="tertiary">
+                                <ion-button (click)="downloadCSV()" fill="outline" color="tertiary">CSV
                                         <ion-icon name="download"></ion-icon>
                                 </ion-button>
                         </ion-col>
@@ -45,12 +45,14 @@
         </ion-grid>
 
 
-
-
+       
+        
+        
 
         <ngx-datatable [ngClass]="tableStyle" [rows]="customers" [columnMode]="'force'"
                 [sortType]="'single'" [reorderable]="false" [scrollbarH]="true" [rowHeight]="'auto'" [headerHeight]="100"
                 [footerHeight]="50" [limit]="10" >
+               
                 <ngx-datatable-column color="primary" name="Tarikh Order" prop="tarikh_order"></ngx-datatable-column>
                 <ngx-datatable-column name="Nama Pelanggan" prop="nama_pelanggan"></ngx-datatable-column>
                 <ngx-datatable-column name="Alamat Pelanggan" prop="alamat_pelanggan"></ngx-datatable-column>

@@ -5,7 +5,8 @@ import { CalendarModal, CalendarModalOptions, CalendarResult } from 'ion2-calend
 import { PostProvider } from '../../../providers/post-provider';
 import { ProdProductPage } from '../../modals/prod-product/prod-product.page';
 import * as papa from 'papaparse';
-
+import { LoadingService } from '../../services/loading.service';
+import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 @Component({
   selector: 'app-production',
   templateUrl: './production.page.html',
@@ -35,7 +36,11 @@ export class ProductionPage implements OnInit {
   stock: any[];
   sums: any[];
   count: any[];
-  headerRow
+  headerRow;
+
+  selected = [];
+  ColumnMode = ColumnMode;
+  SelectionType = SelectionType;
   tableStyle = 'bootstrap';
   constructor(
     private router: Router,
@@ -43,6 +48,8 @@ export class ProductionPage implements OnInit {
     public toastCtrl: ToastController,
     public alertCtrl: AlertController,
     public modalController: ModalController,
+    public loadCtrl: LoadingService,
+
   ) { }
 
   ngOnInit() {
@@ -51,7 +58,7 @@ export class ProductionPage implements OnInit {
 
   ionViewWillEnter() {
     this.customers = [];
-    
+
     this.loadCustomer();
     this.unverifiedprod = [];
     this.loadUnverify();
@@ -84,18 +91,33 @@ export class ProductionPage implements OnInit {
       });
     }, 500);
   }
+  onSelect({ selected }) {
+    console.log('Select Event', selected, this.selected);
 
+    this.selected.splice(0, this.selected.length);
+    this.selected.push(...selected);
+  }
+
+  onActivate(event) {
+    console.log('Activate Event', event);
+  }
+
+  displayCheck(row) {
+    return row.name;
+  }
   loadCustomer() {
     return new Promise(resolve => {
+      this.loadCtrl.present();
       const body = {
         aksi: 'getdataverified',
-       
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
         for (const customer of data.result) {
           this.customers.push(customer);
         }
+        this.loadCtrl.dismiss();
         resolve(true);
         this.customers = this.customers.map(row => ({
           order_id: row['order_id'],
@@ -123,7 +145,7 @@ export class ProductionPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getunverifyproduction',
-       
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {
@@ -352,7 +374,7 @@ export class ProductionPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getproduct',
-        
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -370,7 +392,7 @@ export class ProductionPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getchoosenproductProd',
-       
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -434,7 +456,7 @@ export class ProductionPage implements OnInit {
     let day = this.date.getDay();
     let month = this.date.getMonth() + 1;
     let year = this.date.getFullYear();
-  
+
 
     console.log(day + '/' + month);
     let customersCSV = this.customers.map(row => ({
@@ -465,7 +487,7 @@ export class ProductionPage implements OnInit {
     let blob = new Blob([csv]);
     let a = window.document.createElement("a");
     a.href = window.URL.createObjectURL(blob);
-    a.download = day + '/' +  month +  '/' +  year + '/' + "production.csv";
+    a.download = day + '/' + month + '/' + year + '/' + "production.csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

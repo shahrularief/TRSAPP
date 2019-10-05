@@ -9,10 +9,10 @@
         <ion-grid>
                 <ion-row>
 
-                        <ion-card color="primary">
+                        <ion-card color='primary'>
                                 <ion-card-subtitle>
                                         <div class="ion-text-center">
-                                                Pending
+                                                Belum Selesai
                                         </div>
                                         <br>
                                         <div class="ion-text-center" *ngFor="let ver of unverifiedprod">
@@ -21,7 +21,7 @@
                                 </ion-card-subtitle>
                         </ion-card>
 
-                        <ion-card color="primary">
+                        <ion-card color='primary'>
                                 <ion-card-subtitle>
                                         <div class="ion-text-center">
                                                 RM
@@ -46,7 +46,7 @@
                                 <ion-button (click)="clearArrayCust()" fill="outline" color="danger">
                                         <ion-icon name="close"></ion-icon>
                                 </ion-button>
-                                <ion-button (click)="downloadCSV()" fill="outline" color="tertiary">
+                                <ion-button (click)="downloadCSV()" fill="outline" color="tertiary">CSV
                                         <ion-icon name="download"></ion-icon>
                                 </ion-button>
                         </ion-col>
@@ -63,18 +63,34 @@
 
         <ngx-datatable class="fullscreen" [ngClass]="tableStyle" [rows]="customers" [columnMode]="'force'"
                 [sortType]="'single'" [reorderable]="false" [scrollbarH]="true" [rowHeight]="'auto'" [headerHeight]="100"
-                [footerHeight]="50" [limit]="10">
-                <ngx-datatable-column width="100" name="Tarikh Order" prop="tarikh_order"></ngx-datatable-column>
-                <ngx-datatable-column width="100" name="Nama" prop="nama_pelanggan"></ngx-datatable-column>
-                <ngx-datatable-column width="100" name="Alamat" prop="alamat_pelanggan"></ngx-datatable-column>
-                <ngx-datatable-column width="100" name="Nombor Telefon" prop="nombor_hp"></ngx-datatable-column>
-                <ngx-datatable-column width="100" name="Akaun" prop="akaun"></ngx-datatable-column>
-                <ngx-datatable-column width="100" name="Produk" prop="produk"></ngx-datatable-column>
-                <ngx-datatable-column width="100" name="Jumlah Produk" prop="jumProduk"></ngx-datatable-column>
-                <ngx-datatable-column width="100" name="Jumlah Bayaran" prop="jumlah_bayaran"></ngx-datatable-column>
-                <ngx-datatable-column width="100" name="Sales" prop="sales"></ngx-datatable-column>
-                <ngx-datatable-column width="100" name="Team" prop="company"></ngx-datatable-column>
-                <ngx-datatable-column width="100" name="Status" prop="pengesahan"></ngx-datatable-column>
+                [footerHeight]="50" [limit]="10"   [selected]="selected"
+                [selectionType]="SelectionType.checkbox"
+                [selectAllRowsOnPage]="false"
+                [displayCheck]="displayCheck"
+                (activate)="onActivate($event)"
+                (select)="onSelect($event)">
+                
+                <ngx-datatable-column
+                [width]="100"
+                [sortable]="false"
+                [canAutoResize]="false"
+                [draggable]="false"
+                [resizeable]="false"
+                [headerCheckboxable]="true"
+                [checkboxable]="true"></ngx-datatable-column>
+               
+
+                <ngx-datatable-column  width="100" name="Tarikh Order" prop="tarikh_order"></ngx-datatable-column>
+                <ngx-datatable-column  width="100" name="Nama" prop="nama_pelanggan"></ngx-datatable-column>
+                <ngx-datatable-column  width="100" name="Alamat" prop="alamat_pelanggan"></ngx-datatable-column>
+                <ngx-datatable-column  width="100" name="Nombor Telefon" prop="nombor_hp"></ngx-datatable-column>
+                <ngx-datatable-column  width="100" name="Akaun" prop="akaun"></ngx-datatable-column>
+                <ngx-datatable-column  width="100" name="Produk" prop="produk"></ngx-datatable-column>
+                <ngx-datatable-column  width="100" name="Jumlah Produk" prop="jumProduk"></ngx-datatable-column>
+                <ngx-datatable-column  width="100" name="Jumlah Bayaran" prop="jumlah_bayaran"></ngx-datatable-column>
+                <ngx-datatable-column  width="100" name="Sales" prop="sales"></ngx-datatable-column>
+                <ngx-datatable-column  width="100" name="Team" prop="company"></ngx-datatable-column>
+                <ngx-datatable-column  width="100" name="Status" prop="pengesahan"></ngx-datatable-column>
 
                 <ngx-datatable-column name="id" [resizeable]="false">
                         <ng-template ngx-datatable-header-template>

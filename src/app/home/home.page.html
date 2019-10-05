@@ -2,7 +2,7 @@
   <ion-toolbar color="primary">
 
     <ion-menu-button slot="start"></ion-menu-button>
-    <ion-title>Home</ion-title>
+    <ion-title>Utama</ion-title>
     <ion-button slot="end" (click)="processLogout()">
       <ion-icon name="log-out" fill="solid" height="100px" width="100px"></ion-icon>
     </ion-button>
@@ -20,7 +20,7 @@
   <ion-item>
     
         <ion-label color="dark">
-            <h1 font-weight: bold>Welcome, {{username}}  {{company}}</h1>
+            <h1 font-weight: bold> {{username}}  {{company}}</h1>
            
           </ion-label>
   </ion-item>
@@ -32,7 +32,7 @@
         <ion-card color="primary">
           <ion-card-content *ngFor="let sumTotal of totalsum">
             <div class="ion-text-center">
-              <h2>Total Sales</h2>
+              <h2>Jumlah Jualan</h2>
               <br>
               RM {{ sumTotal.sum}}
             </div>
@@ -44,7 +44,7 @@
         <ion-card color="tertiary">
           <ion-card-content *ngFor="let today of todaysum">
             <div class="ion-text-center">
-              <h2>Sales Today</h2>
+              <h2>Jualan Hari ini</h2>
               <br>
               RM {{ today.sum}}
             </div>
@@ -56,7 +56,7 @@
         <ion-card color="warning">
           <ion-card-content *ngFor="let month of monthsum">
             <div class="ion-text-center">
-              <h2>This Month</h2>
+              <h2>Jualan Bulan Ini</h2>
               <br>
               RM {{ month.sum}}
             </div>
@@ -73,7 +73,7 @@
         <ion-card color="tertiary">
           <ion-card-content *ngFor="let uv of unverifys">
             <div class="ion-text-center">
-              <h2>Pending Verification</h2>
+              <h2>Pengesahan tertunggak</h2>
               <br>
               {{ uv.sum}}
             </div>
@@ -84,7 +84,7 @@
         <ion-card color="tertiary">
           <ion-card-content *ngFor="let up of unverifiedprod">
             <div class="ion-text-center">
-              <h2>Pending</h2>
+              <h2>Pengesahan tertunggak</h2>
               <br>
               {{ up.sum}}
             </div>
@@ -103,7 +103,7 @@
               <ion-card class="graph-card">
                 <ion-card-header>
                   <ion-label>
-                    Total Sale Performance
+                    Prestasi Jualan Keseluruhan
                   </ion-label>
                 </ion-card-header>
                 <ion-card-content>
@@ -117,7 +117,7 @@
             <ion-card class="graph-card">
               <ion-card-header>
                 <ion-label>
-                  Total Unit Sold
+                  Jumlah Jualan Unit
                 </ion-label>
               </ion-card-header>
               <ion-card-content>
@@ -131,7 +131,7 @@
               <ion-card class="graph-card">
                 <ion-card-header>
                   <ion-label>
-                    Total Sale By Team
+                    Jumlah Jualan Team
                   </ion-label>
                 </ion-card-header>
                 <ion-card-content>
@@ -147,7 +147,7 @@
                 <ion-card class="graph-card">
                   <ion-card-header>
                     <ion-label>
-                      Total Sale By Product
+                      Jumlah Jualan Produk
                     </ion-label>
                   </ion-card-header>
                   <ion-card-content>
@@ -165,7 +165,7 @@
     <ion-col *ngIf="showProd">
         <ion-card>
           <ion-card-header>
-            Shipping Transaction (Total)
+           Jumlah Transaksi Penghantaran 
           </ion-card-header>
           <ion-card-content>
               <div style="overflow-x:auto;">
@@ -174,7 +174,7 @@
                 <tr>
                   <th></th>
                   <th>Unit</th>
-                  <th>Customer</th>
+                  <th>Pelanggan</th>
                 </tr>
               </thead>
               <tbody>
@@ -200,7 +200,7 @@
     <ion-col *ngIf="showProd">
         <ion-card>
           <ion-card-header>
-            Shipping Transaction (Today)
+            Jumlah Transaksi Hari ini
           </ion-card-header>
           <ion-card-content>
               <div style="overflow-x:auto;">
@@ -209,13 +209,13 @@
                 <tr>
                   <th></th>
                   <th>Unit</th>
-                  <th>Customer</th>
+                  <th>Pelanggan</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let sdb of shippingtoday">
                   <td>
-                    <ion-text>Total</ion-text>
+                    <ion-text>Jumlah</ion-text>
                   </td>
                   <td>
                     <ion-text>{{sdb.jumProduk}}</ion-text>
@@ -235,7 +235,7 @@
     <ion-col *ngIf="showProd">
         <ion-card>
           <ion-card-header>
-            Shipping Transaction (Week)
+            Jumlah Transaksi Mingguan
           </ion-card-header>
           <ion-card-content>
               <div style="overflow-x:auto;">
@@ -244,13 +244,13 @@
                 <tr>
                   <th></th>
                   <th>Unit</th>
-                  <th>Customer</th>
+                  <th>Pelanggan</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let sdb of shippingweekly">
                   <td>
-                    <ion-text>Total</ion-text>
+                    <ion-text>Jumlah</ion-text>
                   </td>
                   <td>
                     <ion-text>{{sdb.jumProduk}}</ion-text>
@@ -270,7 +270,7 @@
     <ion-col *ngIf="showProd">
         <ion-card>
           <ion-card-header>
-            Shipping Transaction (Month)
+              Jumlah Transaksi Bulanan
           </ion-card-header>
           <ion-card-content>
               <div style="overflow-x:auto;">
@@ -279,7 +279,7 @@
                 <tr>
                   <th></th>
                   <th>Unit</th>
-                  <th>Customer</th>
+                  <th>Pelanggan</th>
                 </tr>
               </thead>
               <tbody>
@@ -306,7 +306,7 @@
       <ion-col *ngIf="showSaleOnly">
           <ion-card>
             <ion-card-header>
-              Sales Team Ranking
+              Ranking Team Sales
             </ion-card-header>
             <ion-card-content>
                 <div style="overflow-x:auto;">
@@ -314,7 +314,7 @@
                 <thead>
                   <tr>
                     <th>Nama</th>
-                    <th>Sale(RM)</th>
+                    <th>Jualan (RM)</th>
                     <th>Unit</th>
                   </tr>
                 </thead>
@@ -347,7 +347,7 @@
                   <thead>
                     <tr>
                       <th>Nama</th>
-                      <th>Sale(RM)</th>
+                      <th>Jualan(RM)</th>
                       <th>Unit</th>
                     </tr>
                   </thead>

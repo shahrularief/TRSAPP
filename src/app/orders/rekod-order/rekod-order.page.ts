@@ -83,7 +83,7 @@ export class RekodOrderPage implements OnInit {
       this.role = this.users.role;
 
       if (this.role === "CEO" || this.role === "BOD") {
-      
+
         this.loadCustomerAll();
       } else {
         this.loadCustomer(this.username);
@@ -144,7 +144,7 @@ export class RekodOrderPage implements OnInit {
 
   async loadCustomer(user) {
     return new Promise(resolve => {
-
+      this.loadCtrl.present();
       let body = {
         aksi: 'getdataallrecord',
         username: user,
@@ -155,7 +155,7 @@ export class RekodOrderPage implements OnInit {
         for (let customer of data.result) {
           this.customers.push(customer);
         }
-
+        this.loadCtrl.dismiss();
         resolve(true);
       });
     });

@@ -171,8 +171,8 @@ export class NewOrderPage implements OnInit {
   openGallery() {
     const options: CameraOptions = {
       quality: 100,
-      // targetWidth: 1000,
-      // targetHeight: 1000,
+      targetWidth: 1000,
+      targetHeight: 1000,
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,

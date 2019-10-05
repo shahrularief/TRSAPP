@@ -13,7 +13,7 @@ import {
 } from 'ion2-calendar';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import * as papa from 'papaparse';
-
+import { LoadingService } from '../../services/loading.service';
 
 
 @Component({
@@ -41,7 +41,7 @@ export class AccountVerifyPage implements OnInit {
   sah = '';
   id: number;
   total: number;
-
+showload = true;
   sortedcount: any = [];
   customers: any = [];
   unverifys: any = [];
@@ -62,7 +62,7 @@ export class AccountVerifyPage implements OnInit {
     public alertCtrl: AlertController,
     private modalController: ModalController,
     public datatable: NgxDatatableModule,
-
+    public loadCtrl: LoadingService,
 
   ) { this.server = postPrvdr.server; }
 
@@ -94,6 +94,7 @@ export class AccountVerifyPage implements OnInit {
 
   loadCustomer() {
     return new Promise(resolve => {
+      this.loadCtrl.present();
       const body = {
         aksi: 'getdataunverified',
 
@@ -104,6 +105,7 @@ export class AccountVerifyPage implements OnInit {
           this.customers.push(customer);
           console.log('customers:' + this.customers);
         }
+        this.loadCtrl.dismiss();
         resolve(true);
         this.customers = this.customers.map(row => ({
           order_id: row['order_id'],

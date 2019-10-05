@@ -23,7 +23,7 @@
   <ion-row>
         <ion-item-sliding *ngFor="let customer of customers">
         <ion-item-options side="start">
-          <ion-item-option color="danger" (click)="deleteAlert(customer.order_id)">Delete</ion-item-option>
+          <ion-item-option color="danger" (click)="deleteAlert(customer.order_id)"><ion-icon name='trash'></ion-icon></ion-item-option>
         </ion-item-options>
     
         <ion-row>
@@ -51,7 +51,7 @@
           customer.jumProduk,
           customer.jumlah_bayaran,
           customer.nota_tambahan,
-          customer.resit)">Update
+          customer.resit)"><ion-icon name="create"></ion-icon>
         </ion-item-option>
       
         <ion-item-option color="tertiary" (click)="openModal(
@@ -66,7 +66,7 @@
         customer.jumlah_bayaran,
         customer.nota_tambahan,
         customer.resit,
-        customer.pengesahan)">Show</ion-item-option>
+        customer.pengesahan)"><ion-icon name='eye'></ion-icon></ion-item-option>
 
       </ion-item-options>
       </ion-item-sliding>
