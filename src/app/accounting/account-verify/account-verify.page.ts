@@ -151,7 +151,8 @@ showload = true;
     const val = event.target.value.toLowerCase();
     if (val && val.trim() !== '') {
       const temp = this.customers.filter(function (d) {
-        return d.company.toLowerCase().indexOf(val) !== -1 || !val;
+        return d.company.toLowerCase().indexOf(val) !== -1 || !val || d.nama_pelanggan.toLowerCase().indexOf(val) !== -1
+        || d.sales.toLowerCase().indexOf(val) !== -1;
       });
       this.customers = temp;
     } else {
@@ -406,7 +407,7 @@ showload = true;
     let blob = new Blob([csv]);
     let a = window.document.createElement("a");
     a.href = window.URL.createObjectURL(blob);
-    a.download = day + '/' +  month +  '/' +  year + '/' + "account.csv";
+    a.download = day + '' +  month +  '' +  year + '' + "account.csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

@@ -11,6 +11,8 @@ export class LoadingService {
   async present() {
     this.isLoading = true;
     return await this.loadingController.create({
+      spinner:"circles",
+      showBackdrop: false,
     
     }).then(a => {
       a.present().then(() => {

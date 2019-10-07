@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, ModalController, ToastController } from '@ionic/angular';
+import { File } from '@ionic-native/file/ngx';
+import { AlertController, ModalController, Platform, ToastController } from '@ionic/angular';
+import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { CalendarModal, CalendarModalOptions, CalendarResult } from 'ion2-calendar';
+import * as papa from 'papaparse';
 import { PostProvider } from '../../../providers/post-provider';
 import { ProdProductPage } from '../../modals/prod-product/prod-product.page';
-import * as papa from 'papaparse';
 import { LoadingService } from '../../services/loading.service';
-import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
+
 @Component({
   selector: 'app-production',
   templateUrl: './production.page.html',
@@ -49,7 +51,8 @@ export class ProductionPage implements OnInit {
     public alertCtrl: AlertController,
     public modalController: ModalController,
     public loadCtrl: LoadingService,
-
+    private plt: Platform,
+    private file: File,
   ) { }
 
   ngOnInit() {
@@ -71,11 +74,21 @@ export class ProductionPage implements OnInit {
     this.getProduct();
   }
 
+  printReceipt(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, resit) {
+    this.router.navigate(['/receipt/' + id + '/' + tarikh + '/' + nama + '/' + alamat + '/' + hp + '/' + akaun + '/'
+      + produk + '/' + jumProduk + '/' + bayaran + '/' + nota]);
+    resit;
+
+    console.log(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, resit);
+  }
+
+
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
     if (val && val.trim() !== '') {
       const temp = this.customers.filter(function (d) {
-        return d.company.toLowerCase().indexOf(val) !== -1 || !val;
+        return d.company.toLowerCase().indexOf(val) !== -1 || !val || d.nama_pelanggan.toLowerCase().indexOf(val) !== -1
+        || d.sales.toLowerCase().indexOf(val) !== -1;
       });
       this.customers = temp;
     } else {
@@ -91,20 +104,7 @@ export class ProductionPage implements OnInit {
       });
     }, 500);
   }
-  onSelect({ selected }) {
-    console.log('Select Event', selected, this.selected);
 
-    this.selected.splice(0, this.selected.length);
-    this.selected.push(...selected);
-  }
-
-  onActivate(event) {
-    console.log('Activate Event', event);
-  }
-
-  displayCheck(row) {
-    return row.name;
-  }
   loadCustomer() {
     return new Promise(resolve => {
       this.loadCtrl.present();
@@ -226,17 +226,12 @@ export class ProductionPage implements OnInit {
           label: 'Poslaju',
           value: 'Poslaju',
         },
+
         {
-          name: 'ninjavan',
+          name: 'citylink',
           type: 'radio',
-          label: 'NinjaVan',
-          value: 'NinjaVan'
-        },
-        {
-          name: 'gdex',
-          type: 'radio',
-          label: 'GDEX',
-          value: 'GDEX'
+          label: 'CITYLINK',
+          value: 'CITYLINK'
         },
         {
           name: 'dhl',
@@ -484,8 +479,8 @@ export class ProductionPage implements OnInit {
     });
 
     // Dummy implementation for Desktop download purpose
-    let blob = new Blob([csv]);
-    let a = window.document.createElement("a");
+    var blob = new Blob([csv]);
+    var a = window.document.createElement('a');
     a.href = window.URL.createObjectURL(blob);
     a.download = day + '/' + month + '/' + year + '/' + "production.csv";
     document.body.appendChild(a);
@@ -493,3 +488,4 @@ export class ProductionPage implements OnInit {
     document.body.removeChild(a);
   }
 }
+

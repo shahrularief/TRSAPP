@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
+
 @Component({
   selector: 'app-modalpopup',
   templateUrl: './modalpopup.page.html',
@@ -9,7 +10,8 @@ import { ModalController } from '@ionic/angular';
 export class ModalpopupPage implements OnInit {
 
   constructor(
-    private modalController: ModalController
+    private modalController: ModalController,
+    
   ) { }
 
   public order_id: string;
@@ -31,4 +33,6 @@ export class ModalpopupPage implements OnInit {
     await this.modalController.dismiss();
   }
 
+
+  
 }

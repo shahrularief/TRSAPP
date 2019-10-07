@@ -44,11 +44,15 @@ const routes: Routes = [
   { path: 'verifyproduct', loadChildren: './modals/verifyproduct/verifyproduct.module#VerifyproductPageModule' },
   { path: 'prod-product', loadChildren: './modals/prod-product/prod-product.module#ProdProductPageModule' },
   { path: 'employee', loadChildren: './admin/employee/employee.module#EmployeePageModule' },
-  { path: 'salesbyperson', loadChildren: './admin/salesbyperson/salesbyperson.module#SalesbypersonPageModule' },
   { path: 'updatecomp', loadChildren: './admin/updatecomp/updatecomp.module#UpdatecompPageModule' },
 
-  { path: 'updatecomp/:id/:nama/:reg/:addr/:city/:pc/:stat/:hp/:ms/:me', 
+  { path: 'updatecomp/:id/:nama/:reg/:addr/:city/:pc/:stat/:hp/:ms/:me',
   loadChildren: './admin/updatecomp/updatecomp.module#UpdatecompPageModule' },
+  { path: 'receipt', loadChildren: './prod/receipt/receipt.module#ReceiptPageModule' },
+  {
+    path: 'receipt/:id/:tarikh/:nama/:alamat/:hp/:akaun/:produk/:jumProduk/:bayaran/:nota',
+    loadChildren: './prod/receipt/receipt.module#ReceiptPageModule'
+  },
 
 
 ];

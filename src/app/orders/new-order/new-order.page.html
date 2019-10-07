@@ -73,25 +73,33 @@
                </ion-item>
               
       </form>
-      <ion-item>
+      <div>
+        <ion-item>
           <ion-label> Resit </ion-label>
-             <ion-button icon="cloud-upload" (click)="openGallery()"><ion-icon name="add"></ion-icon></ion-button>
+             <ion-button (click)="openGallery()" ><ion-icon name="images"></ion-icon></ion-button>
         </ion-item>
+        <ion-item *ngIf="base64Image">
+          <img src="{{base64Image}}" title="pict">
+        </ion-item>
+    
+      </div>
+    
+      <div class="ion-padding">
+          <ion-button expand="block" type="submit" class="ion-no-margin" shape="round" (click)="submit()">
+            Buat Tempahan
+            <ion-ripple-effect></ion-ripple-effect>
+          </ion-button>
+        </div>
+    
+     
     </ion-card-content>
 
-    <div class="ion-padding">
-        <ion-button expand="block" type="submit" class="ion-no-margin" shape="round" (click)="submit()">
-          Buat Tempahan
-          <ion-ripple-effect></ion-ripple-effect>
-        </ion-button>
-      </div>
+    
   </ion-card>
 
-  <ion-item *ngIf="base64Image">
-      <img src="{{base64Image}}" title="pict">
-    </ion-item>
-
-
+ 
+  
+   
   
 
 </ion-content>
