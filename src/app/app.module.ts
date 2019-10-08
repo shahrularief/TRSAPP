@@ -26,7 +26,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ProdProductPageModule } from './modals/prod-product/prod-product.module';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { NgxSpinnerModule } from 'ngx-spinner';
-
+import { Printer, PrintOptions } from '@ionic-native/printer/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -43,6 +43,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     ProdProductPageModule,
     NgxDatatableModule,
     NgxSpinnerModule,
+  
     IonicStorageModule.forRoot(),
   ],
   providers: [
@@ -54,6 +55,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     File,
     FilePath,
     Camera,
+    Printer,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: LocationStrategy, useClass: HashLocationStrategy }
 

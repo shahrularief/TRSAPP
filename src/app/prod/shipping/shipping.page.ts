@@ -273,4 +273,12 @@ export class ShippingPage implements OnInit {
     a.click();
     document.body.removeChild(a);
   }
+
+  printReceipt(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, resit,sales,track) {
+    this.router.navigate(['/receipt/' + id + '/' + tarikh + '/' + nama + '/' + alamat + '/' + hp + '/' + akaun + '/'
+      + produk + '/' + jumProduk + '/' + bayaran + '/' + nota + '/' + sales + '/' + track]);
+    resit;
+    console.log(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, sales, track);
+  }
+
 }

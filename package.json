@@ -29,6 +29,7 @@
     "@ionic-native/file-transfer": "^5.12.0",
     "@ionic-native/full-screen-image": "^5.12.0",
     "@ionic-native/ionic-webview": "^5.11.0",
+    "@ionic-native/printer": "^5.15.0",
     "@ionic-native/social-sharing": "^5.15.0",
     "@ionic-native/splash-screen": "^5.0.0",
     "@ionic-native/status-bar": "^5.0.0",
@@ -51,6 +52,7 @@
     "cordova-plugin-file-transfer": "^1.7.1",
     "cordova-plugin-filepath": "^1.5.5",
     "cordova-plugin-ionic-webview": "^4.1.1",
+    "cordova-plugin-printer": "^0.8.0",
     "cordova-sqlite-storage": "^3.2.1",
     "core-js": "^2.5.4",
     "es.keensoft.fullscreenimage": "^0.2.10",
@@ -118,7 +120,10 @@
       "cordova-plugin-actionsheet": {},
       "es.keensoft.fullscreenimage": {},
       "cordova-plugin-file-transfer": {},
-      "mx.ferreyra.callnumber": {}
+      "mx.ferreyra.callnumber": {},
+      "cordova-plugin-printer": {
+        "ANDROID_SUPPORT_V4_VERSION": "28.+"
+      }
     },
     "platforms": [
       "browser",

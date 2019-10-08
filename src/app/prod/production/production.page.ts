@@ -74,14 +74,7 @@ export class ProductionPage implements OnInit {
     this.getProduct();
   }
 
-  printReceipt(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, resit) {
-    this.router.navigate(['/receipt/' + id + '/' + tarikh + '/' + nama + '/' + alamat + '/' + hp + '/' + akaun + '/'
-      + produk + '/' + jumProduk + '/' + bayaran + '/' + nota]);
-    resit;
-
-    console.log(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, resit);
-  }
-
+  
 
   updateFilter(event) {
     const val = event.target.value.toLowerCase();

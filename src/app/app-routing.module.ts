@@ -50,7 +50,7 @@ const routes: Routes = [
   loadChildren: './admin/updatecomp/updatecomp.module#UpdatecompPageModule' },
   { path: 'receipt', loadChildren: './prod/receipt/receipt.module#ReceiptPageModule' },
   {
-    path: 'receipt/:id/:tarikh/:nama/:alamat/:hp/:akaun/:produk/:jumProduk/:bayaran/:nota',
+    path: 'receipt/:id/:tarikh/:nama/:alamat/:hp/:akaun/:produk/:jumProduk/:bayaran/:nota/:sales/:track',
     loadChildren: './prod/receipt/receipt.module#ReceiptPageModule'
   },
 

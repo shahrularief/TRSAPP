@@ -1,5 +1,5 @@
 #invoice-POS{
-    box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
+    // box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
     padding:2mm;
     margin: 0 auto;
     width: 100%;
@@ -8,17 +8,17 @@
     
   ::selection {background: #f31544; color: #FFF;}
   h1{
-    font-size: 1.5em;
+    font-size: 2em;
     color: #222;
   }
-  h2{font-size: .9em;}
+  h2{font-size: 1em;}
   h3{
-    font-size: 1.2em;
+    font-size: 1.5em;
     font-weight: 300;
     line-height: 2em;
   }
   p{
-    font-size: .7em;
+    font-size: 1em;
     color: #666;
     line-height: 1.2em;
   }
@@ -32,22 +32,22 @@
   #bot{ min-height: 50px;}
   
   #top .logo{
-    //float: left;
+      float: right;
       height: 60px;
       width: 60px;
-      background: "assets/trsgold.png" no-repeat;
+      background: url(http://trstest.lumiactive.com/assets/trsgold_icon.png) no-repeat;
       background-size: 60px 60px;
   }
   .clientlogo{
-    float: left;
-      height: 60px;
+    // float: left;
+      height: 60px; 
       width: 60px;
-      background: url(http://michaeltruong.ca/images/client.jpg) no-repeat;
+      background: url(http://trstest.lumiactive.com/assets/trsgold_icon.png) no-repeat;
       background-size: 60px 60px;
     border-radius: 50px;
   }
   .info{
-    display: block;
+    display: grid;
     //float:left;
     margin-left: 0;
   }
@@ -65,12 +65,12 @@
   }
   .tabletitle{
     //padding: 5px;
-    font-size: .5em;
+    font-size: 1em;
     background: #EEE;
   }
   .service{border-bottom: 1px solid #EEE;}
   .item{width: 24mm;}
-  .itemtext{font-size: .5em;}
+  .itemtext{font-size: .8em;}
   
   #legalcopy{
     margin-top: 5mm;
