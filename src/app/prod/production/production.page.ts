@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { File } from '@ionic-native/file/ngx';
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { AlertController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { CalendarModal, CalendarModalOptions, CalendarResult } from 'ion2-calendar';
@@ -8,6 +9,7 @@ import * as papa from 'papaparse';
 import { PostProvider } from '../../../providers/post-provider';
 import { ProdProductPage } from '../../modals/prod-product/prod-product.page';
 import { LoadingService } from '../../services/loading.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-production',
@@ -16,6 +18,8 @@ import { LoadingService } from '../../services/loading.service';
 })
 export class ProductionPage implements OnInit {
   date: Date = new Date();
+  fileCSV;
+  prod_username;
   tarikh_order;
   nama_pelanggan;
   alamat_pelanggan;
@@ -38,12 +42,17 @@ export class ProductionPage implements OnInit {
   stock: any[];
   sums: any[];
   count: any[];
-  headerRow;
-
+  
+  filechoosen: any;
   selected = [];
+  csvData: any[] = [];
+  headerRow: any[] = [];
+
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
-  tableStyle = 'bootstrap';
+  tableStyle = 'bootstrap fullscreen';
+  private fileTransfer: FileTransferObject;
+  uploaded: boolean;
   constructor(
     private router: Router,
     private postPrvdr: PostProvider,
@@ -51,17 +60,20 @@ export class ProductionPage implements OnInit {
     public alertCtrl: AlertController,
     public modalController: ModalController,
     public loadCtrl: LoadingService,
-    private plt: Platform,
-    private file: File,
+    private auth: AuthService,
+    private transfer: FileTransfer,
+    private file: File
+
   ) { }
 
   ngOnInit() {
   }
 
 
+
   ionViewWillEnter() {
     this.customers = [];
-
+    this.loadProduction();
     this.loadCustomer();
     this.unverifiedprod = [];
     this.loadUnverify();
@@ -74,14 +86,14 @@ export class ProductionPage implements OnInit {
     this.getProduct();
   }
 
-  
+
 
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
     if (val && val.trim() !== '') {
       const temp = this.customers.filter(function (d) {
         return d.company.toLowerCase().indexOf(val) !== -1 || !val || d.nama_pelanggan.toLowerCase().indexOf(val) !== -1
-        || d.sales.toLowerCase().indexOf(val) !== -1;
+          || d.sales.toLowerCase().indexOf(val) !== -1;
       });
       this.customers = temp;
     } else {
@@ -90,12 +102,21 @@ export class ProductionPage implements OnInit {
     }
   }
 
+
+
   loadData(event: any) {
     setTimeout(() => {
       this.loadCustomer().then(() => {
         event.target.complete();
       });
     }, 500);
+  }
+
+  loadProduction() {
+    this.auth.authState.subscribe(users => {
+      this.prod_username = users.username;
+      console.log(this.prod_username);
+    });
   }
 
   loadCustomer() {
@@ -268,6 +289,7 @@ export class ProductionPage implements OnInit {
         order_id: id,
         penghantaran: hantar,
         pengesahan: deliver,
+        shipped_by: this.prod_username,
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -440,6 +462,25 @@ export class ProductionPage implements OnInit {
       });
     });
   }
+
+  changeListener($event) : void {
+    this.file = $event.target.files[0];
+    console.log(this.file);
+    this.extractData(this.file);
+  }
+
+  extractData(res) {
+    let csvData = res || '';
+ 
+    papa.parse(csvData, {
+      complete: parsedData => {
+        this.headerRow = parsedData.data.splice(0, 1)[0];
+        this.csvData = parsedData.data;
+      }
+    });
+    console.log(this.csvData);
+  }
+  
   downloadCSV() {
     let day = this.date.getDay();
     let month = this.date.getMonth() + 1;
@@ -481,4 +522,3 @@ export class ProductionPage implements OnInit {
     document.body.removeChild(a);
   }
 }
-

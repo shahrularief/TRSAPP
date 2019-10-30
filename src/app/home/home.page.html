@@ -18,11 +18,11 @@
 
 
   <ion-item>
-    
-        <ion-label color="dark">
-            <h1 font-weight: bold> {{username}}  {{company}}</h1>
-           
-          </ion-label>
+
+    <ion-label color="dark">
+      <h1 font-weight: bold> {{username}} {{company}}</h1>
+
+    </ion-label>
   </ion-item>
 
   <ion-grid>
@@ -41,7 +41,7 @@
       </ion-col>
 
       <ion-col>
-        <ion-card color="tertiary">
+        <ion-card color="danger">
           <ion-card-content *ngFor="let today of todaysum">
             <div class="ion-text-center">
               <h2>Jualan Hari ini</h2>
@@ -63,12 +63,48 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
+
+      <ion-col *ngIf="showSaleOnly">
+          <ion-card color="success">
+            <ion-card-content>
+              <div class="ion-text-center">
+                <h2>Anggaran Pendapatan</h2>
+                <br>
+                RM {{ comission}}
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col *ngIf="showSaleOnly">
+          <ion-card color="light">
+            <ion-card-content>
+              <div class="ion-text-center">
+                <h2>Overall Ranking</h2>
+                <br>
+                {{ overallrank }}
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col *ngIf="showSaleOnly">
+          <ion-card color="secondary">
+            <ion-card-content>
+              <div class="ion-text-center">
+                <h2>Team Ranking</h2>
+                <br>
+                {{ teamrank }}
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
     </ion-row>
   </ion-grid>
 
 
   <ion-grid>
     <ion-row>
+        <ion-col *ngIf="showAcc">
+          </ion-col>  
       <ion-col *ngIf="showAcc">
         <ion-card color="tertiary">
           <ion-card-content *ngFor="let uv of unverifys">
@@ -80,6 +116,10 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
+      <ion-col *ngIf="showAcc">
+        </ion-col>  
+      <ion-col *ngIf="showProd">
+      </ion-col>  
       <ion-col *ngIf="showProd">
         <ion-card color="tertiary">
           <ion-card-content *ngFor="let up of unverifiedprod">
@@ -92,236 +132,292 @@
         </ion-card>
       </ion-col>
       <ion-col *ngIf="showProd">
-
       </ion-col>
     </ion-row>
   </ion-grid>
 
   <ion-slides [options]="slider1" pager="true">
-      <ion-slide>
-          <ion-col *ngIf="showSale">
-              <ion-card class="graph-card">
-                <ion-card-header>
-                  <ion-label>
-                    Prestasi Jualan Keseluruhan
-                  </ion-label>
-                </ion-card-header>
-                <ion-card-content>
-                  <canvas #lineCanvas></canvas>
-                </ion-card-content>
-              </ion-card>
-            </ion-col>
-      </ion-slide>
-      <ion-slide>
-        <ion-col *ngIf="showSale">
-            <ion-card class="graph-card">
-              <ion-card-header>
-                <ion-label>
-                  Jumlah Jualan Unit
-                </ion-label>
-              </ion-card-header>
-              <ion-card-content>
-                <canvas #lineCanvasProductSold></canvas>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-      </ion-slide>
-      <ion-slide>
-          <ion-col *ngIf="showAdmin">
-              <ion-card class="graph-card">
-                <ion-card-header>
-                  <ion-label>
-                    Jumlah Jualan Team
-                  </ion-label>
-                </ion-card-header>
-                <ion-card-content>
-      
-                  <canvas #barCanvasT></canvas>
-                </ion-card-content>
-              </ion-card>
-            </ion-col>
-        
-        </ion-slide>
-        <ion-slide>
-            <ion-col *ngIf="showAdmin">
-                <ion-card class="graph-card">
-                  <ion-card-header>
-                    <ion-label>
-                      Jumlah Jualan Produk
-                    </ion-label>
-                  </ion-card-header>
-                  <ion-card-content>
-        
-                    <canvas #barCanvasP></canvas>
-                  </ion-card-content>
-                </ion-card>
-              </ion-col>
-          </ion-slide>
-    </ion-slides>
-    
-<ion-grid>
-  <ion-slides [options]="slider1">
-<ion-slide>
-    <ion-col *ngIf="showProd">
-        <ion-card>
+    <ion-slide>
+      <ion-col *ngIf="showSale">
+        <ion-card class="graph-card">
           <ion-card-header>
-           Jumlah Transaksi Penghantaran 
+            <ion-label>
+              Prestasi Jualan Keseluruhan
+            </ion-label>
           </ion-card-header>
           <ion-card-content>
-              <div style="overflow-x:auto;">
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Unit</th>
-                  <th>Pelanggan</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let sdb of shippingdashboard">
-                  <td>
-                    <ion-text>Total</ion-text>
-                  </td>
-                  <td>
-                    <ion-text>{{sdb.jumProduk}}</ion-text>
-                  </td>
-                  <td>
-                    <ion-text>{{sdb.Total}}</ion-text>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            </div>
+            <canvas #lineCanvas></canvas>
           </ion-card-content>
         </ion-card>
       </ion-col>
-</ion-slide>
-<ion-slide>
-    <ion-col *ngIf="showProd">
-        <ion-card>
+    </ion-slide>
+    <ion-slide>
+      <ion-col *ngIf="showSale">
+        <ion-card class="graph-card">
           <ion-card-header>
-            Jumlah Transaksi Hari ini
+            <ion-label>
+              Jumlah Jualan Unit
+            </ion-label>
           </ion-card-header>
           <ion-card-content>
-              <div style="overflow-x:auto;">
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Unit</th>
-                  <th>Pelanggan</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let sdb of shippingtoday">
-                  <td>
-                    <ion-text>Jumlah</ion-text>
-                  </td>
-                  <td>
-                    <ion-text>{{sdb.jumProduk}}</ion-text>
-                  </td>
-                  <td>
-                    <ion-text>{{sdb.Total}}</ion-text>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            </div>
+            <canvas #lineCanvasProductSold></canvas>
           </ion-card-content>
         </ion-card>
       </ion-col>
-</ion-slide>
-<ion-slide>
-    <ion-col *ngIf="showProd">
-        <ion-card>
+    </ion-slide>
+    <ion-slide>
+      <ion-col *ngIf="showAdmin">
+        <ion-card class="graph-card">
           <ion-card-header>
-            Jumlah Transaksi Mingguan
+            <ion-label>
+              Jumlah Jualan Team
+            </ion-label>
           </ion-card-header>
           <ion-card-content>
-              <div style="overflow-x:auto;">
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Unit</th>
-                  <th>Pelanggan</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let sdb of shippingweekly">
-                  <td>
-                    <ion-text>Jumlah</ion-text>
-                  </td>
-                  <td>
-                    <ion-text>{{sdb.jumProduk}}</ion-text>
-                  </td>
-                  <td>
-                    <ion-text>{{sdb.Total}}</ion-text>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-              </div>
+
+            <canvas #barCanvasT></canvas>
           </ion-card-content>
         </ion-card>
       </ion-col>
-</ion-slide>
-<ion-slide>
-    <ion-col *ngIf="showProd">
-        <ion-card>
+
+    </ion-slide>
+    <ion-slide>
+      <ion-col *ngIf="showAdmin">
+        <ion-card class="graph-card">
           <ion-card-header>
-              Jumlah Transaksi Bulanan
+            <ion-label>
+              Jumlah Jualan Produk
+            </ion-label>
           </ion-card-header>
           <ion-card-content>
-              <div style="overflow-x:auto;">
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Unit</th>
-                  <th>Pelanggan</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let sdb of shippingmonthly">
-                  <td>
-                    <ion-text>Total</ion-text>
-                  </td>
-                  <td>
-                    <ion-text>{{sdb.jumProduk}}</ion-text>
-                  </td>
-                  <td>
-                    <ion-text>{{sdb.Total}}</ion-text>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-              </div>
+
+            <canvas #barCanvasP></canvas>
           </ion-card-content>
         </ion-card>
       </ion-col>
-</ion-slide>
+    </ion-slide>
   </ion-slides>
-<ion-row>
-      <ion-col *ngIf="showSaleOnly">
+
+  <ion-grid>
+    <ion-slides [options]="slider1">
+      <ion-slide>
+        <ion-col *ngIf="showProd">
           <ion-card>
             <ion-card-header>
-              Ranking Team Sales
+              Jumlah Transaksi Penghantaran
             </ion-card-header>
             <ion-card-content>
-                <div style="overflow-x:auto;">
+              <div style="overflow-x:auto;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Unit</th>
+                      <th>Pelanggan</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let sdb of shippingdashboard">
+                      <td>
+                        <ion-text>Total</ion-text>
+                      </td>
+                      <td>
+                        <ion-text>{{sdb.jumProduk}}</ion-text>
+                      </td>
+                      <td>
+                        <ion-text>{{sdb.Total}}</ion-text>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-slide>
+      <ion-slide>
+        <ion-col *ngIf="showProd">
+          <ion-card>
+            <ion-card-header>
+              Jumlah Transaksi Hari ini
+            </ion-card-header>
+            <ion-card-content>
+              <div style="overflow-x:auto;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Unit</th>
+                      <th>Pelanggan</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let sdb of shippingtoday">
+                      <td>
+                        <ion-text>Jumlah</ion-text>
+                      </td>
+                      <td>
+                        <ion-text>{{sdb.jumProduk}}</ion-text>
+                      </td>
+                      <td>
+                        <ion-text>{{sdb.Total}}</ion-text>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-slide>
+      <ion-slide>
+        <ion-col *ngIf="showProd">
+          <ion-card>
+            <ion-card-header>
+              Jumlah Transaksi Mingguan
+            </ion-card-header>
+            <ion-card-content>
+              <div style="overflow-x:auto;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Unit</th>
+                      <th>Pelanggan</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let sdb of shippingweekly">
+                      <td>
+                        <ion-text>Jumlah</ion-text>
+                      </td>
+                      <td>
+                        <ion-text>{{sdb.jumProduk}}</ion-text>
+                      </td>
+                      <td>
+                        <ion-text>{{sdb.Total}}</ion-text>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-slide>
+      <ion-slide>
+        <ion-col *ngIf="showProd">
+          <ion-card>
+            <ion-card-header>
+              Jumlah Transaksi Bulanan
+            </ion-card-header>
+            <ion-card-content>
+              <div style="overflow-x:auto;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Unit</th>
+                      <th>Pelanggan</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let sdb of shippingmonthly">
+                      <td>
+                        <ion-text>Total</ion-text>
+                      </td>
+                      <td>
+                        <ion-text>{{sdb.jumProduk}}</ion-text>
+                      </td>
+                      <td>
+                        <ion-text>{{sdb.Total}}</ion-text>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-slide>
+    </ion-slides>
+    <ion-col *ngIf="showProdOnly">
+      <ngx-datatable  [ngClass]="tableStyle" [rows]="count" [columnMode]="'force'"
+      [sortType]="'single'" [reorderable]="false" [scrollbarH]="true" [rowHeight]="'auto'" [headerHeight]="100"
+      [footerHeight]="0" >
+      
+      <ngx-datatable-column  width="100" name="Nama Produk" prop="prodName"></ngx-datatable-column>
+      <ngx-datatable-column  width="100" name="Stok Terkini" prop="stock"></ngx-datatable-column>
+     
+</ngx-datatable>
+    </ion-col>
+    <ion-row>
+      <ion-col *ngIf="showSale">
+        <ion-card>
+          <ion-card-header>
+            Ranking Team Sales
+          </ion-card-header>
+          <ion-card-content>
+            <ngx-datatable [ngClass]="tableStyle" [rows]="ranksales" [columnMode]="'force'" [sortType]="'single'"
+              [reorderable]="false"  [rowHeight]="'auto'" [headerHeight]="100" [footerHeight]="0"
+              [limit]="10">
+              <ngx-datatable-column name="No" width="80">
+                <ng-template let-rowIndex="rowIndex" let-row="row" ngx-datatable-cell-template>
+                  <strong>{{ rowIndex + 1 }}</strong>
+                </ng-template>
+              </ngx-datatable-column>
+             
+              <ngx-datatable-column name="Nama" prop="sales" width="80"></ngx-datatable-column>
+              <ngx-datatable-column name="Unit" prop="jumProduk" width="80"></ngx-datatable-column>
+              <ngx-datatable-column name="Jualan" prop="jumlah_bayaran" width="80"></ngx-datatable-column>
+            </ngx-datatable>
+
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col *ngIf="showSale">
+        <ion-card>
+          <ion-card-header>
+            Ranking Sales All
+          </ion-card-header>
+          <ion-card-content>
+            <ngx-datatable [ngClass]="tableStyle" [rows]="salesall" [columnMode]="'force'" [sortType]="'single'"
+              [reorderable]="false" [rowHeight]="'auto'" [headerHeight]="100" [footerHeight]="0"
+              [limit]="10">
+              <ngx-datatable-column name="No" width="'auto'">
+                <ng-template let-rowIndex="rowIndex" let-row="row" ngx-datatable-cell-template>
+                  <strong>{{ rowIndex + 1 }}</strong>
+                </ng-template>
+              </ngx-datatable-column>
+             
+              <ngx-datatable-column name="Nama" prop="sales" width="'auto'"></ngx-datatable-column>
+              <ngx-datatable-column name="Unit" prop="jumProduk" width="'auto'"></ngx-datatable-column>
+              <ngx-datatable-column name="Jualan" prop="jumlah_bayaran" width="'auto'"></ngx-datatable-column>
+            </ngx-datatable>
+
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col *ngIf="showAdmin">
+        <ion-card>
+          <ion-card-header>
+            Team Ranking
+          </ion-card-header>
+          <ion-card-content>
+            <div style="overflow-x:auto;">
               <table>
                 <thead>
                   <tr>
                     <th>Nama</th>
-                    <th>Jualan (RM)</th>
+                    <th>Jualan(RM)</th>
                     <th>Unit</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let name of ranksales">
+                  <tr *ngFor="let name of ranking">
                     <td>
-                      <ion-text>{{name.sales}}</ion-text>
+                      <ion-text>{{name.company}}</ion-text>
                     </td>
                     <td>
                       <ion-text>{{name.jumlah_bayaran}}</ion-text>
@@ -332,43 +428,13 @@
                   </tr>
                 </tbody>
               </table>
-                </div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-        <ion-col *ngIf="showAdmin">
-            <ion-card>
-              <ion-card-header>
-                Team Ranking
-              </ion-card-header>
-              <ion-card-content>
-                  <div style="overflow-x:auto;">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Nama</th>
-                      <th>Jualan(RM)</th>
-                      <th>Unit</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let name of ranking">
-                      <td>
-                        <ion-text>{{name.company}}</ion-text>
-                      </td>
-                      <td>
-                        <ion-text>{{name.jumlah_bayaran}}</ion-text>
-                      </td>
-                      <td>
-                        <ion-text>{{name.jumProduk}}</ion-text>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                  </div>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
     </ion-row>
   </ion-grid>
+
+
+
 </ion-content>

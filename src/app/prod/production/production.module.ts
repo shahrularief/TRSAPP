@@ -5,8 +5,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { CalendarModule } from 'ion2-calendar';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-
+import { Ng2FileInputModule } from 'ng2-file-input';
 import { ProductionPage } from './production.page';
+
 
 const routes: Routes = [
   {
@@ -22,6 +23,8 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     NgxDatatableModule,
+    Ng2FileInputModule,
+ 
     RouterModule.forChild(routes)
   ],
   declarations: [ProductionPage],

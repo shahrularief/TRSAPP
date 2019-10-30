@@ -129,7 +129,10 @@
       $query = mysqli_query($mysqli, "SELECT * FROM employee_table ORDER BY role ASC ");
     
       while($row = mysqli_fetch_array($query)){
+     
         $data[] = array(
+          'userID' => $row['userID'],
+          'password' => $row['password'],
           'username' => $row['username'],
           'fullname' => $row['fullname'],
           'nickname' => $row['nickname'],
@@ -146,6 +149,7 @@
         echo $result;
     
       }
+     
   ///// DISPLAY DATA UNVERIFIED///////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=='getdataunverified'){
   $data = array();
@@ -705,7 +709,27 @@ elseif($postjson['aksi']=='getsumship'){
   	echo $result;
 
   }
+     // UPDATE employee///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='updateemployee'){        
+  $pass = md5($postjson['password']);
+  $query = mysqli_query($mysqli, "UPDATE employee_table SET
+          username = '$postjson[username]',
+          fullname = '$postjson[fullname]',
+          nickname = '$postjson[nickname]',
+          userhp = '$postjson[userhp]',
+          userEmail = '$postjson[userEmail]',
+          role = '$postjson[role]',
+          company = '$postjson[company]',
+          password= $pass
+          WHERE userID='$postjson[userID]'");
 
+          if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
+          else $result = json_encode(array('success'=>false, 'result'=>'error'));
+
+          echo $result;
+
+          }
+ 
   // update verification///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=='updateverify'){
@@ -772,6 +796,17 @@ elseif($postjson['aksi']=='getsumship'){
   	echo $result;
 
   }
+
+  elseif($postjson['aksi']=='deleteemployee'){
+  	$query = mysqli_query($mysqli, "DELETE FROM employee_table WHERE userID ='$postjson[userID]'");
+
+  	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
+  	else $result = json_encode(array('success'=>false, 'result'=>'error'));
+
+  	echo $result;
+
+  }
+
 
    //DELETE PRODUCT DATA///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -898,14 +933,33 @@ elseif($postjson['aksi']=='getrankingsales'){
 
   }
   
-  // get sales ranking all///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // get company ranking all///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getrankingall'){
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table ORDER BY sales DESC ");
+  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table ORDER BY company DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
       'company' => $row['company'],
+      'jumProduk' => $row['jumProduk'],
+      'jumlah_bayaran' => $row['jumlah_bayaran']
+    );
+  }
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+  }
+
+   // get sales ranking all///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getrankingsalesall'){
+  $data = array();
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table ORDER BY sales DESC ");
+
+  while($row = mysqli_fetch_array($query)){
+    $data[] = array(
+      'sales' => $row['sales'],
       'jumProduk' => $row['jumProduk'],
       'jumlah_bayaran' => $row['jumlah_bayaran']
     );

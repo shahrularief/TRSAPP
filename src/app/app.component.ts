@@ -5,9 +5,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { MenuController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { AuthService } from './services/auth.service';
-import {NgxSpinnerService} from 'ngx-spinner';
-
-
+import { NgxSpinnerService } from 'ngx-spinner';
 
 const TOKEN_KEY = 'user-access-token';
 
@@ -30,10 +28,6 @@ export class AppComponent {
   perflabel = false;
   admlabel = false;
 
-  // public appAdmin = [];
-  // public appAccount = [];
-  // public appProduction = [];
-  // public appSales = [];
 
   public appHome = [
     {
@@ -43,60 +37,15 @@ export class AppComponent {
     },
   ];
   public appSales = [
-    // {
-    //   title: 'Tempahan Baru',
-    //   url: '/new-order',
-    //   icon: 'add'
-    // },
-    // {
-    //   title: 'Rekod Tempahan',
-    //   url: '/rekod-order',
-    //   icon: 'cart'
-    // },
   ];
 
   public appAccount = [
-    // {
-    //   title: 'Pengesahan',
-    //   url: '/account-verify',
-    //   icon: 'people'
-    // },
   ];
 
   public appProduction = [
-    // {
-    //   title: 'Production',
-    //   url: '/production',
-    //   icon: 'cube'
-    // },
-    // {
-    //   title: 'Shipping',
-    //   url: '/shipping',
-    //   icon: 'train'
-    // },
-
-    // {
-    //   title: 'Stok',
-    //   url: '/stock',
-    //   icon: 'filing'
-    // },
   ];
   public appAdmin = [
-    // {
-    //   title: 'Pendaftaran',
-    //   url: '/registration',
-    //   icon: 'add'
-    // },
-    // {
-    //   title: 'Syarikat',
-    //   url: '/company',
-    //   icon: 'business'
-    // },
-    // {
-    //   title: 'Jualan Team',
-    //   url: '/team',
-    //   icon: 'business'
-    // },
+
   ];
 
   public appPerform = [
@@ -139,7 +88,7 @@ export class AppComponent {
 
         if (this.res !== null && this.role === 'SALES') {
           this.router.navigate(['/home']);
-          
+
           this.ordlabel = true;
           this.appSales = [
             {
@@ -157,7 +106,7 @@ export class AppComponent {
           this.appAccount = [];
           this.appProduction = [];
           this.appAdmin = [];
-          
+
 
         } else if (this.res !== null && this.role === 'ACCOUNT') {
           this.router.navigate(['/home']);
@@ -184,7 +133,39 @@ export class AppComponent {
           ];
           this.appAdmin = [];
 
-        } else if (this.res !== null && this.role === 'PRODUCTION') {
+        } else if (this.res !== null && this.role === 'ACCOUNT LEADER') {
+          this.router.navigate(['/home']);
+          this.appSales = [];
+          this.appPerform = [];
+
+          this.acclabel = true;
+          this.ordlabel = false;
+          this.prodlabel = false;
+          this.perflabel = false;
+          this.admlabel = false;
+          this.appAccount = [{
+            title: 'Pengesahan',
+            url: '/account-verify',
+            icon: 'checkmark-circle'
+          },
+          {
+            title: 'Shipping',
+            url: '/shipping',
+            icon: 'train'
+          },
+          {
+            title: 'Report',
+            url: '/account-report',
+            icon: 'document'
+          }
+          ];
+          this.appProduction = [
+          ];
+          this.appAdmin = [];
+
+        }
+
+        else if (this.res !== null && this.role === 'PRODUCTION') {
           this.router.navigate(['/home']);
           this.appPerform = [];
           this.ordlabel = true;
@@ -229,7 +210,7 @@ export class AppComponent {
         } else if (this.res !== null && this.role === 'CEO' || this.role === 'BOD' || this.role === 'DEV') {
           this.router.navigate(['/home']);
           this.ordlabel = true;
-          
+
           this.appSales = [
             {
               title: 'Tempahan Baru',

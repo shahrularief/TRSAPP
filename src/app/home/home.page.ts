@@ -1,8 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Chart } from 'chart.js';
 import { PostProvider } from '../../providers/post-provider';
+import { ProdProductPage } from '../modals/prod-product/prod-product.page';
 import { AuthService } from '../services/auth.service';
+
 
 
 const TOKEN_KEY = 'user-access-token';
@@ -35,13 +38,16 @@ export class HomePage implements OnInit {
 
   showAdmin: boolean = false;
   showProd: boolean = false;
+  showProdOnly: boolean = false;
   showSale: boolean = false;
   showAcc: boolean = false;
   showSaleOnly: boolean = false;
+  teamrank: any;
+  overallrank: any;
   username: string;
   users: any;
   company: string;
-
+  tableStyle = 'bootstrap';
   totalsum: any[];
   todaysum: any[];
   monthsum: any[];
@@ -73,20 +79,23 @@ export class HomePage implements OnInit {
   shippingmonthly: any[];
   unverifiedprod: any[];
   unverifys: any[];
-
- 
+  salesall: any[];
+  salesallranking: any[];
+  comission: number;
   customers: any = [];
+  monthcom: any = [{ sum: 0 }];
+  count: any[];
 
   constructor(
     private postPrvdr: PostProvider,
     private storage: Storage,
     private auth: AuthService,
-
+    private modalController: ModalController,
 
   ) { }
 
   ngOnInit() {
-   
+
   }
 
 
@@ -94,6 +103,7 @@ export class HomePage implements OnInit {
     this.totalsum = [];
     this.todaysum = [];
     this.monthsum = [];
+    this.monthcom = [];
     this.newmonth = [];
     this.months = [];
     this.jb = [];
@@ -121,7 +131,10 @@ export class HomePage implements OnInit {
     this.unverifiedprod = [];
     this.unverifys = [];
     this.ranksales = [];
-    
+    this.salesall = [];
+    this.count = [];
+    this.salesallranking = [];
+
     this.auth.authState.subscribe(state => {
       this.users = state;
       this.username = this.users.username;
@@ -156,7 +169,8 @@ export class HomePage implements OnInit {
       this.loadMonthGraphByTeam();
       this.loadMonthGraphByProductSold();
       this.loadTeamSales();
-    
+      this.loadSalesRanking();
+      this.loadMonthlyComission();
 
     } else if (this.role === 'CEO' || this.role === 'BOD') {
       this.showAdmin = true;
@@ -174,13 +188,20 @@ export class HomePage implements OnInit {
       this.loadAllShippingToday();
       this.loadAllShippingWeekly();
       this.loadAllShippingMonthly();
+      this.loadSalesRanking();
+      this.loadTeamSales();
     } else if (this.role === 'ACCOUNT') {
+      this.showAcc = true;
+      this.loadUnverifyAcc();
+    } else if (this.role === 'ACCOUNT LEADER') {
       this.showAcc = true;
       this.loadUnverifyAcc();
     } else if (this.role === 'PRODUCTION') {
       this.showProd = true;
+      this.showProdOnly = true;
       this.loadUnverifyProduction();
       this.loadAllShipping();
+      this.getProduct();
     } else if (this.role === 'DEV') {
       this.showAdmin = true;
       this.showSale = true;
@@ -567,7 +588,7 @@ export class HomePage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getrankingall',
-       
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -575,7 +596,7 @@ export class HomePage implements OnInit {
           this.salesranking.push(sales);
         }
         resolve(true);
-        console.log('sales:' + this.salesranking);
+        console.log(' loadAllSalesRanking:' + this.salesranking);
         let ranking = [];
 
         this.salesranking.forEach(function (a) {
@@ -586,7 +607,7 @@ export class HomePage implements OnInit {
           this[a.company].jumlah_bayaran += +a.jumlah_bayaran;
           this[a.company].jumProduk += +a.jumProduk;
         }, Object.create(null));
-        console.log('ranking', ranking);
+        console.log(' loadAllSalesRanking', ranking);
         this.ranking = ranking.concat();
         this.ranking.sort(function (a, b) {
           return b.jumlah_bayaran - a.jumlah_bayaran;
@@ -698,7 +719,7 @@ export class HomePage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getshippingtotal',
-       
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -730,7 +751,7 @@ export class HomePage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getshippingweekly',
-       
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -746,7 +767,7 @@ export class HomePage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getshippingmonthly',
-       
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -805,6 +826,78 @@ export class HomePage implements OnInit {
           console.log('total', this.monthsum);
         }
         resolve(true);
+      });
+    });
+  }
+  loadMonthlyComission() {
+    return new Promise(resolve => {
+      const body = {
+        username: this.username,
+        aksi: 'getsumsalesmonth',
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (const sum of data.result) {
+          this.monthcom.push(sum);
+
+        }
+        console.log('total', this.monthcom);
+        resolve(true);
+        let monthC = this.monthcom[0].sum;
+        console.log("comission", monthC);
+        let mc: number;
+        mc = +monthC;
+        console.log(mc);
+        if (mc < 10000) {
+          console.log("less than 10K");
+          let calc;
+          calc = mc * (5 / 100);
+          this.comission = calc.toFixed(2);
+        } else if (mc >= 10000 && mc < 20000) {
+          let calc;
+          calc = mc * (7 / 100);
+          this.comission = calc.toFixed(2);
+
+        } else if (mc >= 20000) {
+          if (mc >= 20000 && mc < 25000) {
+            let calc;
+            calc = mc * (10 / 100);
+            this.comission = calc.toFixed(2);
+          } else if (mc >= 25000 && mc < 30000) {
+            let calc;
+            calc = mc * (10 / 100) + 500;
+            this.comission = calc.toFixed(2);
+          } else if (mc >= 30000 && mc < 40000) {
+            let calc;
+            calc = mc * (10 / 100) + 1000;
+            this.comission = calc.toFixed(2);
+          } else if (mc >= 40000 && mc < 50000) {
+            let calc;
+            calc = mc * (10 / 100) + 1500;
+            this.comission = calc.toFixed(2);
+          } else if (mc >= 50000 && mc < 60000) {
+            let calc;
+            calc = mc * (10 / 100) + 2000;
+            this.comission = calc.toFixed(2);
+          } else if (mc >= 60000 && mc < 70000) {
+            let calc;
+            calc = mc * (10 / 100) + 2500;
+            this.comission = calc.toFixed(2);
+          }
+          else if (mc >= 70000 && mc < 80000) {
+            let calc;
+            calc = mc * (10 / 100) + 3000;
+            this.comission = calc.toFixed(2);
+          }
+          else if (mc >= 80000 && mc < 90000) {
+            let calc;
+            calc = mc * (10 / 100) + 3500;
+            this.comission = calc.toFixed(2);
+          }
+        }
+
+
+
       });
     });
   }
@@ -960,7 +1053,7 @@ export class HomePage implements OnInit {
       const body = {
         company: this.company,
         aksi: 'getrankingsales',
-      
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -968,26 +1061,86 @@ export class HomePage implements OnInit {
           this.salesranking.push(sales);
         }
         resolve(true);
-        console.log('sales:' + this.salesranking);
+        console.log('loadTeamSales:' + this.salesranking);
         let ranksales = [];
 
         this.salesranking.forEach(function (a) {
           if (!this[a.sales]) {
+
             this[a.sales] = { sales: a.sales, jumProduk: 0, jumlah_bayaran: 0 };
             ranksales.push(this[a.sales]);
           }
           this[a.sales].jumlah_bayaran += +a.jumlah_bayaran;
           this[a.sales].jumProduk += +a.jumProduk;
+
         }, Object.create(null));
-        console.log('ranking', ranksales);
+        console.log('loadTeamSales', ranksales);
         this.ranksales = ranksales.concat();
         this.ranksales.sort(function (a, b) {
           return b.jumlah_bayaran - a.jumlah_bayaran;
         });
-        console.log('Nranking', this.ranksales);
-
+        console.log('NloadTeamSales', this.ranksales);
+        let index = this.ranksales.findIndex(x => x.sales === this.username);
+        console.log("index team sale", index);
+        this.teamrank = index + 1;
       });
+      this.ranksales = this.ranksales.map(row => ({
+        id: row['id'],
+        nama: row['sales'],
+        jumProduk: row['jumProduk'],
+        jumlah_bayaran: row['jumlah_bayaran'],
+      }));
+
+
+
+
     });
+
+  }
+
+  ////////////////// ranking sales all
+  loadSalesRanking() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getrankingsalesall',
+
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (const sales of data.result) {
+          this.salesallranking.push(sales);
+        }
+        resolve(true);
+
+        let ranksales = [];
+
+        this.salesallranking.forEach(function (a) {
+          if (!this[a.sales]) {
+
+            this[a.sales] = { sales: a.sales, jumProduk: 0, jumlah_bayaran: 0 };
+            ranksales.push(this[a.sales]);
+          }
+          this[a.sales].jumlah_bayaran += +a.jumlah_bayaran;
+          this[a.sales].jumProduk += +a.jumProduk;
+
+        }, Object.create(null));
+
+        this.salesall = ranksales.concat();
+        this.salesall.sort(function (a, b) {
+          return b.jumlah_bayaran - a.jumlah_bayaran;
+        });
+        console.log('loadSalesRanking', this.salesall);
+        let index = this.salesall.findIndex(x => x.sales === this.username);
+        console.log("index overall", index);
+        this.overallrank = index + 1;
+      });
+      this.salesall = this.salesall.map(row => ({
+        nama: row['sales'],
+        jumProduk: row['jumProduk'],
+        jumlah_bayaran: row['jumlah_bayaran'],
+      }));
+    });
+
   }
 
   //PROOOOODUCTIOOON
@@ -996,19 +1149,42 @@ export class HomePage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getunverifyproduction',
-      
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {
         for (const verify of Cresult.result) {
           this.unverifiedprod.push(verify);
-          console.log('unverified items production:' + this.unverifiedprod);
+
         }
         resolve(true);
-
+        console.log('unverified items production:' + this.unverifiedprod);
       });
     });
   }
+
+  getProduct() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getproduct',
+
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (const prod of data.result) {
+          this.count.push(prod);
+          console.log('Products:' + this.count);
+        }
+        this.count = this.count.map(row => ({
+          prodName: row['prodName'],
+          stock: row['stock']
+        }));
+        resolve(true);
+        console.log(this.count);
+      });
+    });
+  }
+
 
   //ACOOUUNNTTT
 
@@ -1016,7 +1192,7 @@ export class HomePage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getunverify',
-    
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {

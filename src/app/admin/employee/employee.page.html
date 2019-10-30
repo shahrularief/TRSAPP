@@ -1,75 +1,59 @@
 <ion-header>
-    <ion-toolbar>
-        
-            <ion-menu-button  slot="start"></ion-menu-button>
-  
-      <ion-title>Senarai Pekerja</ion-title>
-      <ion-icon slot="end" name="contrast" (click)="switchStyle()"></ion-icon>
-    </ion-toolbar>
-  </ion-header>
-  
-  <ion-content>
-    <!-- <ion-searchbar placeholder="Search by name" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar> -->
-    
+  <ion-toolbar>
+
+    <ion-menu-button slot="start"></ion-menu-button>
+
+    <ion-title>Senarai Pekerja</ion-title>
+    <ion-icon slot="end" name="contrast" (click)="switchStyle()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- <ion-searchbar placeholder="Search by name" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar> -->
+
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button (click)="goList()">
-        <ion-icon name="add"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
+    <ion-fab-button (click)="goList()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <input type="text" style="padding:8px;margin:15px auto;width:30%;" placeholder=" Search nama // company"
+    (keyup)="updateFilter($event)" />
 
 
-    <!-- <div style="overflow-x:auto;">
-        <table>
-            <thead>
-              <tr>
-                <th>Nama Penuh</th>
-                <th>Nama Panggilan</th>
-                <th>Username</th>
-                <th>No Telefon</th>
-                <th>Emel</th>
-                <th>Peranan</th>
-                <th>Syarikat</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let em of employees">
-                <td>
-                  <ion-text>{{ em.fullname}}</ion-text>
-                </td>
-                <td>
-                  <ion-text>{{em.nickname}}</ion-text>
-                </td>
-                <td>
-                  <ion-text>{{em.username}}</ion-text>
-                </td>
-                <td>
-                  <ion-text>{{em.userhp}}</ion-text>
-                </td>
-                <td>
-                  <ion-text>{{em.userEmail}}</ion-text>
-                </td>
-                <td>
-                  <ion-text>{{em.role}}</ion-text>
-                </td>
-                <td>
-                  <ion-text>{{em.company}}</ion-text>
-                </td>
-          </table>
-        </div> -->
-        
 
-        <input
-        type="text"
-        style="padding:8px;margin:15px auto;width:30%;"
-        placeholder="Type to filter the name column..."
-        (keyup)="updateFilter($event)"
-      />
-      
-        
-     
-        <ngx-datatable #table [ngClass]="tableStyle" [rows]="employees" [columns]="tableColumns" 
-        [scrollbarH]="true"  columnMode="force"
-        [headerHeight]="50"
-        [footerHeight]="0"
-        [rowHeight]="'auto'"></ngx-datatable>
-  </ion-content>
+  <ngx-datatable [ngClass]="tableStyle" [rows]="employees" [columnMode]="'force'" [sortType]="'single'"
+    [reorderable]="false" [scrollbarH]="true" [rowHeight]="'auto'" [headerHeight]="100" [footerHeight]="50"
+    [limit]="10">
+    <ngx-datatable-column name="Nama Penuh" prop="fullname"></ngx-datatable-column>
+    <ngx-datatable-column name="Nama Pelanggan" prop="nickname"></ngx-datatable-column>
+
+    <ngx-datatable-column name="Username" prop="username"></ngx-datatable-column>
+    <ngx-datatable-column name="No H/P" prop="userhp"></ngx-datatable-column>
+    <ngx-datatable-column name="Emel" prop="userEmail"></ngx-datatable-column>
+    <ngx-datatable-column name="Role" prop="role"></ngx-datatable-column>
+    <ngx-datatable-column name="Company" prop="company"></ngx-datatable-column>
+
+    <ngx-datatable-column name="id" [resizeable]="false">
+      <ng-template ngx-datatable-header-template>
+      </ng-template>
+      <ng-template let-row="row" ngx-datatable-cell-template>
+
+        <button ion-button small color="light" (click)="updateEmployee(row.username,row.fullname,row.nickname,
+              row.userhp,
+              row.userEmail,
+              row.role,
+              row.company,
+              row.userID,
+              row.password)">
+          <ion-icon name="create"></ion-icon>
+        </button>
+
+        <button ion-button small outline color="light" (click)="deleteEmployee(row.userID)">
+          <ion-icon name="trash"></ion-icon>
+        </button>
+      </ng-template>
+    </ngx-datatable-column>
+
+  </ngx-datatable>
+</ion-content>

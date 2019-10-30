@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class PostProvider {
     // server: string = 'http://192.168.0.191/trsAppV1/server_api/'; //HNA
-    server: string = 'http://trstest.lumiactive.com/server_api/'; //HNA
+    server: string = 'https://trstest.lumiactive.com/server_api/'; //HNA
 
 
     // server: string = 'http://192.168.0.1/trsAppV1/server_api/'; //HQ

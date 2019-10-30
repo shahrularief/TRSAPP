@@ -53,6 +53,10 @@ const routes: Routes = [
     path: 'receipt/:id/:tarikh/:nama/:alamat/:hp/:akaun/:produk/:jumProduk/:bayaran/:nota/:sales/:track',
     loadChildren: './prod/receipt/receipt.module#ReceiptPageModule'
   },
+  { path: 'updateemployee', loadChildren: './admin/updateemployee/updateemployee.module#UpdateemployeePageModule' },
+  { path: 'updateemployee/:user/:full/:nick/:hp/:emel/:role/:comp/:id/:pass',
+  loadChildren: './admin/updateemployee/updateemployee.module#UpdateemployeePageModule' },
+  { path: 'account-report', loadChildren: './accounting/account-report/account-report.module#AccountReportPageModule' },
 
 
 ];

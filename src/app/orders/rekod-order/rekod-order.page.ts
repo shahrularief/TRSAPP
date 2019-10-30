@@ -33,6 +33,8 @@ export class RekodOrderPage implements OnInit {
   loaderToShow: any;
   customers: any = [];
   users: any = [];
+  tableStyle = 'bootstrap fullscreen';
+
   constructor(
     private router: Router,
     private postPvdr: PostProvider,
@@ -71,6 +73,7 @@ export class RekodOrderPage implements OnInit {
 
 
   ngOnInit() {
+
   }
 
   ionViewWillEnter() {
@@ -88,10 +91,9 @@ export class RekodOrderPage implements OnInit {
       } else {
         this.loadCustomer(this.username);
       }
-
     });
-  }
 
+  }
   updateCustomer(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, resit) {
     this.router.navigate(['/update-order/' + id + '/' + tarikh + '/' + nama + '/' + alamat + '/' + hp + '/' + akaun + '/'
       + produk + '/' + jumProduk + '/' + bayaran + '/' + nota]);
@@ -157,7 +159,28 @@ export class RekodOrderPage implements OnInit {
         }
         this.loadCtrl.dismiss();
         resolve(true);
+
+       
+        this.customers = this.customers.map(row => ({
+          order_id: row['order_id'],
+          tarikh_order: row['tarikh_order'],
+          nama_pelanggan: row['nama_pelanggan'],
+          alamat_pelanggan: row['alamat_pelanggan'],
+          nombor_hp: row['nombor_hp'],
+          akaun: row['akaun'],
+          produk: row['produk'],
+          penghantaran: row['penghantaran'],
+          jumlah_bayaran: row['jumlah_bayaran'],
+          jumProduk: row['jumProduk'],
+          nota_tambahan: row['nota_tambahan'],
+          sales: row['sales'],
+          company: row['company'],
+          fail_lampiran: row['fail_lampiran'],
+          resit: row['resit'],
+          pengesahan: row['pengesahan']
+        }));
       });
+
     });
   }
 
@@ -166,6 +189,7 @@ export class RekodOrderPage implements OnInit {
       this.loadCtrl.present();
       let body = {
         aksi: 'getdataall',
+
       };
 
       this.postPvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -174,8 +198,47 @@ export class RekodOrderPage implements OnInit {
         }
         this.loadCtrl.dismiss();
         resolve(true);
+        this.customers = this.customers.map(row => ({
+          order_id: row['order_id'],
+          tarikh_order: row['tarikh_order'],
+          nama_pelanggan: row['nama_pelanggan'],
+          alamat_pelanggan: row['alamat_pelanggan'],
+          nombor_hp: row['nombor_hp'],
+          akaun: row['akaun'],
+          produk: row['produk'],
+          penghantaran: row['penghantaran'],
+          jumlah_bayaran: row['jumlah_bayaran'],
+          jumProduk: row['jumProduk'],
+          nota_tambahan: row['nota_tambahan'],
+          sales: row['sales'],
+          company: row['company'],
+          fail_lampiran: row['fail_lampiran'],
+          resit: row['resit'],
+          pengesahan: row['pengesahan']
+        }));
       });
     });
   }
+
+  updateFilter(event) {
+    const val = event.target.value.toLowerCase();
+    if (val && val.trim() !== '') {
+      const temp = this.customers.filter(function (d) {
+        return d.nama_pelanggan.toLowerCase().indexOf(val) !== -1 || d.order_id.toLowerCase().indexOf(val) !== -1 || !val;
+
+      });
+      this.customers = temp;
+    } else {
+      this.customers = [];
+      if (this.role === "CEO" || this.role === "BOD") {
+
+        this.loadCustomerAll();
+      } else {
+        this.loadCustomer(this.username);
+      }
+    }
+  }
+
+
 }
 

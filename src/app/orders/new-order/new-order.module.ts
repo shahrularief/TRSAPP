@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-
 import { NewOrderPage } from './new-order.page';
+import { InternationalPhoneNumberModule } from 'ngx-international-phone-number';
 
 const routes: Routes = [
   {
@@ -20,6 +20,7 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     ReactiveFormsModule,
+    InternationalPhoneNumberModule,
     RouterModule.forChild(routes)
   ],
   declarations: [NewOrderPage]

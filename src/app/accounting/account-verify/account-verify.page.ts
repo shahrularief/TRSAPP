@@ -14,7 +14,7 @@ import {
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import * as papa from 'papaparse';
 import { LoadingService } from '../../services/loading.service';
-
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-account-verify',
@@ -23,7 +23,7 @@ import { LoadingService } from '../../services/loading.service';
 })
 export class AccountVerifyPage implements OnInit {
   date: Date = new Date();
-
+  accountname;
   tarikh_order;
   nama_pelanggan;
   alamat_pelanggan;
@@ -41,15 +41,16 @@ export class AccountVerifyPage implements OnInit {
   sah = '';
   id: number;
   total: number;
-showload = true;
+  showload = true;
   sortedcount: any = [];
   customers: any = [];
+  loadedcustomers: any = [];
   unverifys: any = [];
   query: any = [];
   count: any = [];
   products: any = [];
   tableColumns: any[];
-  tableStyle = 'bootstrap';
+  tableStyle = 'bootstrap fullscreen';
   public searchTerm = '';
   server: string;
   headerRow
@@ -63,15 +64,16 @@ showload = true;
     private modalController: ModalController,
     public datatable: NgxDatatableModule,
     public loadCtrl: LoadingService,
+    private auth: AuthService,
 
   ) { this.server = postPrvdr.server; }
 
   ngOnInit() {
-    console.log(this.date);
   }
 
   ionViewWillEnter() {
     this.customers = [];
+    this.loadedcustomers = [];
     this.unverifys = [];
     this.count = [];
     this.sortedcount = [];
@@ -80,6 +82,15 @@ showload = true;
     this.loadUnverify();
     this.loadProduct();
     this.getProduct();
+    this.loadAccount();
+  }
+
+  autoRefresh() {
+    setInterval(() => {
+      this.customers = [];
+      this.loadCustomer();
+    }, 60000);
+
   }
 
   loadData(event: any) {
@@ -91,10 +102,17 @@ showload = true;
     }, 500);
   }
 
+  loadAccount() {
+    this.auth.authState.subscribe(users => {
+
+      this.accountname = users.username;
+      console.log(this.accountname);
+    });
+  }
 
   loadCustomer() {
     return new Promise(resolve => {
-      this.loadCtrl.present();
+      // this.loadCtrl.present();
       const body = {
         aksi: 'getdataunverified',
 
@@ -103,31 +121,44 @@ showload = true;
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
         for (const customer of data.result) {
           this.customers.push(customer);
-          console.log('customers:' + this.customers);
+
         }
-        this.loadCtrl.dismiss();
+        // this.loadCtrl.dismiss();
+        console.log('customers:' + this.customers);
         resolve(true);
-        this.customers = this.customers.map(row => ({
-          order_id: row['order_id'],
-          tarikh_order: row['tarikh_order'],
-          nama_pelanggan: row['nama_pelanggan'],
-          alamat_pelanggan: row['alamat_pelanggan'],
-          nombor_hp: row['nombor_hp'],
-          akaun: row['akaun'],
-          produk: row['produk'],
-          penghantaran: row['penghantaran'],
-          jumlah_bayaran: row['jumlah_bayaran'],
-          jumProduk: row['jumProduk'],
-          nota_tambahan: row['nota_tambahan'],
-          sales: row['sales'],
-          company: row['company'],
-          fail_lampiran: row['fail_lampiran'],
-          resit: row['resit'],
-          pengesahan: row['pengesahan']
-        }));
+        this.customerLoaded(this.customers);
+        this.autoRefresh();
       });
     });
   }
+
+  customerLoaded(cust) {
+    this.loadedcustomers = [];
+    this.loadedcustomers = cust.map(row => ({
+      order_id: row['order_id'],
+      tarikh_order: row['tarikh_order'],
+      nama_pelanggan: row['nama_pelanggan'],
+      alamat_pelanggan: row['alamat_pelanggan'],
+      poskod: row['poskod'],
+      bandar: row['bandar'],
+      negeri: row['negeri'],
+      negara: row['negara'],
+      nombor_hp: row['nombor_hp'],
+      namaakaun: row['namaakaun'],
+      akaun: row['akaun'],
+      produk: row['produk'],
+      penghantaran: row['penghantaran'],
+      jumlah_bayaran: row['jumlah_bayaran'],
+      jumProduk: row['jumProduk'],
+      nota_tambahan: row['nota_tambahan'],
+      sales: row['sales'],
+      company: row['company'],
+      fail_lampiran: row['fail_lampiran'],
+      resit: row['resit'],
+      pengesahan: row['pengesahan']
+    }));
+  }
+
 
   loadUnverify() {
     return new Promise(resolve => {
@@ -139,10 +170,10 @@ showload = true;
       this.postPrvdr.postData(body, 'process-api.php').subscribe(Cresult => {
         for (const verify of Cresult.result) {
           this.unverifys.push(verify);
-          console.log('unverified items:' + this.unverifys);
+
         }
         resolve(true);
-
+        console.log('unverified items:' + this.unverifys);
       });
     });
   }
@@ -152,7 +183,7 @@ showload = true;
     if (val && val.trim() !== '') {
       const temp = this.customers.filter(function (d) {
         return d.company.toLowerCase().indexOf(val) !== -1 || !val || d.nama_pelanggan.toLowerCase().indexOf(val) !== -1
-        || d.sales.toLowerCase().indexOf(val) !== -1;
+          || d.sales.toLowerCase().indexOf(val) !== -1;
       });
       this.customers = temp;
     } else {
@@ -201,13 +232,19 @@ showload = true;
         aksi: 'updateverify',
         order_id: id,
         pengesahan: sah,
+        verified_by: this.accountname,
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
         this.router.navigate(['/account-verify']);
-        this.ionViewWillEnter();
-        console.log('OK');
+
+
       });
+      resolve(true);
+      console.log('OK');
+      this.customers = [];
+      this.loadedcustomers = [];
+      this.loadCustomer();
     });
 
   }
@@ -331,9 +368,10 @@ showload = true;
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
         for (let product of data.result) {
           this.products.push(product);
-          console.log(this.products);
+
 
         }
+        console.log(this.products);
         resolve(true);
       });
     });
@@ -377,7 +415,7 @@ showload = true;
     let day = this.date.getDay();
     let month = this.date.getMonth() + 1;
     let year = this.date.getFullYear();
-  
+
 
     console.log(day + '/' + month);
     let customersCSV = this.customers.map(row => ({
@@ -407,7 +445,7 @@ showload = true;
     let blob = new Blob([csv]);
     let a = window.document.createElement("a");
     a.href = window.URL.createObjectURL(blob);
-    a.download = day + '' +  month +  '' +  year + '' + "account.csv";
+    a.download = day + '' + month + '' + year + '' + "account.csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

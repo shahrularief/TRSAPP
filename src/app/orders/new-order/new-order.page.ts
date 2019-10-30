@@ -5,7 +5,8 @@ import { ToastController, ActionSheetController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { FormGroup, FormBuilder, FormControl, FormArray, Validators } from '@angular/forms';
-
+import { AuthService } from '../../services/auth.service';
+import { DomSanitizer } from '@angular/platform-browser'; 
 const TOKEN_KEY = 'user-access-token';
 
 @Component({
@@ -14,16 +15,17 @@ const TOKEN_KEY = 'user-access-token';
   styleUrls: ['./new-order.page.scss'],
 })
 export class NewOrderPage implements OnInit {
-
+  [x: string]: any;
+  public anArray: any = [];
+  data;
   myForm: FormGroup;
-  private playerCount: number = 1;
+  produk: FormArray;
 
   tarikh_order = '';
   nama_pelanggan = '';
   alamat_pelanggan = '';
   nombor_hp;
   akaun = '';
-  produk = '';
   jumProduk = '';
   jumlah_bayaran = '';
   nota_tambahan = '';
@@ -39,7 +41,7 @@ export class NewOrderPage implements OnInit {
   company: string;
   users: any;
   products: any[];
-
+  choosenproduct: any[];
 
   constructor(
     private postPrvdr: PostProvider,
@@ -49,30 +51,32 @@ export class NewOrderPage implements OnInit {
     private storage: Storage,
     private camera: Camera,
     public actionSheetController: ActionSheetController,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private auth: AuthService,
+    private sanitizer: DomSanitizer,
   ) {
     this.myForm = this.formBuilder.group({
-      nama_pelanggan: new FormControl('', Validators.required),
-      alamat_pelanggan: new FormControl('', Validators.required),
-
-      nombor_hp: new FormControl('', Validators.required),
-      tarikh_order: new FormControl('', Validators.required),
-      akaun: new FormControl(''),
-      produk: new FormControl(''),
-      jumProduk: new FormControl('', Validators.required),
-      jumlah_bayaran: new FormControl('', Validators.required),
-      nota_tambahan: new FormControl('', Validators.required),
+      nama_pelanggan: ['', Validators.required],
+      negeri: ['', Validators.required],
+      negara: ['', Validators.required],
+      alamat_pelanggan: ['', Validators.required],
+      nombor_hp: ['', Validators.required],
+      tarikh_order: ['', Validators.required],
+      namaakaun: ['', Validators.required],
+      akaun: ['', Validators.required],
+      poskod: ['', Validators.required],
+      bandar: ['', Validators.required],
+      emel: ['', Validators.email],
+      jumlah_bayaran: ['', Validators.required],
+      nota_tambahan: ['', Validators.required]
     });
-    console.log(this.myForm);
   }
   ionViewWillEnter() {
-    this.storage.get(TOKEN_KEY).then((res) => {
-      this.users = res;
+    this.auth.authState.subscribe(state => {
+      this.users = state;
       this.sales_username = this.users.username;
       this.company = this.users.company;
-      console.log(res);
     });
-
     this.loadProduct();
     this.products = [];
   }
@@ -82,25 +86,43 @@ export class NewOrderPage implements OnInit {
   }
 
 
+  Add() {
+    this.anArray.push({ 'value': '', 'total': '' });
+    console.log(this.anArray);
+  }
+
+
+  onDelete(i) {
+    console.log(i);
+    this.anArray.splice(i, 1);
+    console.log(this.anArray);
+  }
   async submit() {
-    console.log("nama_pelanggan", this.myForm.value.nama_pelanggan);
-    console.log("alamat_pelanggan", this.myForm.value.alamat_pelanggan);
-    console.log("nombor_hp", this.myForm.value.nombor_hp);
-    console.log("akaun", this.myForm.value.akaun);
-    console.log("produk", this.myForm.value.produk);
-    console.log("jumProduk", this.myForm.value.jumProduk);
-    console.log("jumlah_bayaran", this.myForm.value.jumlah_bayaran);
-    console.log("nota_tambahan", this.myForm.value.nota_tambahan);
 
+    console.log('this.anArray', this.anArray);
 
+    let name = [];
+    let sum = 0;
+
+    for (let i = 0; i < this.anArray.length; i++) {
+      console.log(this.anArray[i].value); //use i instead of 0
+      name.push(this.anArray[i].value + '[' + this.anArray[i].total + ']');
+      console.log(name);
+    }
+
+    for (let i = 0; i < this.anArray.length; i++) {
+      sum += this.anArray[i].total;
+      console.log(sum);
+    }
 
     if (this.myForm.value.nama_pelanggan !== '' && this.myForm.value.alamat_pelanggan !== ''
-      && this.myForm.value.nombor_hp !== '' && this.myForm.value.akaun !== '' && this.myForm.value.produk !== ' '
-      && this.myForm.value.jumProduk !== ''
+      && this.myForm.value.poskod !== ''
+      && this.myForm.value.negeri !== ''
+      && this.myForm.value.negara !== ''
+      && this.myForm.value.nombor_hp !== '' && this.myForm.value.namaakaun !== '' && this.myForm.value.akaun !== ''
       && this.myForm.value.jumlah_bayaran !== '' && this.myForm.value.nota_tambahan !== '') {
 
       let hp = this.myForm.value.nombor_hp.toString();
-      let pro = this.myForm.value.jumProduk.toString();
       let byr = this.myForm.value.jumlah_bayaran.toString();
 
 
@@ -109,10 +131,15 @@ export class NewOrderPage implements OnInit {
         aksi: 'add',
         nama_pelanggan: this.myForm.value.nama_pelanggan,
         alamat_pelanggan: this.myForm.value.alamat_pelanggan,
-        nombor_hp: hp,
+        negeri: this.myForm.value.negeri,
+        poskod: this.myForm.value.poskod,
+        bandar: this.myForm.value.bandar,
+        negara: this.myForm.value.negara,
+        nombor_hp: hp.toString(),
+        namaakaun: this.myForm.value.namaakaun,
         akaun: this.myForm.value.akaun,
-        produk: this.myForm.value.produk,
-        jumProduk: pro,
+        produk: name.toString(),
+        jumProduk: sum,
         jumlah_bayaran: byr,
         nota_tambahan: this.myForm.value.nota_tambahan,
         pengesahan: this.pengesahan,
@@ -120,6 +147,7 @@ export class NewOrderPage implements OnInit {
         resit: this.base64Image,
         sales: this.sales_username,
         company: this.company,
+        emel: this.myForm.value.emel,
       };
       const toast = await this.toastController.create({
         message: 'Tempahan telah di simpan',
@@ -127,15 +155,13 @@ export class NewOrderPage implements OnInit {
       });
       toast.present();
 
+      this.anArray = [];
       this.myForm.reset();
-      this.router.navigate(['/new-order']);
+      this.router.navigate(['/rekod-tempahan']);
       this.postPrvdr.postData(body, 'process-api.php').subscribe(async data => {
 
         console.log('OK');
         console.log(data);
-
-
-
 
       });
     } else {
@@ -147,25 +173,6 @@ export class NewOrderPage implements OnInit {
     }
 
   }
-
-
-
-  async presentActionSheet() {
-    const actionSheet = await this.actionSheetController.create({
-      header: 'Choose one',
-      buttons: [
-        {
-          text: 'Gallery',
-          icon: 'image',
-          handler: () => {
-            this.openGallery();
-          }
-        }
-      ]
-    });
-    await actionSheet.present();
-  }
-
 
 
   openGallery() {
@@ -183,7 +190,9 @@ export class NewOrderPage implements OnInit {
 
     this.camera.getPicture(options).then((imageData) => {
       this.cameraData = imageData;
+      this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image);
       this.base64Image = 'data:image/jpeg;base64,' + imageData;
+     
       console.log(this.base64Image);
     }, (err) => {
       // Handle error
@@ -202,10 +211,11 @@ export class NewOrderPage implements OnInit {
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
         for (let product of data.result) {
           this.products.push(product);
-          console.log(this.products);
+
 
         }
         resolve(true);
+        console.log(this.products);
       });
     });
   }

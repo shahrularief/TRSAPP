@@ -56,48 +56,60 @@ export class EmployeePage implements OnInit {
           userhp: row['userhp'],
           userEmail: row['userEmail'],
           role: row['role'],
-          company: row['company']
+          company: row['company'],
+          userID: row['userID'],
+          password: row['password'],
         }));
-        this.tableColumns = [
-          {
-            prop: 'fullname',
-            name: 'Nama Penuh'
-          },
-          {
-            prop: 'nickname',
-            name: 'Nama Panggilan'
-          },
-          {
-            prop: 'username',
-            name: 'Username'
-          },
-
-          {
-            prop: 'userhp',
-            name: 'Nombor Telefon'
-          },
-          {
-            prop: 'userEmail',
-            name: 'Emel'
-          },
-          {
-            prop: 'role',
-            name: 'Peranan'
-          },
-          {
-            prop: 'company',
-            name: 'Syarikat'
-          }
-        ]
         console.log("map", this.employees);
       });
+    });
+  }
+
+  updateEmployee(user,full,nick,hp,emel,role,comp,id,pass){
+    this.router.navigate(['/updateemployee/' + user + '/' + full + '/' + nick + '/' + hp + '/' + emel + '/' + role + '/'
+    + comp + '/' + id  + '/' + pass]);
+  }
+
+  async deleteEmployee(id){
+    console.log(id);
+    const alert = await this.alertCtrl.create({
+      header: 'Delete!',
+      message: 'Adakah anda pasti?',
+      buttons: [
+        {
+          text: 'Tidak',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Delete',
+          handler: () => {
+            this.delEmployee(id);
+            console.log('Confirm Okay');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  delEmployee(id) {
+    const body = {
+      aksi: 'deleteemployee',
+      userID: id
+    };
+    this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+      this.ionViewWillEnter();
     });
   }
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
     if (val && val.trim() !== '') {
     const temp = this.employees.filter(function(d) {
-      return d.fullname.toLowerCase().indexOf(val) !== -1 || !val;
+      return d.fullname.toLowerCase().indexOf(val) !== -1 || !val || d.company.toLowerCase().indexOf(val) !== -1;
     });
     this.employees = temp;
   } else {

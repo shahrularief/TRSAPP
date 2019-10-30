@@ -16,61 +16,55 @@
       </ion-refresher>
   <!-- <ion-searchbar showCancelButton="always"> </ion-searchbar>-->
 
-  <ion-grid>
-
   
-
-  <ion-row>
-        <ion-item-sliding *ngFor="let customer of customers">
-        <ion-item-options side="start">
-          <ion-item-option color="danger" (click)="deleteAlert(customer.order_id)"><ion-icon name='trash'></ion-icon></ion-item-option>
-        </ion-item-options>
     
-        <ion-row>
-          <ion-col>
-              <ion-item>
-                  <ion-text>{{customer.nama_pelanggan}}</ion-text>  
-          </ion-item>     
-      </ion-col>
-          
 
-        </ion-row>
-          
-        
-       
+<ion-searchbar showCancelButton="always" (ionChange)="updateFilter($event)" placeholder="Name || order id"></ion-searchbar>
 
-        <ion-item-options side="end">
-          <ion-item-option (click)="updateCustomer(
-          customer.order_id,
-          customer.nama_pelanggan,
-          customer.tarikh_order,
-          customer.alamat_pelanggan,
-          customer.nombor_hp,
-          customer.akaun,
-          customer.produk,
-          customer.jumProduk,
-          customer.jumlah_bayaran,
-          customer.nota_tambahan,
-          customer.resit)"><ion-icon name="create"></ion-icon>
-        </ion-item-option>
-      
-        <ion-item-option color="tertiary" (click)="openModal(
-          customer.order_id, 
-        customer.nama_pelanggan,
-        customer.tarikh_order,
-        customer.alamat_pelanggan,
-        customer.nombor_hp,
-        customer.akaun,
-        customer.produk,
-        customer.jumProduk,
-        customer.jumlah_bayaran,
-        customer.nota_tambahan,
-        customer.resit,
-        customer.pengesahan)"><ion-icon name='eye'></ion-icon></ion-item-option>
+     <ngx-datatable [ngClass]="tableStyle" [rows]="customers" [columnMode]="'force'"
+     [sortType]="'single'" [reorderable]="false"  [rowHeight]="'auto'" [headerHeight]="100"
+     [footerHeight]="'auto'" [limit]="15">
+     <ngx-datatable-column name= "ID" prop="order_id"></ngx-datatable-column>
+     <ngx-datatable-column name="Nama" prop="nama_pelanggan"></ngx-datatable-column>
+     <ngx-datatable-column name="Status" prop="pengesahan"></ngx-datatable-column>
+    
+     <ngx-datatable-column name="id" [resizeable]="false">
+             <ng-template ngx-datatable-header-template>
+                     
+             </ng-template>
+             <ng-template let-row="row" ngx-datatable-cell-template>
+                     <button ion-button small color="danger" (click)="deleteAlert(row.order_id)">
+                             <ion-icon name="trash"></ion-icon>
+                     </button>
+                     <button ion-button small color="success" (click)="updateCustomer(row.order_id,row.nama_pelanggan,
+                       row.tarikh_order,
+                       row.alamat_pelanggan,
+                       row.nombor_hp,
+                       row.akaun,
+                       row.produk,
+                       row.jumProduk,
+                       row.jumlah_bayaran,
+                       row.nota_tambahan)">
+                             <ion-icon name="create"></ion-icon>
+                     </button>
+                     <button ion-button small fill color="tertiary" (click)="openModal(
+                     row.order_id, 
+                     row.nama_pelanggan,
+                     row.tarikh_order,
+                     row.alamat_pelanggan,
+                     row.nombor_hp,
+                     row.akaun,
+                     row.produk,
+                     row.jumProduk,
+                     row.jumlah_bayaran,
+                     row.nota_tambahan,
+                     row.resit,
+                     row.pengesahan)">
+                             <ion-icon name="eye"></ion-icon>
+                     </button>
+                    
+             </ng-template>
+     </ngx-datatable-column>
+</ngx-datatable>
 
-      </ion-item-options>
-      </ion-item-sliding>
-      
-    </ion-row>
-    </ion-grid>  
 </ion-content>
