@@ -86,10 +86,18 @@ export class AccountVerifyPage implements OnInit {
   }
 
   autoRefresh() {
-    setInterval(() => {
-      this.customers = [];
-      this.loadCustomer();
-    }, 60000);
+    if(this.customers.length === this.loadedcustomers.length){
+      console.log("no new data");
+      setInterval(() => {
+        this.loadCustomer();
+      }, 10000);
+    }else{
+      setInterval(() => {
+        this.customers = [];
+        this.loadCustomer();
+      }, 10000);
+    }
+    
 
   }
 
@@ -181,13 +189,13 @@ export class AccountVerifyPage implements OnInit {
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
     if (val && val.trim() !== '') {
-      const temp = this.customers.filter(function (d) {
+      const temp = this.loadedcustomers.filter(function (d) {
         return d.company.toLowerCase().indexOf(val) !== -1 || !val || d.nama_pelanggan.toLowerCase().indexOf(val) !== -1
           || d.sales.toLowerCase().indexOf(val) !== -1;
       });
-      this.customers = temp;
+      this.loadedcustomers = temp;
     } else {
-      this.customers = [];
+      this.loadedcustomers = [];
       this.loadCustomer();
     }
   }

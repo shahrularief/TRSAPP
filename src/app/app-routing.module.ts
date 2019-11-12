@@ -58,7 +58,6 @@ const routes: Routes = [
   loadChildren: './admin/updateemployee/updateemployee.module#UpdateemployeePageModule' },
   { path: 'account-report', loadChildren: './accounting/account-report/account-report.module#AccountReportPageModule' },
 
-
 ];
 
 @NgModule({

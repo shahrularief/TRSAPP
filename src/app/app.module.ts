@@ -3,25 +3,24 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, RouteReuseStrategy, Routes } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { TooltipModule } from 'ng2-tooltip-directive';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { FileTransfer} from '@ionic-native/file-transfer/ngx';
+import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 
 import { HttpModule } from '@angular/http';
 import { PostProvider } from '../providers/post-provider';
 import { IonicStorageModule } from '@ionic/storage';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
-
-
 import { File } from '@ionic-native/file/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 import { ImageModalPageModule } from './modals/image-modal/image-modal.module';
 import { ModalpopupPageModule } from './modals/modalpopup/modalpopup.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { VerifyproductPageModule } from './modals/verifyproduct/verifyproduct.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -37,6 +36,7 @@ import { FileChooser } from '@ionic-native/file-chooser/ngx';
   imports: [
     BrowserModule,
     HttpModule,
+    TooltipModule,
     JwtModule.forRoot({}),
     HttpClientModule,
     IonicModule.forRoot(),
@@ -45,16 +45,15 @@ import { FileChooser } from '@ionic-native/file-chooser/ngx';
     ModalpopupPageModule,
     VerifyproductPageModule,
     ProdProductPageModule,
-    
+    BrowserAnimationsModule,
     NgxDatatableModule,
     NgxSpinnerModule,
-
     IonicStorageModule.forRoot(),
   ],
   providers: [
     StatusBar,
     PostProvider,
-    SplashScreen,
+
     FileTransfer,
     File,
     FilePath,

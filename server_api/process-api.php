@@ -17,7 +17,7 @@
     $year = date('Y');
     $weeknow = date('W');
     echo $today ; 
-  echo $weeknow ;
+    echo $weeknow ;
     echo $day ;
     echo $month ;
     echo $year ;

@@ -3,8 +3,8 @@ import { ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Chart } from 'chart.js';
 import { PostProvider } from '../../providers/post-provider';
-import { ProdProductPage } from '../modals/prod-product/prod-product.page';
 import { AuthService } from '../services/auth.service';
+import { ProdProductPage } from '../modals/prod-product/prod-product.page';
 
 
 

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { IonicModule } from '@ionic/angular';
+import { TooltipModule } from 'ng2-tooltip-directive';
 
 import { RekodOrderPage } from './rekod-order.page';
 
@@ -20,6 +21,7 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     NgxDatatableModule,
+    TooltipModule,
     RouterModule.forChild(routes)
   ],
   declarations: [RekodOrderPage]

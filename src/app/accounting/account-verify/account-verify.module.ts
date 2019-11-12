@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
+import { TooltipModule } from 'ng2-tooltip-directive';
 
 import { IonicModule } from '@ionic/angular';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -21,6 +22,7 @@ const routes: Routes = [
     IonicModule,
     CalendarModule,
     NgxDatatableModule,
+    TooltipModule,
     RouterModule.forChild(routes)
   ],
   declarations: [AccountVerifyPage],

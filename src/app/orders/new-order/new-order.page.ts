@@ -157,7 +157,7 @@ export class NewOrderPage implements OnInit {
 
       this.anArray = [];
       this.myForm.reset();
-      this.router.navigate(['/rekod-tempahan']);
+      this.router.navigate(['/rekod-order']);
       this.postPrvdr.postData(body, 'process-api.php').subscribe(async data => {
 
         console.log('OK');

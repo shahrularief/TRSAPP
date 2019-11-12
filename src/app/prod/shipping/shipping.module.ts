@@ -7,6 +7,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { IonicModule } from '@ionic/angular';
 import { CalendarModule } from 'ion2-calendar';
 import { ShippingPage } from './shipping.page';
+import { TooltipModule } from 'ng2-tooltip-directive';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
     FormsModule,
     IonicModule,CalendarModule,
     NgxDatatableModule,
+    TooltipModule,
     RouterModule.forChild(routes)
   ],
   declarations: [ShippingPage]

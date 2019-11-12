@@ -35,6 +35,7 @@ export class ProductionPage implements OnInit {
   total: number;
   sales;
   chProduk;
+  collect: any = [];
   sortedcount: any = [];
   customers: any = [];
   unverifiedprod: any = [];
@@ -42,7 +43,7 @@ export class ProductionPage implements OnInit {
   stock: any[];
   sums: any[];
   count: any[];
-  
+  deliver: string;
   filechoosen: any;
   selected = [];
   csvData: any[] = [];
@@ -73,6 +74,7 @@ export class ProductionPage implements OnInit {
 
   ionViewWillEnter() {
     this.customers = [];
+    this.collect = [];
     this.loadProduction();
     this.loadCustomer();
     this.unverifiedprod = [];
@@ -102,7 +104,35 @@ export class ProductionPage implements OnInit {
     }
   }
 
+  updateArray(track, id, deliver) {
+    this.collect.push({ track, deliver, id });
+    console.log(this.collect);
+  }
 
+  submitCollected() {
+    console.log('collected', this.collect);
+    let sah = 'shipping';
+
+
+    return new Promise(resolve => {
+      for (let n = 0; n < this.collect.length; n++) {
+        let body = {
+          aksi: 'updateproduction',
+          order_id: this.collect[n].id,
+          tracking: this.collect[n].track,
+          penghantaran: this.collect[n].deliver,
+          pengesahan: sah,
+        };
+
+        this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+
+          console.log('OK' + data);
+        });
+      }
+      resolve(true);
+      this.ionViewWillEnter();
+    });
+  }
 
   loadData(event: any) {
     setTimeout(() => {
@@ -134,23 +164,23 @@ export class ProductionPage implements OnInit {
         this.loadCtrl.dismiss();
         resolve(true);
         this.customers = this.customers.map(row => ({
-          order_id: row['order_id'],
-          tarikh_order: row['tarikh_order'],
-          nama_pelanggan: row['nama_pelanggan'],
-          alamat_pelanggan: row['alamat_pelanggan'],
-          nombor_hp: row['nombor_hp'],
-          akaun: row['akaun'],
-          produk: row['produk'],
-          penghantaran: row['penghantaran'],
-          jumlah_bayaran: row['jumlah_bayaran'],
-          jumProduk: row['jumProduk'],
-          nota_tambahan: row['nota_tambahan'],
-          sales: row['sales'],
-          company: row['company'],
-          fail_lampiran: row['fail_lampiran'],
-          resit: row['resit'],
-          pengesahan: row['pengesahan'],
-          tracking: row['tracking']
+          order_id: row.order_id,
+          tarikh_order: row.tarikh_order,
+          nama_pelanggan: row.nama_pelanggan,
+          alamat_pelanggan: row.alamat_pelanggan,
+          nombor_hp: row.nombor_hp,
+          akaun: row.akaun,
+          produk: row.produk,
+          penghantaran: row.penghantaran,
+          jumlah_bayaran: row.jumlah_bayaran,
+          jumProduk: row.jumProduk,
+          nota_tambahan: row.nota_tambahan,
+          sales: row.sales,
+          company: row.company,
+          fail_lampiran: row.fail_lampiran,
+          resit: row.resit,
+          pengesahan: row.pengesahan,
+          tracking: row.tracking
         }));
       });
     });
@@ -463,7 +493,7 @@ export class ProductionPage implements OnInit {
     });
   }
 
-  changeListener($event) : void {
+  changeListener($event): void {
     this.file = $event.target.files[0];
     console.log(this.file);
     this.extractData(this.file);
@@ -471,7 +501,7 @@ export class ProductionPage implements OnInit {
 
   extractData(res) {
     let csvData = res || '';
- 
+
     papa.parse(csvData, {
       complete: parsedData => {
         this.headerRow = parsedData.data.splice(0, 1)[0];
@@ -480,7 +510,7 @@ export class ProductionPage implements OnInit {
     });
     console.log(this.csvData);
   }
-  
+
   downloadCSV() {
     let day = this.date.getDay();
     let month = this.date.getMonth() + 1;
@@ -489,21 +519,21 @@ export class ProductionPage implements OnInit {
 
     console.log(day + '/' + month);
     let customersCSV = this.customers.map(row => ({
-      order_id: row['order_id'],
-      tarikh_order: row['tarikh_order'],
-      nama_pelanggan: row['nama_pelanggan'],
-      alamat_pelanggan: row['alamat_pelanggan'],
-      nombor_hp: row['nombor_hp'],
-      akaun: row['akaun'],
-      produk: row['produk'],
-      penghantaran: row['penghantaran'],
-      jumlah_bayaran: row['jumlah_bayaran'],
-      jumProduk: row['jumProduk'],
-      nota_tambahan: row['nota_tambahan'],
-      sales: row['sales'],
-      company: row['company'],
-      pengesahan: row['pengesahan'],
-      tracking: row['tracking']
+      order_id: row.order_id,
+      tarikh_order: row.tarikh_order,
+      nama_pelanggan: row.nama_pelanggan,
+      alamat_pelanggan: row.alamat_pelanggan,
+      nombor_hp: row.nombor_hp,
+      akaun: row.akaun,
+      produk: row.produk,
+      penghantaran: row.penghantaran,
+      jumlah_bayaran: row.jumlah_bayaran,
+      jumProduk: row.jumProduk,
+      nota_tambahan: row.nota_tambahan,
+      sales: row.sales,
+      company: row.company,
+      pengesahan: row.pengesahan,
+      tracking: row.tracking
     }));
 
     console.log(customersCSV);

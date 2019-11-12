@@ -7,6 +7,8 @@ import { CalendarModule } from 'ion2-calendar';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { Ng2FileInputModule } from 'ng2-file-input';
 import { ProductionPage } from './production.page';
+import { TooltipModule } from 'ng2-tooltip-directive';
+
 
 
 const routes: Routes = [
@@ -21,10 +23,10 @@ const routes: Routes = [
     CommonModule,
     CalendarModule,
     FormsModule,
-    IonicModule,
+    IonicModule,TooltipModule,
     NgxDatatableModule,
     Ng2FileInputModule,
- 
+   
     RouterModule.forChild(routes)
   ],
   declarations: [ProductionPage],

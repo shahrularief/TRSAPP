@@ -33,10 +33,10 @@
                      
              </ng-template>
              <ng-template let-row="row" ngx-datatable-cell-template>
-                     <button ion-button small color="danger" (click)="deleteAlert(row.order_id)">
+                     <button ion-button small color="danger" (click)="deleteAlert(row.order_id)" tooltip="Delete">
                              <ion-icon name="trash"></ion-icon>
                      </button>
-                     <button ion-button small color="success" (click)="updateCustomer(row.order_id,row.nama_pelanggan,
+                     <button ion-button small color="success" tooltip="Edit" (click)="updateCustomer(row.order_id,row.nama_pelanggan,
                        row.tarikh_order,
                        row.alamat_pelanggan,
                        row.nombor_hp,
@@ -47,7 +47,7 @@
                        row.nota_tambahan)">
                              <ion-icon name="create"></ion-icon>
                      </button>
-                     <button ion-button small fill color="tertiary" (click)="openModal(
+                     <button ion-button small fill color="tertiary" tooltip="Show" (click)="openModal(
                      row.order_id, 
                      row.nama_pelanggan,
                      row.tarikh_order,

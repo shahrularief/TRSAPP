@@ -13,6 +13,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^8.2.13",
     "@angular/common": "^7.2.2",
     "@angular/core": "^7.2.2",
     "@angular/forms": "^7.2.2",
@@ -69,6 +70,7 @@
     "moment": "^2.24.0",
     "ng2-file-input": "^1.1.0",
     "ng2-file-upload": "^1.4.0",
+    "ng2-tooltip-directive": "^2.8.17",
     "ngx-international-phone-number": "^1.0.4",
     "ngx-intl-tel-input": "^2.3.1",
     "ngx-papaparse": "^4.0.4",
@@ -95,7 +97,6 @@
     "codelyzer": "~4.5.0",
     "cordova-plugin-device": "2.0.2",
     "cordova-plugin-ionic-keyboard": "^2.1.3",
-    "cordova-plugin-splashscreen": "5.0.2",
     "cordova-plugin-statusbar": "2.4.2",
     "cordova-plugin-whitelist": "1.3.3",
     "jasmine-core": "~2.99.1",
@@ -119,7 +120,6 @@
       "cordova-plugin-whitelist": {},
       "cordova-plugin-statusbar": {},
       "cordova-plugin-device": {},
-      "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-advanced-http": {
         "OKHTTP_VERSION": "3.10.0"
