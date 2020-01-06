@@ -1,14 +1,14 @@
 <ion-header>
   <ion-toolbar>
       <ion-back-button slot="start"></ion-back-button>
-    <ion-title>Kemaskini Maklumat Staff</ion-title>
+    <ion-title>Kemaskini Maklumat</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
               <ion-card>
                   <ion-card-content>
-                      <ion-card-title>Staff</ion-card-title>
+                      <ion-card-title>{{fullname}}</ion-card-title>
                       <ion-card-subtitle>*Sila isi semua ruang</ion-card-subtitle>
                  
                       <ion-item>
@@ -16,7 +16,7 @@
                         <ion-input type="text" [(ngModel)]="fullname"></ion-input>
                       </ion-item>
                       <ion-item>
-                          <ion-label position="floating">Nama Panggilan</ion-label>
+                          <ion-label position="floating">Nama Seller</ion-label>
                           <ion-input type="text" [(ngModel)]="nickname"></ion-input>
                         </ion-item>
               
@@ -28,12 +28,13 @@
               
                       <ion-item>
                         <ion-label position="floating">Kata Laluan</ion-label>
-                        <ion-input type="password" [(ngModel)]="password"></ion-input>
+                        <ion-input [disabled]="toggle02" type="password" [(ngModel)]="password"></ion-input>
+                        <ion-toggle slot="end" [(ngModel)]="toggle01" (ionChange)="toggleTwo()" ></ion-toggle>
                       </ion-item>
               
                       <ion-item>
                         <ion-label position="floating">Sahkan Kata Laluan</ion-label>
-                        <ion-input type="password" [(ngModel)]="confirm_password"></ion-input>
+                        <ion-input [disabled]="toggle02" type="password" [(ngModel)]="confirm_password"></ion-input>
                       </ion-item>
               
                       <ion-item>
@@ -46,19 +47,25 @@
                             <ion-input type="text" [(ngModel)]="userEmail"></ion-input>
                           </ion-item>
                   
-                      <ion-item>
+                      <ion-item *ngIf="isHide">
                         <ion-label position="floating">Peranan</ion-label>
                         <ion-select placeholder="Role" type="text" [(ngModel)]="role">
                           <ion-select-option value="BOD">BOD</ion-select-option>
                           <ion-select-option value="CEO">CEO</ion-select-option>
-                          <ion-select-option value="SALES">SALES</ion-select-option>
+                          <ion-select-option value="SALES">TEAM SALES</ion-select-option>
+                          <!-- <ion-select-option value="SALES LEADER">SALES LEADER</ion-select-option> -->
+                          
+                          <ion-select-option value="ACCOUNT HEAD">HEAD OF ACCOUNTING </ion-select-option>
                           <ion-select-option value="ACCOUNT">ACCOUNT</ion-select-option>
+                          <ion-select-option value="PRODUCTION HEAD">HEAD OF PRODUCTION</ion-select-option>
                           <ion-select-option value="PRODUCTION">PRODUCTION</ion-select-option>
+                          <ion-select-option value="HR">HR</ion-select-option>
                         </ion-select>
                       </ion-item>
                  
+                 
               
-                    <ion-item>
+                    <ion-item >
                       <ion-label position="floating">Syarikat</ion-label>
                       <ion-select placeholder="company" type="text" [(ngModel)]="company">
                           <ion-select-option *ngFor="let td of companies" [value]="td.compName">{{td.compName}}</ion-select-option>

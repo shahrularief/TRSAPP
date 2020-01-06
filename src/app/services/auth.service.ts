@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   signInEmployee(credentials) {
-
+    let userID = credentials.userID;
     let username = credentials.username;
     let password = credentials.password;
     let role = credentials.role;
@@ -48,11 +48,12 @@ export class AuthService {
     let userEmail = credentials.userEmail;
     let company = credentials.company;
     let nickname = credentials.nickname;
+    let avatar = credentials.avatar;
 
     let user;
 
     if (username !== '' && password !== '') {
-      user = { nickname, fullname, userhp, username, password, role, userEmail, company };
+      user = { userID, nickname, fullname, userhp, username, password, role, userEmail, company, avatar };
       this.router.navigateByUrl('/home');
       console.log(user);
     } else {
@@ -73,6 +74,7 @@ export class AuthService {
     await this.storage.set(TOKEN_KEY, null);
     this.authState.next(null);
     this.storage.clear();
+    this.users = [];
     this.router.navigateByUrl('/login');
     console.log(this.storage);
     console.log(this.authState);

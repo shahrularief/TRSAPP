@@ -15,5 +15,8 @@ export class ProdProductPage implements OnInit {
   public counted: any[];
   ngOnInit() {
   }
-
+  async closeModal() {
+    await this.modalController.dismiss();
+   
+  }
 }

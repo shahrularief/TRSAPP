@@ -4,14 +4,13 @@
     <ion-menu-button slot="start"></ion-menu-button>
 
     <ion-title>Senarai Pekerja</ion-title>
-    <ion-icon slot="end" name="contrast" (click)="switchStyle()"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <!-- <ion-searchbar placeholder="Search by name" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar> -->
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab vertical="top" horizontal="end" slot="fixed">
     <ion-fab-button (click)="goList()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
@@ -24,15 +23,28 @@
 
   <ngx-datatable [ngClass]="tableStyle" [rows]="employees" [columnMode]="'force'" [sortType]="'single'"
     [reorderable]="false" [scrollbarH]="true" [rowHeight]="'auto'" [headerHeight]="100" [footerHeight]="50"
-    [limit]="10">
+    [limit]="20">
+    
     <ngx-datatable-column name="Nama Penuh" prop="fullname"></ngx-datatable-column>
-    <ngx-datatable-column name="Nama Pelanggan" prop="nickname"></ngx-datatable-column>
+    <ngx-datatable-column name="Nama Panggilan" prop="nickname"></ngx-datatable-column>
 
     <ngx-datatable-column name="Username" prop="username"></ngx-datatable-column>
     <ngx-datatable-column name="No H/P" prop="userhp"></ngx-datatable-column>
     <ngx-datatable-column name="Emel" prop="userEmail"></ngx-datatable-column>
     <ngx-datatable-column name="Role" prop="role"></ngx-datatable-column>
     <ngx-datatable-column name="Company" prop="company"></ngx-datatable-column>
+
+    <ngx-datatable-column>
+      <ng-template let-column="column" ngx-datatable-header-template>
+              Status
+            </ng-template>
+            <ng-template let-row="row" ngx-datatable-cell-template>
+                    <ion-chip [color]="getStatus(row.status)" (click)="verifyAlert(row.userID)" >
+                      {{row.status}} 
+                    </ion-chip>
+            </ng-template>
+</ngx-datatable-column> 
+
 
     <ngx-datatable-column name="id" [resizeable]="false">
       <ng-template ngx-datatable-header-template>

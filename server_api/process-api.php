@@ -9,41 +9,45 @@
   
   $postjson = json_decode(file_get_contents('php://input'), true);
 
-  ////////ADD CUSTOMER/ORDER ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////ADD CUSTOMER's ORDER ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   if($postjson['aksi']=='add'){
-    $today = date('Y-m-d');
+      date_default_timezone_set("Asia/Kuala_Lumpur");
+     $today = date('Y-m-d H:i:s', time());
     $day = date('d');
     $month = date('m');
     $year = date('Y');
     $weeknow = date('W');
-    echo $today ; 
-    echo $weeknow ;
-    echo $day ;
-    echo $month ;
-    echo $year ;
+    
+    // Indexed Array
+    $resit_arr = $postjson['resit'];
+    // echo $resit_arr;
+    // Separate Array by " , "
+    $resit_str = implode(" , ",$resit_arr);
+    
     $data = array();
-		$datenowxx = date('Y-m-d_H_i_s'); // remove duplicate name image 
-		$entry = base64_decode($postjson['images']);
-		$img = imagecreatefromstring($entry);
-
-		$directory = "images/img_user".$datenowxx.".jpg"; // save gambar to folder sever 
-		imagejpeg($img, $directory);
-		imagedestroy($img);
-
     $query = mysqli_query($mysqli, "INSERT INTO order_table SET
       tarikh_order = '$today',
   		nama_pelanggan = '$postjson[nama_pelanggan]',
   		alamat_pelanggan = '$postjson[alamat_pelanggan]',
+  		poskod = '$postjson[poskod]',
+  		bandar = '$postjson[bandar]',
+  		negeri = '$postjson[negeri]',
+  		negara = '$postjson[negara]',
       nombor_hp = '$postjson[nombor_hp]',
+      namaakaun = '$postjson[namaakaun]',
+      masaakaun = '$postjson[masaakaun]',
       akaun = '$postjson[akaun]',
       produk = '$postjson[produk]',
+      prodCode = '$postjson[prodCode]',
       jumProduk = '$postjson[jumProduk]',
       jumlah_bayaran = '$postjson[jumlah_bayaran]',
       nota_tambahan = '$postjson[nota_tambahan]',
       sales = '$postjson[sales]',
+      nickname = '$postjson[nickname]',
+      sales_hp = '$postjson[sales_hp]',
       company = '$postjson[company]',
-      fail_lampiran = '$directory',
-      resit = '$postjson[resit]',
+      emel = '$postjson[emel]',
+      resit = '$resit_str',
       day = '$day',
       week = '$weeknow',
       month = '$month',
@@ -60,9 +64,47 @@
    elseif($postjson['aksi']=="addproduct"){
     $query = mysqli_query($mysqli, "INSERT INTO product_table SET
       prodName = '$postjson[prodName]',
-      prodPrice = '$postjson[prodPrice]',
       prodCode = '$postjson[prodCode]',
+      kos_founder = '$postjson[kos_founder]',
+      kos_company = '$postjson[kos_company]',
+      stock_in = '$postjson[prodStock]',
       stock = '$postjson[prodStock]'
+    ");
+
+    if($query) $result = json_encode(array('success'=>true));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+  }
+
+   /////IN TX/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   elseif($postjson['aksi']=="intransaction"){
+    date_default_timezone_set("Asia/Kuala_Lumpur");
+    $today = date('Y-m-d H:i:s', time());
+    $query = mysqli_query($mysqli, "INSERT INTO transaction_product SET
+      txproduct = '$postjson[txproduct]',
+      txtotal = '$postjson[txtotal]',
+      txtype = '$postjson[txtype]',
+      txname = '$postjson[txname]',
+      created_at = '$today'
+    ");
+
+    if($query) $result = json_encode(array('success'=>true));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+  }
+
+   /////OUT TX/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   elseif($postjson['aksi']=="outtransaction"){
+    date_default_timezone_set("Asia/Kuala_Lumpur");
+    $today = date('Y-m-d H:i:s', time());
+    $query = mysqli_query($mysqli, "INSERT INTO transaction_product SET
+      txproduct = '$postjson[txproduct]',
+      txtotal = '$postjson[txtotal]',
+      txtype = '$postjson[txtype]',
+      txname = '$postjson[txname]',
+      created_at = '$today'
     ");
 
     if($query) $result = json_encode(array('success'=>true));
@@ -95,6 +137,28 @@
 
     echo $result;
   }
+  // get transaction///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='gettransactions'){
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM transaction_product ORDER BY created_at DESC ");
+  
+    while($row = mysqli_fetch_array($query)){
+      $data[] = array(
+        'txid' => $row['txid'],
+        'txproduct' => $row['txproduct'],
+        'txtotal' => $row['txtotal'],
+        'txtype' => $row['txtype'],
+        'txname' => $row['txname'],
+        'created_at' => $row['created_at']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
 
     // get company///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     elseif($postjson['aksi']=='getcompany'){
@@ -129,7 +193,7 @@
       $query = mysqli_query($mysqli, "SELECT * FROM employee_table ORDER BY role ASC ");
     
       while($row = mysqli_fetch_array($query)){
-     
+       
         $data[] = array(
           'userID' => $row['userID'],
           'password' => $row['password'],
@@ -153,31 +217,41 @@
   ///// DISPLAY DATA UNVERIFIED///////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=='getdataunverified'){
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='belum disahkan' ORDER BY order_id DESC ");
+  $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='pending' ORDER BY order_id DESC ");
 
   while($row = mysqli_fetch_array($query)){
-
-
+  $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']);  
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
     $data[] = array(
       'order_id' => $row['order_id'],
-      'tarikh_order' => $row['tarikh_order'],
+      'tarikh_order' => $newDate,
       'nama_pelanggan' => $row['nama_pelanggan'],
       'alamat_pelanggan' => $row['alamat_pelanggan'],
+      'emel' => $row['emel'],
+       'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
       'nombor_hp' => $row['nombor_hp'],
+      'namaakaun' => $row['namaakaun'],
+      'masaakaun' => $row['masaakaun'],
       'akaun' => $row['akaun'],
       'produk' => $row['produk'],
+      'prodCode' => $row['prodCode'],
       'penghantaran' => $row['penghantaran'],
       'jumlah_bayaran' => $row['jumlah_bayaran'],
       'jumProduk' => $row['jumProduk'],
       'nota_tambahan' => $row['nota_tambahan'],
       'sales' => $row['sales'],
       'company' => $row['company'],
-      'fail_lampiran' => $row['fail_lampiran'],
-      'resit' => $row['resit'],
+      'resit' => $resit_explode,
       'day' => $row['day'],
       'month' => $row['month'],
       'year' => $row['year'],
-      'pengesahan' => $row['pengesahan']
+      'pengesahan' => $row['pengesahan'],
+      'request' => $row['request']
     );
   }
 
@@ -191,23 +265,103 @@
 // DISPLAY DATA VERIFIED///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getdataverified'){
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='sah'OR pengesahan='tracking' ORDER BY order_id DESC ");
+  $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='sah' OR pengesahan='cod' ORDER BY order_id DESC ");
 
   while($row = mysqli_fetch_array($query)){
+
+    $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+
+   $tarikh_verify = $row['tarikh_verify'];
+   $verifyDate = date("d-m-Y H:i:s", strtotime($tarikh_verify));
+
+ 
+
     $data[] = array(
       'order_id' => $row['order_id'],
-      'tarikh_order' => $row['tarikh_order'],
+      'tarikh_order' => $newDate,
+      'tarikh_verify' => $verifyDate,
+       'verified_by' => $row['verified_by'],
       'nama_pelanggan' => $row['nama_pelanggan'],
+      'emel' => $row['emel'],
       'alamat_pelanggan' => $row['alamat_pelanggan'],
+      'poskod' => $row['poskod'],
+      'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
       'nombor_hp' => $row['nombor_hp'],
+      'namaakaun' => $row['namaakaun'],
+      'masaakaun' => $row['masaakaun'],
       'akaun' => $row['akaun'],
       'produk' => $row['produk'],
+      'prodCode' => $row['prodCode'],
       'penghantaran' => $row['penghantaran'],
       'jumlah_bayaran' => $row['jumlah_bayaran'],
       'nota_tambahan' => $row['nota_tambahan'],
       'jumProduk' => $row['jumProduk'],
       'pengesahan' => $row['pengesahan'],
+      'resit' => $row['resit'],
       'sales' => $row['sales'],
+      'request' => $row['request'],
+      'nickname' => $row['nickname'],
+      'sales_hp' => $row['sales_hp'],
+      'tracking' => $row['tracking'],
+      'company' => $row['company'],
+      'day' => $row['day'],
+      'month' => $row['month'],
+      'year' => $row['year']
+    );
+  }
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+  	else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+  	echo $result;
+
+  }
+// DISPLAY DATA VERIFIED///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getdataverifiedreport'){
+  $data = array();
+  $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan NOT IN ('pending','codpending','cod') ORDER BY order_id DESC ");
+
+  while($row = mysqli_fetch_array($query)){
+
+    $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+
+   $tarikh_verify = $row['tarikh_verify'];
+   $verifyDate = date("d-m-Y H:i:s", strtotime($tarikh_verify));
+
+ 
+
+    $data[] = array(
+      'order_id' => $row['order_id'],
+      'tarikh_order' => $newDate,
+      'tarikh_verify' => $verifyDate,
+       'verified_by' => $row['verified_by'],
+      'nama_pelanggan' => $row['nama_pelanggan'],
+      'emel' => $row['emel'],
+      'alamat_pelanggan' => $row['alamat_pelanggan'],
+      'poskod' => $row['poskod'],
+      'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
+      'nombor_hp' => $row['nombor_hp'],
+      'namaakaun' => $row['namaakaun'],
+      'masaakaun' => $row['masaakaun'],
+      'akaun' => $row['akaun'],
+      'produk' => $row['produk'],
+      'prodCode' => $row['prodCode'],
+      'penghantaran' => $row['penghantaran'],
+      'jumlah_bayaran' => $row['jumlah_bayaran'],
+      'nota_tambahan' => $row['nota_tambahan'],
+      'jumProduk' => $row['jumProduk'],
+      'pengesahan' => $row['pengesahan'],
+      'resit' => $row['resit'],
+      'sales' => $row['sales'],
+      'request' => $row['request'],
+      'nickname' => $row['nickname'],
+      'sales_hp' => $row['sales_hp'],
       'tracking' => $row['tracking'],
       'company' => $row['company'],
       'day' => $row['day'],
@@ -229,25 +383,104 @@ elseif($postjson['aksi']=='getdatashipped'){
   $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='shipping' ORDER BY order_id DESC ");
 
   while($row = mysqli_fetch_array($query)){
+    $tarikh_order = $row['tarikh_order'];
+    $orderDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+    $tarikh_verify = $row['tarikh_verify'];
+    $verifyDate = date("d-m-Y H:i:s", strtotime($tarikh_verify));
+    $tarikh_shipping = $row['tarikh_shipping'];
+    $shippingDate = date("d-m-Y H:i:s", strtotime($tarikh_shipping));
+
     $data[] = array(
-      'order_id' => $row['order_id'],
-      'tarikh_order' => $row['tarikh_order'],
+     'order_id' => $row['order_id'],
+      'tarikh_order' => $orderDate,
+      'tarikh_verify' => $verifyDate,
+       'verified_by' => $row['verified_by'],
+       'tarikh_shipping' => $shippingDate,
+       'shipped_by' => $row['shipped_by'],
       'nama_pelanggan' => $row['nama_pelanggan'],
+      'emel' => $row['emel'],
       'alamat_pelanggan' => $row['alamat_pelanggan'],
+      'poskod' => $row['poskod'],
+      'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
       'nombor_hp' => $row['nombor_hp'],
+      'namaakaun' => $row['namaakaun'],
+      'masaakaun' => $row['masaakaun'],
       'akaun' => $row['akaun'],
       'produk' => $row['produk'],
+      'prodCode' => $row['prodCode'],
       'penghantaran' => $row['penghantaran'],
       'jumlah_bayaran' => $row['jumlah_bayaran'],
       'nota_tambahan' => $row['nota_tambahan'],
       'jumProduk' => $row['jumProduk'],
       'pengesahan' => $row['pengesahan'],
       'sales' => $row['sales'],
+      'nickname' => $row['nickname'],
+      'sales_hp' => $row['sales_hp'],
       'tracking' => $row['tracking'],
+      'company' => $row['company'],
       'day' => $row['day'],
       'month' => $row['month'],
-      'year' => $row['year'],
-      'company' => $row['company']
+      'request' => $row['request'],
+      'year' => $row['year']
+    );
+  }
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+  	else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+  	echo $result;
+
+  }
+
+   // DISPLAY DATA COD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getdatacod'){
+  $data = array();
+  $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='cod' OR pengesahan='codpending' ORDER BY order_id DESC ");
+
+  while($row = mysqli_fetch_array($query)){
+    $tarikh_order = $row['tarikh_order'];
+    $orderDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+    $tarikh_verify = $row['tarikh_verify'];
+    $verifyDate = date("d-m-Y H:i:s", strtotime($tarikh_verify));
+    $tarikh_shipping = $row['tarikh_shipping'];
+    $shippingDate = date("d-m-Y H:i:s", strtotime($tarikh_shipping));
+
+    $data[] = array(
+     'order_id' => $row['order_id'],
+      'tarikh_order' => $orderDate,
+      'tarikh_verify' => $verifyDate,
+       'verified_by' => $row['verified_by'],
+       'tarikh_shipping' => $shippingDate,
+       'shipped_by' => $row['shipped_by'],
+      'nama_pelanggan' => $row['nama_pelanggan'],
+      'emel' => $row['emel'],
+      'alamat_pelanggan' => $row['alamat_pelanggan'],
+      'poskod' => $row['poskod'],
+      'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
+      'nombor_hp' => $row['nombor_hp'],
+      'namaakaun' => $row['namaakaun'],
+      'masaakaun' => $row['masaakaun'],
+      'akaun' => $row['akaun'],
+      'produk' => $row['produk'],
+      'prodCode' => $row['prodCode'],
+      'penghantaran' => $row['penghantaran'],
+      'jumlah_bayaran' => $row['jumlah_bayaran'],
+      'nota_tambahan' => $row['nota_tambahan'],
+      'jumProduk' => $row['jumProduk'],
+      'pengesahan' => $row['pengesahan'],
+      'sales' => $row['sales'],
+      'nickname' => $row['nickname'],
+      'sales_hp' => $row['sales_hp'],
+      'tracking' => $row['tracking'],
+      'company' => $row['company'],
+      'day' => $row['day'],
+      'month' => $row['month'],
+      'request' => $row['request'],
+      'year' => $row['year']
     );
   }
 
@@ -260,23 +493,139 @@ elseif($postjson['aksi']=='getdatashipped'){
   // DISPLAY DATA ALL///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=='getdataall'){
     $data = array();
-    $query = mysqli_query($mysqli, "SELECT * FROM order_table ORDER BY order_id DESC ");
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table ORDER BY pengesahan,order_id ASC ");
   
     while($row = mysqli_fetch_array($query)){
+          $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']); 
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
       $data[] = array(
         'order_id' => $row['order_id'],
-        'tarikh_order' => $row['tarikh_order'],
+        'tarikh_order' => $newDate,
         'nama_pelanggan' => $row['nama_pelanggan'],
         'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'emel' => $row['emel'],
+        'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
         'nombor_hp' => $row['nombor_hp'],
+        'namaakaun' => $row['namaakaun'],
+        'masaakaun' => $row['masaakaun'],
         'akaun' => $row['akaun'],
         'produk' => $row['produk'],
+        'prodCode' => $row['prodCode'],
         'penghantaran' => $row['penghantaran'],
+        'tracking' => $row['tracking'],
         'jumlah_bayaran' => $row['jumlah_bayaran'],
         'nota_tambahan' => $row['nota_tambahan'],
         'sales' => $row['sales'],
+        'nickname' => $row['nickname'],
+        'company' => $row['company'],
+        'request' => $row['request'],
         'jumProduk' => $row['jumProduk'],
-        'resit' => $row['resit'],
+        'resit' => $resit_explode,
+        'day' => $row['day'],
+        'month' => $row['month'],
+        'year' => $row['year'],
+        'pengesahan' => $row['pengesahan']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
+// DISPLAY DATA ALL PENDING///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($postjson['aksi']=='getdataallpending'){
+  $data = array();
+  $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='pending' ORDER BY order_id DESC ");
+
+  while($row = mysqli_fetch_array($query)){
+        $resit = $row['resit'];
+ $resit_explode = explode(" , ",$row['resit']); 
+ $tarikh_order = $row['tarikh_order'];
+ $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+    $data[] = array(
+      'order_id' => $row['order_id'],
+      'tarikh_order' => $newDate,
+      'nama_pelanggan' => $row['nama_pelanggan'],
+      'alamat_pelanggan' => $row['alamat_pelanggan'],
+      'emel' => $row['emel'],
+      'poskod' => $row['poskod'],
+      'bandar' => $row['bandar'],
+      'negeri' => $row['negeri'],
+       'negara' => $row['negara'],
+      'nombor_hp' => $row['nombor_hp'],
+      'namaakaun' => $row['namaakaun'],
+      'masaakaun' => $row['masaakaun'],
+      'akaun' => $row['akaun'],
+      'produk' => $row['produk'],
+      'prodCode' => $row['prodCode'],
+      'penghantaran' => $row['penghantaran'],
+      'tracking' => $row['tracking'],
+      'jumlah_bayaran' => $row['jumlah_bayaran'],
+      'nota_tambahan' => $row['nota_tambahan'],
+      'sales' => $row['sales'],
+      'nickname' => $row['nickname'],
+      'company' => $row['company'],
+      'request' => $row['request'],
+      'jumProduk' => $row['jumProduk'],
+      'resit' => $resit_explode,
+      'day' => $row['day'],
+      'month' => $row['month'],
+      'year' => $row['year'],
+      'pengesahan' => $row['pengesahan']
+    );
+  }
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+    else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+
+    echo $result;
+
+  }
+
+   
+     // DISPLAY DATA ALL VERIFIED///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='getdataallverified'){
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='sah' ORDER BY order_id ASC ");
+  
+    while($row = mysqli_fetch_array($query)){
+          $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']); 
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+      $data[] = array(
+        'order_id' => $row['order_id'],
+        'tarikh_order' => $newDate,
+        'nama_pelanggan' => $row['nama_pelanggan'],
+        'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'emel' => $row['emel'],
+        'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
+        'nombor_hp' => $row['nombor_hp'],
+        'namaakaun' => $row['namaakaun'],
+        'masaakaun' => $row['masaakaun'],
+        'akaun' => $row['akaun'],
+        'produk' => $row['produk'],
+        'prodCode' => $row['prodCode'],
+        'penghantaran' => $row['penghantaran'],
+        'tracking' => $row['tracking'],
+        'jumlah_bayaran' => $row['jumlah_bayaran'],
+        'nota_tambahan' => $row['nota_tambahan'],
+        'sales' => $row['sales'],
+        'nickname' => $row['nickname'],
+        'company' => $row['company'],
+        'request' => $row['request'],
+        'jumProduk' => $row['jumProduk'],
+        'resit' => $resit_explode,
         'day' => $row['day'],
         'month' => $row['month'],
         'year' => $row['year'],
@@ -291,31 +640,595 @@ elseif($postjson['aksi']=='getdatashipped'){
   
     }
 
-     // DISPLAY DATA ALL///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DISPLAY DATA ALL SHIPPING///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='getdataallshipping'){
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='shipping' ORDER BY order_id ASC ");
+  
+    while($row = mysqli_fetch_array($query)){
+          $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']); 
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+      $data[] = array(
+        'order_id' => $row['order_id'],
+        'tarikh_order' => $newDate,
+        'nama_pelanggan' => $row['nama_pelanggan'],
+        'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'emel' => $row['emel'],
+        'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
+        'nombor_hp' => $row['nombor_hp'],
+        'namaakaun' => $row['namaakaun'],
+        'masaakaun' => $row['masaakaun'],
+        'akaun' => $row['akaun'],
+        'produk' => $row['produk'],
+        'prodCode' => $row['prodCode'],
+        'penghantaran' => $row['penghantaran'],
+        'tracking' => $row['tracking'],
+        'jumlah_bayaran' => $row['jumlah_bayaran'],
+        'nota_tambahan' => $row['nota_tambahan'],
+        'sales' => $row['sales'],
+        'nickname' => $row['nickname'],
+        'company' => $row['company'],
+        'request' => $row['request'],
+        'jumProduk' => $row['jumProduk'],
+        'resit' => $resit_explode,
+        'day' => $row['day'],
+        'month' => $row['month'],
+        'year' => $row['year'],
+        'pengesahan' => $row['pengesahan']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
+
+    // DISPLAY DATA ALL SHIPPING///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='getdataallcod'){
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE pengesahan='cod' ORDER BY order_id ASC ");
+  
+    while($row = mysqli_fetch_array($query)){
+          $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']); 
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+      $data[] = array(
+        'order_id' => $row['order_id'],
+        'tarikh_order' => $newDate,
+        'nama_pelanggan' => $row['nama_pelanggan'],
+        'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'emel' => $row['emel'],
+        'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
+        'nombor_hp' => $row['nombor_hp'],
+        'namaakaun' => $row['namaakaun'],
+        'masaakaun' => $row['masaakaun'],
+        'akaun' => $row['akaun'],
+        'produk' => $row['produk'],
+        'prodCode' => $row['prodCode'],
+        'penghantaran' => $row['penghantaran'],
+        'tracking' => $row['tracking'],
+        'jumlah_bayaran' => $row['jumlah_bayaran'],
+        'nota_tambahan' => $row['nota_tambahan'],
+        'sales' => $row['sales'],
+        'nickname' => $row['nickname'],
+        'company' => $row['company'],
+        'request' => $row['request'],
+        'jumProduk' => $row['jumProduk'],
+        'resit' => $resit_explode,
+        'day' => $row['day'],
+        'month' => $row['month'],
+        'year' => $row['year'],
+        'pengesahan' => $row['pengesahan']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
+
+     
+     
+
+     // DISPLAY DATA username///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=='getdataallrecord'){
     $username = $postjson['username'];
     $data = array();
     $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE sales='$username' ORDER BY order_id DESC ");
   
     while($row = mysqli_fetch_array($query)){
+         $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']);  
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+  
       $data[] = array(
         'order_id' => $row['order_id'],
-        'tarikh_order' => $row['tarikh_order'],
+        'tarikh_order' => $newDate,
         'nama_pelanggan' => $row['nama_pelanggan'],
         'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'emel' => $row['emel'],
+        'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
         'nombor_hp' => $row['nombor_hp'],
+        'namaakaun' => $row['namaakaun'],
+        'masaakaun' => $row['masaakaun'],
         'akaun' => $row['akaun'],
         'produk' => $row['produk'],
+        'prodCode' => $row['prodCode'],
+        'company' => $row['company'],
+        'tracking' => $row['tracking'],
+        'penghantaran' => $row['penghantaran'],
+        'jumlah_bayaran' => $row['jumlah_bayaran'],
+        'nota_tambahan' => $row['nota_tambahan'],
+        'sales' => $row['sales'],
+        'request' => $row['request'],
+        'jumProduk' => $row['jumProduk'],
+        'resit' => $resit_explode,
+        'day' => $row['day'],
+        'month' => $row['month'],
+        'year' => $row['year'],
+        'pengesahan' => $row['pengesahan']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
+
+     // DISPLAY DATA username///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='getdataallrecordcod'){
+    $username = $postjson['username'];
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE sales='$username' AND pengesahan='cod' ORDER BY order_id DESC ");
+  
+    while($row = mysqli_fetch_array($query)){
+         $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']);  
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+  
+      $data[] = array(
+        'order_id' => $row['order_id'],
+        'tarikh_order' => $newDate,
+        'nama_pelanggan' => $row['nama_pelanggan'],
+        'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'emel' => $row['emel'],
+        'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
+        'nombor_hp' => $row['nombor_hp'],
+        'namaakaun' => $row['namaakaun'],
+        'masaakaun' => $row['masaakaun'],
+        'akaun' => $row['akaun'],
+        'produk' => $row['produk'],
+        'prodCode' => $row['prodCode'],
+        'company' => $row['company'],
+        'tracking' => $row['tracking'],
+        'penghantaran' => $row['penghantaran'],
+        'jumlah_bayaran' => $row['jumlah_bayaran'],
+        'nota_tambahan' => $row['nota_tambahan'],
+        'sales' => $row['sales'],
+        'request' => $row['request'],
+        'jumProduk' => $row['jumProduk'],
+        'resit' => $resit_explode,
+        'day' => $row['day'],
+        'month' => $row['month'],
+        'year' => $row['year'],
+        'pengesahan' => $row['pengesahan']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
+     // DISPLAY DATA username///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='getdataallrecordpending'){
+    $username = $postjson['username'];
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE sales='$username' AND pengesahan='pending' ORDER BY order_id DESC ");
+  
+    while($row = mysqli_fetch_array($query)){
+         $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']);  
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+  
+      $data[] = array(
+        'order_id' => $row['order_id'],
+        'tarikh_order' => $newDate,
+        'nama_pelanggan' => $row['nama_pelanggan'],
+        'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'emel' => $row['emel'],
+        'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
+        'nombor_hp' => $row['nombor_hp'],
+        'namaakaun' => $row['namaakaun'],
+        'masaakaun' => $row['masaakaun'],
+        'akaun' => $row['akaun'],
+        'produk' => $row['produk'],
+        'prodCode' => $row['prodCode'],
+        'company' => $row['company'],
+        'tracking' => $row['tracking'],
+        'penghantaran' => $row['penghantaran'],
+        'jumlah_bayaran' => $row['jumlah_bayaran'],
+        'nota_tambahan' => $row['nota_tambahan'],
+        'sales' => $row['sales'],
+        'request' => $row['request'],
+        'jumProduk' => $row['jumProduk'],
+        'resit' => $resit_explode,
+        'day' => $row['day'],
+        'month' => $row['month'],
+        'year' => $row['year'],
+        'pengesahan' => $row['pengesahan']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
+     // DISPLAY DATA username///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='getdataallrecordverified'){
+    $username = $postjson['username'];
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE sales='$username' AND pengesahan='sah' ORDER BY order_id DESC ");
+  
+    while($row = mysqli_fetch_array($query)){
+         $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']);  
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+  
+      $data[] = array(
+        'order_id' => $row['order_id'],
+        'tarikh_order' => $newDate,
+        'nama_pelanggan' => $row['nama_pelanggan'],
+        'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'emel' => $row['emel'],
+        'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
+        'nombor_hp' => $row['nombor_hp'],
+        'namaakaun' => $row['namaakaun'],
+        'masaakaun' => $row['masaakaun'],
+        'akaun' => $row['akaun'],
+        'produk' => $row['produk'],
+        'prodCode' => $row['prodCode'],
+        'company' => $row['company'],
+        'tracking' => $row['tracking'],
+        'penghantaran' => $row['penghantaran'],
+        'jumlah_bayaran' => $row['jumlah_bayaran'],
+        'nota_tambahan' => $row['nota_tambahan'],
+        'sales' => $row['sales'],
+        'request' => $row['request'],
+        'jumProduk' => $row['jumProduk'],
+        'resit' => $resit_explode,
+        'day' => $row['day'],
+        'month' => $row['month'],
+        'year' => $row['year'],
+        'pengesahan' => $row['pengesahan']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
+     // DISPLAY DATA username///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='getdataallrecordshipping'){
+    $username = $postjson['username'];
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE sales='$username' AND pengesahan='shipping' ORDER BY order_id DESC ");
+  
+    while($row = mysqli_fetch_array($query)){
+         $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']);  
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+  
+      $data[] = array(
+        'order_id' => $row['order_id'],
+        'tarikh_order' => $newDate,
+        'nama_pelanggan' => $row['nama_pelanggan'],
+        'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'emel' => $row['emel'],
+        'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
+        'nombor_hp' => $row['nombor_hp'],
+        'namaakaun' => $row['namaakaun'],
+        'masaakaun' => $row['masaakaun'],
+        'akaun' => $row['akaun'],
+        'produk' => $row['produk'],
+        'prodCode' => $row['prodCode'],
+        'company' => $row['company'],
+        'tracking' => $row['tracking'],
+        'penghantaran' => $row['penghantaran'],
+        'jumlah_bayaran' => $row['jumlah_bayaran'],
+        'nota_tambahan' => $row['nota_tambahan'],
+        'sales' => $row['sales'],
+        'request' => $row['request'],
+        'jumProduk' => $row['jumProduk'],
+        'resit' => $resit_explode,
+        'day' => $row['day'],
+        'month' => $row['month'],
+        'year' => $row['year'],
+        'pengesahan' => $row['pengesahan']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
+    
+       // DISPLAY DATA company///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='getdataallceo'){
+    $company = $postjson['company'];
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE company='$company' ORDER BY order_id DESC ");
+  
+    while($row = mysqli_fetch_array($query)){
+          $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']);  
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+  
+      $data[] = array(
+        'order_id' => $row['order_id'],
+        'tarikh_order' => $newDate,
+        'nama_pelanggan' => $row['nama_pelanggan'],
+         'emel' => $row['emel'],
+        'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
+        'nombor_hp' => $row['nombor_hp'],
+        'namaakaun' => $row['namaakaun'],
+        'masaakaun' => $row['masaakaun'],
+        'akaun' => $row['akaun'],
+        'produk' => $row['produk'],
+        'prodCode' => $row['prodCode'],
         'penghantaran' => $row['penghantaran'],
         'jumlah_bayaran' => $row['jumlah_bayaran'],
         'nota_tambahan' => $row['nota_tambahan'],
         'sales' => $row['sales'],
         'jumProduk' => $row['jumProduk'],
-        'resit' => $row['resit'],
+        'resit' => $resit_explode,
         'day' => $row['day'],
         'month' => $row['month'],
         'year' => $row['year'],
-        'pengesahan' => $row['pengesahan']
+        'pengesahan' => $row['pengesahan'],
+        'request' => $row['request']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
+
+      // DISPLAY DATA company pending///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='getdataallceopending'){
+    $company = $postjson['company'];
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE company='$company' AND pengesahan='pending' ORDER BY order_id DESC ");
+  
+    while($row = mysqli_fetch_array($query)){
+          $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']);  
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+  
+      $data[] = array(
+        'order_id' => $row['order_id'],
+        'tarikh_order' => $newDate,
+        'nama_pelanggan' => $row['nama_pelanggan'],
+         'emel' => $row['emel'],
+        'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
+        'nombor_hp' => $row['nombor_hp'],
+        'namaakaun' => $row['namaakaun'],
+        'masaakaun' => $row['masaakaun'],
+        'akaun' => $row['akaun'],
+        'produk' => $row['produk'],
+        'prodCode' => $row['prodCode'],
+        'penghantaran' => $row['penghantaran'],
+        'jumlah_bayaran' => $row['jumlah_bayaran'],
+        'nota_tambahan' => $row['nota_tambahan'],
+        'sales' => $row['sales'],
+        'jumProduk' => $row['jumProduk'],
+        'resit' => $resit_explode,
+        'day' => $row['day'],
+        'month' => $row['month'],
+        'year' => $row['year'],
+        'pengesahan' => $row['pengesahan'],
+        'request' => $row['request']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
+
+      // DISPLAY DATA company verified///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='getdataallceoverified'){
+    $company = $postjson['company'];
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE company='$company' AND pengesahan='sah' ORDER BY order_id DESC ");
+  
+    while($row = mysqli_fetch_array($query)){
+          $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']);  
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+  
+      $data[] = array(
+        'order_id' => $row['order_id'],
+        'tarikh_order' => $newDate,
+        'nama_pelanggan' => $row['nama_pelanggan'],
+         'emel' => $row['emel'],
+        'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
+        'nombor_hp' => $row['nombor_hp'],
+        'namaakaun' => $row['namaakaun'],
+        'masaakaun' => $row['masaakaun'],
+        'akaun' => $row['akaun'],
+        'produk' => $row['produk'],
+        'prodCode' => $row['prodCode'],
+        'penghantaran' => $row['penghantaran'],
+        'jumlah_bayaran' => $row['jumlah_bayaran'],
+        'nota_tambahan' => $row['nota_tambahan'],
+        'sales' => $row['sales'],
+        'jumProduk' => $row['jumProduk'],
+        'resit' => $resit_explode,
+        'day' => $row['day'],
+        'month' => $row['month'],
+        'year' => $row['year'],
+        'pengesahan' => $row['pengesahan'],
+        'request' => $row['request']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
+      // DISPLAY DATA company shipping///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='getdataallceoshipping'){
+    $company = $postjson['company'];
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE company='$company' AND pengesahan='shipping' ORDER BY order_id DESC ");
+  
+    while($row = mysqli_fetch_array($query)){
+          $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']);  
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+  
+      $data[] = array(
+        'order_id' => $row['order_id'],
+        'tarikh_order' => $newDate,
+        'nama_pelanggan' => $row['nama_pelanggan'],
+         'emel' => $row['emel'],
+        'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
+        'nombor_hp' => $row['nombor_hp'],
+        'namaakaun' => $row['namaakaun'],
+        'masaakaun' => $row['masaakaun'],
+        'akaun' => $row['akaun'],
+        'produk' => $row['produk'],
+        'prodCode' => $row['prodCode'],
+        'penghantaran' => $row['penghantaran'],
+        'jumlah_bayaran' => $row['jumlah_bayaran'],
+        'nota_tambahan' => $row['nota_tambahan'],
+        'sales' => $row['sales'],
+        'jumProduk' => $row['jumProduk'],
+        'resit' => $resit_explode,
+        'day' => $row['day'],
+        'month' => $row['month'],
+        'year' => $row['year'],
+        'pengesahan' => $row['pengesahan'],
+        'request' => $row['request']
+      );
+    }
+  
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+  
+      echo $result;
+  
+    }
+
+       // DISPLAY DATA company shipping///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  elseif($postjson['aksi']=='getdataallceocod'){
+    $company = $postjson['company'];
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT * FROM order_table WHERE company='$company' AND pengesahan='cod' ORDER BY order_id DESC ");
+  
+    while($row = mysqli_fetch_array($query)){
+          $resit = $row['resit'];
+   $resit_explode = explode(" , ",$row['resit']);  
+   $tarikh_order = $row['tarikh_order'];
+   $newDate = date("d-m-Y H:i:s", strtotime($tarikh_order));
+  
+      $data[] = array(
+        'order_id' => $row['order_id'],
+        'tarikh_order' => $newDate,
+        'nama_pelanggan' => $row['nama_pelanggan'],
+         'emel' => $row['emel'],
+        'alamat_pelanggan' => $row['alamat_pelanggan'],
+        'poskod' => $row['poskod'],
+        'bandar' => $row['bandar'],
+        'negeri' => $row['negeri'],
+         'negara' => $row['negara'],
+        'nombor_hp' => $row['nombor_hp'],
+        'namaakaun' => $row['namaakaun'],
+        'masaakaun' => $row['masaakaun'],
+        'akaun' => $row['akaun'],
+        'produk' => $row['produk'],
+        'prodCode' => $row['prodCode'],
+        'penghantaran' => $row['penghantaran'],
+        'jumlah_bayaran' => $row['jumlah_bayaran'],
+        'nota_tambahan' => $row['nota_tambahan'],
+        'sales' => $row['sales'],
+        'jumProduk' => $row['jumProduk'],
+        'resit' => $resit_explode,
+        'day' => $row['day'],
+        'month' => $row['month'],
+        'year' => $row['year'],
+        'pengesahan' => $row['pengesahan'],
+        'request' => $row['request']
       );
     }
   
@@ -330,15 +1243,18 @@ elseif($postjson['aksi']=='getdatashipped'){
     // get products///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   elseif($postjson['aksi']=='getproduct'){
     $data = array();
-    $query = mysqli_query($mysqli, "SELECT * FROM product_table ORDER BY prodID DESC ");
+    $query = mysqli_query($mysqli, "SELECT * FROM product_table ORDER BY prodName ASC ");
   
     while($row = mysqli_fetch_array($query)){
       $data[] = array(
         'prodID' => $row['prodID'],
         'prodName' => $row['prodName'],
-        'prodPrice' => $row['prodPrice'],
         'prodCode' => $row['prodCode'],
-        'stock' => $row['stock']
+        'kos_founder' => $row['kos_founder'],
+        'kos_company' => $row['kos_company'],
+        'stock' => $row['stock'],
+        'stock_in' => $row['stock_in'],
+        'stock_out' => $row['stock_out']
       );
     }
   
@@ -354,7 +1270,7 @@ elseif($postjson['aksi']=='getdatashipped'){
     $data = array();
   	$query = mysqli_query($mysqli, "SELECT COUNT(*) AS mycount
     FROM order_table
-    WHERE pengesahan = 'belum disahkan'");
+    WHERE pengesahan = 'pending' OR pengesahan = 'cod' OR pengesahan = 'codpending'");
 
   	$countresult = mysqli_fetch_array($query); 
     $data[] = array(
@@ -369,9 +1285,10 @@ elseif($postjson['aksi']=='getdatashipped'){
   // get all total sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=='getsumall'){
+    $year = date('Y');
     $data = array();
     $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
-    FROM order_table");
+    FROM order_table WHERE year=$year AND pengesahan NOT IN ('pending','codpending','cod')" );
 
   	$countresult = mysqli_fetch_array($query); 
     $data[] = array(
@@ -381,14 +1298,52 @@ elseif($postjson['aksi']=='getdatashipped'){
       else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
     echo $result;
   }
+
+    // get all total sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    elseif($postjson['aksi']=='getsumceo'){
+      $company = $postjson['company'];
+      $year = date('Y');
+      $data = array();
+      $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
+      FROM order_table WHERE year=$year AND company='$company' AND pengesahan NOT IN ('pending','codpending','cod')" );
+  
+      $countresult = mysqli_fetch_array($query); 
+      $data[] = array(
+        'sum' => $countresult['mycount']
+      );
+      if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+        else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+      echo $result;
+    }
   // get total sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=='getsum'){
+    $year = date('Y');
     $data = array();
     $username =  $postjson['sales_username'];
     $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
     FROM order_table
-    WHERE sales = '$username'");
+    WHERE sales = '$username'AND year=$year AND pengesahan NOT IN ('pending','codpending','cod') ");
+
+  	$countresult = mysqli_fetch_array($query); 
+    $data[] = array(
+      'sum' => $countresult['mycount']
+    );
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    echo $result;
+  }
+  
+  // get total sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  elseif($postjson['aksi']=='getsumpending'){
+    $year = date('Y');
+    $data = array();
+    $username =  $postjson['sales_username'];
+    $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
+    FROM order_table
+    WHERE sales = '$username'AND year=$year AND pengesahan = 'pending' OR pengesahan = 'cod'");
 
   	$countresult = mysqli_fetch_array($query); 
     $data[] = array(
@@ -399,14 +1354,41 @@ elseif($postjson['aksi']=='getdatashipped'){
     echo $result;
   }
   // get today sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  elseif($postjson['aksi']=='getsumtoday'){
-    $today = date('Y-m-d');
+ 
+   elseif($postjson['aksi']=='getsumtoday'){
+    date_default_timezone_set("Asia/Kuala_Lumpur");
+     $today = date('Y-m-d H:i:s', time());
+     $day = date('d');
+    $month = date('m');
+    $year = date('Y');
     $data = array();
     $username =  $postjson['sales_username'];
     $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
     FROM order_table
-    WHERE sales = '$username' AND tarikh_order ='$today'");
+    WHERE sales = '$username' AND day ='$day' AND year ='$year' AND month ='$month' AND pengesahan NOT IN ('pending','codpending','cod')");
+
+  	$countresult = mysqli_fetch_array($query); 
+    $data[] = array(
+      'sum' => $countresult['mycount']
+    );
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    echo $result;
+  }
+
+   // get ceo today sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   
+   elseif($postjson['aksi']=='getsumceotoday'){
+    date_default_timezone_set("Asia/Kuala_Lumpur");
+    $company = $postjson['company'];
+     $today = date('Y-m-d H:i:s', time());
+     $day = date('d');
+    $month = date('m');
+    $year = date('Y');
+    $data = array();
+    $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
+    FROM order_table
+    WHERE company = '$company' AND day ='$day' AND year ='$year' AND month ='$month' AND pengesahan NOT IN ('pending','codpending','cod')");
 
   	$countresult = mysqli_fetch_array($query); 
     $data[] = array(
@@ -420,11 +1402,15 @@ elseif($postjson['aksi']=='getdatashipped'){
   // get all today sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=='getsumalltoday'){
-    $today = date('Y-m-d');
+    date_default_timezone_set("Asia/Kuala_Lumpur");
+     $today = date('Y-m-d H:i:s', time());
+     $day = date('d');
+    $month = date('m');
+    $year = date('Y');
     $data = array();
     $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
     FROM order_table
-    WHERE tarikh_order ='$today'");
+    WHERE day ='$day' AND year ='$year' AND month ='$month' AND  pengesahan NOT IN ('pending','codpending','cod')");
 
   	$countresult = mysqli_fetch_array($query); 
     $data[] = array(
@@ -439,11 +1425,11 @@ elseif($postjson['aksi']=='getdatashipped'){
 
   elseif($postjson['aksi']=='getsumallmonth'){
     $data = array();
-   
+    $year = date('Y');
     $monthnow = date('m');
     $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
     FROM order_table
-    WHERE month ='$monthnow'");
+    WHERE month ='$monthnow' AND year ='$year' AND pengesahan NOT IN ('pending','codpending','cod')");
 
   	$countresult = mysqli_fetch_array($query); 
     $data[] = array(
@@ -454,15 +1440,35 @@ elseif($postjson['aksi']=='getdatashipped'){
     echo $result;
   }
 
+  // get month sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  elseif($postjson['aksi']=='getsumceomonth'){
+    $data = array();
+    $company = $postjson['company'];
+    $monthnow = date('m');
+    $year = date('Y');
+    $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
+    FROM order_table
+    WHERE month ='$monthnow' AND year ='$year' AND company ='$company' AND pengesahan NOT IN ('pending','codpending','cod')");
+
+  	$countresult = mysqli_fetch_array($query); 
+    $data[] = array(
+      'sum' => $countresult['mycount']
+    );
+    if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+      else $result = json_encode(array('success'=>false, 'msg'=>'error, please try again'));
+    echo $result;
+  }
    // get month sale///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    elseif($postjson['aksi']=='getsumsalesmonth'){
     $data = array();
     $username =  $postjson['username'];
     $monthnow = date('m');
+    $year = date('Y');
     $query = mysqli_query($mysqli, "SELECT SUM(jumlah_bayaran) AS mycount
     FROM order_table
-    WHERE month ='$monthnow' AND sales='$username'");
+    WHERE month ='$monthnow' AND year ='$year' AND sales='$username' AND pengesahan NOT IN ('pending','codpending','cod') ");
 
   	$countresult = mysqli_fetch_array($query); 
     $data[] = array(
@@ -478,8 +1484,8 @@ elseif($postjson['aksi']=='getdatashipped'){
 
    elseif($postjson['aksi']=='getgraphmonth'){
     $data = array();
-
-    $query = mysqli_query($mysqli, "SELECT jumlah_bayaran,month FROM order_table ORDER BY month ASC");
+    $year = date('Y');
+    $query = mysqli_query($mysqli, "SELECT jumlah_bayaran,month FROM order_table WHERE pengesahan NOT IN ('pending','codpending','cod') AND year='$year' ORDER BY month ASC");
   
     while($row = mysqli_fetch_array($query)){
       $data[] = array(
@@ -498,8 +1504,9 @@ elseif($postjson['aksi']=='getdatashipped'){
 
   elseif($postjson['aksi']=='getgraphmonthsales'){
     $data = array();
+     $year = date('Y');
     $username =  $postjson['username'];
-    $query = mysqli_query($mysqli, "SELECT jumlah_bayaran,month FROM order_table WHERE sales='$username' ORDER BY month ASC");
+    $query = mysqli_query($mysqli, "SELECT jumlah_bayaran,month FROM order_table WHERE sales='$username' AND pengesahan NOT IN ('pending','codpending','cod') AND year='$year' ORDER BY month ASC");
   
     while($row = mysqli_fetch_array($query)){
       $data[] = array(
@@ -518,7 +1525,8 @@ elseif($postjson['aksi']=='getdatashipped'){
 
    elseif($postjson['aksi']=='getgraphmonthbyproduct'){
     $data = array();
-    $query = mysqli_query($mysqli, "SELECT jumlah_bayaran,month,produk FROM order_table ORDER BY produk ASC");
+     $year = date('Y');
+    $query = mysqli_query($mysqli, "SELECT jumlah_bayaran,month,produk FROM order_table  WHERE pengesahan NOT IN ('pending','codpending','cod') AND year='$year' ORDER BY produk ASC");
   
     while($row = mysqli_fetch_array($query)){
       $data[] = array(
@@ -537,13 +1545,16 @@ elseif($postjson['aksi']=='getdatashipped'){
  // graph product sold SALES  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
  elseif($postjson['aksi']=='getgraphproductsold'){
+ date_default_timezone_set("Asia/Kuala_Lumpur");
+    $month = date('m');
+  $year = date('Y');
   $data = array();
   $username =  $postjson['username'];
-  $query = mysqli_query($mysqli, "SELECT jumProduk,month FROM order_table WHERE sales='$username'ORDER BY month ASC");
+  $query = mysqli_query($mysqli, "SELECT produk,jumProduk FROM order_table WHERE sales='$username' AND pengesahan NOT IN ('pending','codpending','cod')AND month='$month' AND year='$year'");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
-      'month' => $row['month'],
+        'produk' => $row['produk'],
       'jumProduk' => $row['jumProduk']
     );
   }
@@ -557,8 +1568,8 @@ elseif($postjson['aksi']=='getdatashipped'){
 
 elseif($postjson['aksi']=='getgraphproductsoldall'){
   $data = array();
-  
-  $query = mysqli_query($mysqli, "SELECT jumProduk,month FROM order_table ORDER BY month ASC");
+   $year = date('Y');
+  $query = mysqli_query($mysqli, "SELECT jumProduk,month FROM order_table  WHERE pengesahan NOT IN ('pending','codpending','cod') AND year='$year' ORDER BY month ASC");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -577,7 +1588,8 @@ elseif($postjson['aksi']=='getgraphproductsoldall'){
 
   elseif($postjson['aksi']=='getgraphmonthbycompany'){
     $data = array();
-    $query = mysqli_query($mysqli, "SELECT jumlah_bayaran,month,company FROM order_table ORDER BY company ASC");
+     $year = date('Y');
+    $query = mysqli_query($mysqli, "SELECT jumlah_bayaran,month,company FROM order_table WHERE pengesahan NOT IN ('pending','codpending','cod') AND year='$year' ORDER BY company ASC");
   
     while($row = mysqli_fetch_array($query)){
       $data[] = array(
@@ -670,14 +1682,37 @@ elseif($postjson['aksi']=='getsumship'){
 
 
   elseif($postjson['aksi']=='update'){
+      date_default_timezone_set("Asia/Kuala_Lumpur");
+     $today = date('Y-m-d H:i:s', time());
+    $day = date('d');
+    $month = date('m');
+    $year = date('Y');
+    $weeknow = date('W');
+    
+    // Indexed Array
+    $resit_arr = $postjson['resit'];
+    echo $resit_arr;
+    // Separate Array by " , "
+    $resit_str = implode(" , ",$resit_arr);
+    
+    
   	$query = mysqli_query($mysqli, "UPDATE order_table SET
-      tarikh_order = '$postjson[tarikh_order]',
+      tarikh_order = '$today',
   		nama_pelanggan = '$postjson[nama_pelanggan]',
   		alamat_pelanggan = '$postjson[alamat_pelanggan]',
+  		poskod = '$postjson[poskod]',
+  		bandar = '$postjson[bandar]',
+  		negara = '$postjson[negara]',
       nombor_hp = '$postjson[nombor_hp]',
+      namaakaun = '$postjson[namaakaun]',
+      masaakaun = '$postjson[masaakaun]',
       akaun = '$postjson[akaun]',
       produk = '$postjson[produk]',
+      prodCode = '$postjson[prodCode]',
       jumProduk = '$postjson[jumProduk]',
+      resit = '$resit_str',
+      pengesahan = '$postjson[pengesahan]',
+      emel = '$postjson[emel]',
       jumlah_bayaran = '$postjson[jumlah_bayaran]',
       nota_tambahan = '$postjson[nota_tambahan]' WHERE order_id='$postjson[order_id]'");
 
@@ -687,6 +1722,85 @@ elseif($postjson['aksi']=='getsumship'){
   	echo $result;
 
   }
+ // UPDATE ORDERTABLE ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+ elseif($postjson['aksi']=='updateordertable'){
+  $query = mysqli_query($mysqli, "UPDATE order_table SET
+    sales = '$postjson[sales]',
+    nickname = '$postjson[nickname]',
+    sales_hp = '$postjson[saleshp]'
+    WHERE sales='$postjson[initsales]' AND nickname = '$postjson[initnickname]' AND sales_hp = '$postjson[initsaleshp]'");
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
+  else $result = json_encode(array('success'=>false, 'result'=>'error'));
+
+  echo $result;
+
+}
+  // UPDATE REQUEST ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  elseif($postjson['aksi']=='updatenota'){
+  	$query = mysqli_query($mysqli, "UPDATE order_table SET
+      nota_tambahan = '$postjson[nota_tambahan]'
+      WHERE order_id='$postjson[order_id]'");
+
+  	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
+  	else $result = json_encode(array('success'=>false, 'result'=>'error'));
+
+  	echo $result;
+
+  }
+
+  // UPDATE REQUEST ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  elseif($postjson['aksi']=='updaterequest'){
+  	$query = mysqli_query($mysqli, "UPDATE order_table SET
+      request = '$postjson[request]'
+      WHERE order_id='$postjson[order_id]'");
+
+  	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
+  	else $result = json_encode(array('success'=>false, 'result'=>'error'));
+
+  	echo $result;
+
+  }
+
+
+  // UPDATE AVATAR ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  elseif($postjson['aksi']=='updateAvatar'){
+  	$query = mysqli_query($mysqli, "UPDATE employee_table SET
+      avatar = '$postjson[avatar]'
+      WHERE userID='$postjson[userID]'");
+
+  	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
+  	else $result = json_encode(array('success'=>false, 'result'=>'error'));
+
+  	echo $result;
+
+  }
+
+// EDIT PRODUCT ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+elseif($postjson['aksi']=='editproduct'){
+  $query = mysqli_query($mysqli, "UPDATE product_table SET
+    prodName = '$postjson[prodName]',
+    prodCode = '$postjson[prodCode]',
+    kos_founder = '$postjson[kos_founder]',
+    kos_company = '$postjson[kos_company]'
+    WHERE prodID='$postjson[prodID]'");
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
+  else $result = json_encode(array('success'=>false, 'result'=>'error'));
+
+  echo $result;
+
+}
 
    // UPDATE DATA///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -710,9 +1824,9 @@ elseif($postjson['aksi']=='getsumship'){
 
   }
      // UPDATE employee///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-elseif($postjson['aksi']=='updateemployee'){        
-  $pass = md5($postjson['password']);
-  $query = mysqli_query($mysqli, "UPDATE employee_table SET
+elseif($postjson['aksi']=='updateemployee'){
+      $pass = md5($postjson['password']);
+   $query = mysqli_query($mysqli, "UPDATE employee_table SET
           username = '$postjson[username]',
           fullname = '$postjson[fullname]',
           nickname = '$postjson[nickname]',
@@ -720,7 +1834,7 @@ elseif($postjson['aksi']=='updateemployee'){
           userEmail = '$postjson[userEmail]',
           role = '$postjson[role]',
           company = '$postjson[company]',
-          password= $pass
+          password= '$pass'
           WHERE userID='$postjson[userID]'");
 
           if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
@@ -729,12 +1843,40 @@ elseif($postjson['aksi']=='updateemployee'){
           echo $result;
 
           }
+           // UPDATE employee no pass///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      elseif($postjson['aksi']=='updateemployeenopassword'){
+      $query = mysqli_query($mysqli, "UPDATE employee_table SET
+      username = '$postjson[username]',
+      fullname = '$postjson[fullname]',
+      nickname = '$postjson[nickname]',
+      userhp = '$postjson[userhp]',
+      userEmail = '$postjson[userEmail]',
+      role = '$postjson[role]',
+      company = '$postjson[company]'
+      WHERE userID='$postjson[userID]'");
+
+      if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
+      else $result = json_encode(array('success'=>false, 'result'=>$result));
+
+      echo $result;
+
+      }
+
  
   // update verification///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=='updateverify'){
+     date_default_timezone_set("Asia/Kuala_Lumpur");
+     $datetime = date('Y-m-d H:i:s', time());
+     $day = date('d');
+    $month = date('m');
+    $year = date('Y');
+    $weeknow = date('W');
   	$query = mysqli_query($mysqli, "UPDATE order_table SET
-    pengesahan = '$postjson[pengesahan]' WHERE order_id='$postjson[order_id]'");
+    pengesahan = '$postjson[pengesahan]',tarikh_verify = '$datetime',verified_by = '$postjson[verified_by]', day = '$day',
+      week = '$weeknow',
+      month = '$month',
+      year = '$year' WHERE  order_id='$postjson[order_id]'");
 
   	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
   	else $result = json_encode(array('success'=>false, 'result'=>'error'));
@@ -743,12 +1885,16 @@ elseif($postjson['aksi']=='updateemployee'){
 
   }
 
-   // update tracking///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // update delivery and tracking ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   elseif($postjson['aksi']=='updatetracking'){
+  
+   elseif($postjson['aksi']=='updateproduction'){
+      date_default_timezone_set("Asia/Kuala_Lumpur");
+     $today = date('Y-m-d H:i:s', time());
+       
   	$query = mysqli_query($mysqli, "UPDATE order_table SET
-    tracking = '$postjson[tracking]',
-    pengesahan = '$postjson[pengesahan]' WHERE order_id='$postjson[order_id]'");
+    tracking = '$postjson[tracking]',penghantaran = '$postjson[penghantaran]',
+    pengesahan = '$postjson[pengesahan]',shipped_by='$postjson[shipped_by]',tarikh_shipping='$today' WHERE order_id='$postjson[order_id]'");
 
   	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
   	else $result = json_encode(array('success'=>false, 'result'=>'error'));
@@ -756,25 +1902,46 @@ elseif($postjson['aksi']=='updateemployee'){
   	echo $result;
 
   }
-   // update penghantaran///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   elseif($postjson['aksi']=='updatedelivery'){
-  	$query = mysqli_query($mysqli, "UPDATE order_table SET
-    penghantaran = '$postjson[penghantaran]',
-    pengesahan = '$postjson[pengesahan]' WHERE order_id='$postjson[order_id]'");
-
-  	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
-  	else $result = json_encode(array('success'=>false, 'result'=>'error'));
-
-  	echo $result;
-
-  }
-
+   
   // update stock ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   elseif($postjson['aksi']=='updatestock'){
   	$query = mysqli_query($mysqli, "UPDATE product_table SET
     stock = '$postjson[stock]' WHERE prodID='$postjson[prodID]'");
+
+  	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
+  	else $result = json_encode(array('success'=>false, 'result'=>'error'));
+
+  	echo $result;
+
+  }
+
+ // UPDATE STOCK IN ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+ elseif($postjson['aksi']=='updatestockin'){
+  $query = mysqli_query($mysqli, "UPDATE product_table SET
+    stock = stock + '$postjson[stock_in]',
+    stock_in = stock_in + '$postjson[stock_in]'
+    WHERE prodName='$postjson[prodName]'");
+
+  if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
+  else $result = json_encode(array('success'=>false, 'result'=>'error'));
+
+  echo $result;
+
+}
+
+
+
+  // UPDATE STOCK OUT ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  elseif($postjson['aksi']=='updatestockout'){
+  	$query = mysqli_query($mysqli, "UPDATE product_table SET
+      stock = stock - '$postjson[stock_out]',
+      stock_out = stock_out + '$postjson[stock_out]'
+      WHERE prodName='$postjson[prodName]'");
 
   	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
   	else $result = json_encode(array('success'=>false, 'result'=>'error'));
@@ -799,6 +1966,16 @@ elseif($postjson['aksi']=='updateemployee'){
 
   elseif($postjson['aksi']=='deleteemployee'){
   	$query = mysqli_query($mysqli, "DELETE FROM employee_table WHERE userID ='$postjson[userID]'");
+
+  	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
+  	else $result = json_encode(array('success'=>false, 'result'=>'error'));
+
+  	echo $result;
+
+  }
+
+  elseif($postjson['aksi']=='deletecompany'){
+  	$query = mysqli_query($mysqli, "DELETE FROM company_table WHERE compID ='$postjson[compID]'");
 
   	if($query) $result = json_encode(array('success'=>true, 'result'=>'success'));
   	else $result = json_encode(array('success'=>false, 'result'=>'error'));
@@ -841,6 +2018,7 @@ elseif($postjson['aksi']=='updateemployee'){
         'company' => $data['company'],
         'created_at' => $data['created_at'],
         'status' => $data['status'],
+        'avatar' => $data['avatar'],
       );
 
       if($data['status']=='y'){
@@ -899,7 +2077,7 @@ elseif($postjson['aksi']=='getchoosenproductProd'){
 ///////////GET PRODUCT account/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getchoosenproductAcc'){
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT jumProduk,produk FROM order_table WHERE pengesahan = 'belum disahkan'");
+  $query = mysqli_query($mysqli, "SELECT jumProduk,produk FROM order_table WHERE pengesahan = 'pending'");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -914,9 +2092,15 @@ elseif($postjson['aksi']=='getchoosenproductAcc'){
 
 // get sales ranking///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getrankingsales'){
+     date_default_timezone_set("Asia/Kuala_Lumpur");
+     $today = date('Y-m-d H:i:s', time());
+    $day = date('d');
+    $month = date('m');
+    $year = date('Y');
+    $weeknow = date('W');
   $data = array();
   $company=$postjson['company'];
-  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE company='$company' ORDER BY sales DESC ");
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE company='$company' AND month='$month' AND year='$year' AND pengesahan NOT IN ('pending','codpending','cod') ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -933,10 +2117,11 @@ elseif($postjson['aksi']=='getrankingsales'){
 
   }
   
-  // get company ranking all///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // get sales ranking all///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getrankingall'){
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table ORDER BY company DESC ");
+   $year = date('Y');
+  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table  WHERE pengesahan NOT IN ('pending','codpending','cod') AND year='$year' ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -951,11 +2136,17 @@ elseif($postjson['aksi']=='getrankingall'){
 
     echo $result;
   }
-
+  
    // get sales ranking all///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 elseif($postjson['aksi']=='getrankingsalesall'){
+     date_default_timezone_set("Asia/Kuala_Lumpur");
+     $today = date('Y-m-d H:i:s', time());
+    $day = date('d');
+    $month = date('m');
+    $year = date('Y');
+    $weeknow = date('W');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table ORDER BY sales DESC ");
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE pengesahan NOT IN ('pending','codpending','cod') AND month=$month ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -978,7 +2169,7 @@ elseif($postjson['aksi']=='getrankingcompanydaily'){
   $week = date('W');
   $datetoday = date('d');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE day='$datetoday' AND week='$week' AND month='$month' AND year='$year' ORDER BY sales DESC ");
+  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE day='$datetoday' AND week='$week' AND month='$month' AND year='$year'  AND pengesahan NOT IN ('pending','codpending','cod') ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1001,7 +2192,7 @@ elseif($postjson['aksi']=='getrankingcompanyweekly'){
   $year = date('Y');
   $weeknow = date('W');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE week='$weeknow' AND month='$month' AND year='$year' ORDER BY sales DESC ");
+  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE week='$weeknow' AND month='$month' AND year='$year' AND pengesahan NOT IN ('pending','codpending','cod') ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1023,7 +2214,7 @@ elseif($postjson['aksi']=='getrankingcompanymonthly'){
   $year = date('Y');
   $monthnow = date('m');
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE month='$monthnow' AND year='$year' ORDER BY sales DESC ");
+  $query = mysqli_query($mysqli, "SELECT company,jumlah_bayaran,jumProduk FROM order_table WHERE month='$monthnow' AND year='$year' AND pengesahan NOT IN ('pending','codpending','cod') ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1047,7 +2238,7 @@ elseif($postjson['aksi']=='getrankingcompanymonthly'){
   $week = date('W');
   $company = $postjson['company'];
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE day='$day' AND week='$week' AND month='$month' AND year='$year' AND company='$company' ORDER BY sales DESC ");
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE day='$day' AND week='$week' AND month='$month' AND year='$year' AND company='$company' AND pengesahan NOT IN ('pending','codpending','cod') ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1070,7 +2261,7 @@ elseif($postjson['aksi']=='getrankingcompanymonthly'){
   $week = date('W');
   $company = $postjson['company'];
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE week='$week' AND month='$month' AND year='$year' AND company='$company' ORDER BY sales DESC ");
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE week='$week' AND month='$month' AND year='$year' AND company='$company' AND pengesahan NOT IN ('pending','codpending','cod') ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(
@@ -1093,7 +2284,7 @@ elseif($postjson['aksi']=='getrankingcompanymonthly'){
   
   $company = $postjson['company'];
   $data = array();
-  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE month='$month' AND year='$year' AND company='$company' ORDER BY sales DESC ");
+  $query = mysqli_query($mysqli, "SELECT sales,jumlah_bayaran,jumProduk FROM order_table WHERE month='$month' AND year='$year' AND company='$company'  AND pengesahan NOT IN ('pending','codpending','cod') ORDER BY sales DESC ");
 
   while($row = mysqli_fetch_array($query)){
     $data[] = array(

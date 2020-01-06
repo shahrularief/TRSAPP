@@ -6,6 +6,15 @@
 </ion-header>
 
 <ion-content scrollX="true">
+                <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+                                <ion-refresher-content
+                                  pullingIcon="arrow-dropdown"
+                                  pullingText="Pull to refresh"
+                                  refreshingSpinner="circles"
+                                  refreshingText="Refreshing...">
+                                </ion-refresher-content>
+                              </ion-refresher>
+                        
         <ion-grid>
                 <ion-row>
 
@@ -63,48 +72,107 @@
         [footerHeight]="50" [limit]="10" >
         <ngx-datatable-column width="100" name="Tarikh Order" prop="tarikh_order"></ngx-datatable-column>
         <ngx-datatable-column width="100" name="Nama" prop="nama_pelanggan"></ngx-datatable-column>
-        <ngx-datatable-column width="100" name="Alamat" prop="alamat_pelanggan"></ngx-datatable-column>
+        <ngx-datatable-column>
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                          Alamat
+                        </ng-template>
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.alamat_pelanggan}},
+                            {{row.poskod}}
+                            {{row.bandar}}, 
+                            {{row.negeri}}, 
+                            {{row.negara}}, 
+
+                        </ng-template>
+                    </ngx-datatable-column>
         <ngx-datatable-column>
                         <ng-template let-column="column" ngx-datatable-header-template>
                           H/P
                         </ng-template>
                         <ng-template let-row="row" ngx-datatable-cell-template>
                             {{row.nombor_hp}} <br> 
-                            <a ion-button href="https://wa.me/{{row.nombor_hp}}"><ion-icon name="logo-whatsapp" style="zoom:1.5;"></ion-icon></a>
+                            <a ion-button href="https://wa.me/{{row.nombor_hp}}"><ion-icon color="success" name="logo-whatsapp" style="zoom:1.5;"></ion-icon></a>
                             <a ion-button href="tel:{{row.nombor_hp}}"><ion-icon name="call" style="zoom:1.5;"></ion-icon></a>
 
                         </ng-template>
-                    </ngx-datatable-column>        <ngx-datatable-column width="100" name="Akaun" prop="akaun"></ngx-datatable-column>
+                    </ngx-datatable-column>       
+                    <ngx-datatable-column>
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                                Akaun
+                              </ng-template>
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                  {{row.namaakaun}} <br>
+                                  {{row.akaun}} <br>
+                                  {{row.masaakaun}} <br>
+                              </ng-template>
+
+                </ngx-datatable-column>
         <ngx-datatable-column width="100" name="Produk" prop="produk"></ngx-datatable-column>
         <ngx-datatable-column width="100" name="Jumlah Produk" prop="jumProduk"></ngx-datatable-column>
         <ngx-datatable-column width="100" name="Jumlah Bayaran" prop="jumlah_bayaran"></ngx-datatable-column>
-        <ngx-datatable-column width="100" name="Sales" prop="sales"></ngx-datatable-column>
-        <ngx-datatable-column width="100" name="Team" prop="company"></ngx-datatable-column>
+        <ngx-datatable-column>
+                <ng-template let-column="column" ngx-datatable-header-template>
+                        Sales
+                      </ng-template>
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                          {{row.sales}} <br>
+                          {{row.company}} <br>
+                      </ng-template>
+        </ngx-datatable-column>
         <ngx-datatable-column width="100" name="Status" prop="pengesahan"></ngx-datatable-column>
-        <ngx-datatable-column width="100" name="Penghantaran" prop="penghantaran"></ngx-datatable-column>
-        <ngx-datatable-column width="100" name="Tracking Number" prop="tracking"></ngx-datatable-column>
+        <ngx-datatable-column>
+                <ng-template let-column="column" ngx-datatable-header-template>
+                        Penghantaran
+                      </ng-template>
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                          {{row.penghantaran}} <br>
+                          {{row.tracking}} <br>
+                      </ng-template>
+        </ngx-datatable-column>
         <ngx-datatable-column name="id" [resizeable]="false">
                         <ng-template ngx-datatable-header-template>
 
                         </ng-template>
                         <ng-template let-row="row" ngx-datatable-cell-template>
-                                <button ion-button small outline color="light"  tooltip="Print" placement="left"
+                                <button disabled ion-button small outline color="light"   tooltip="Print" placement="left"
                                 (click)="printReceipt(
                                         row.order_id,
                                         row.nama_pelanggan,
+                                        row.emel,
                                         row.tarikh_order,
                                         row.alamat_pelanggan,
+                                        row.poskod,
+                                        row.bandar,
+                                        row.negeri,
+                                        row.negara,
                                         row.nombor_hp,
+                                        row.namaakaun,
                                         row.akaun,
                                         row.produk,
                                         row.jumProduk,
                                         row.jumlah_bayaran,
-                                        row.nota_tambahan,
-                                        row.resit,
                                         row.sales,
+                                        row.penghantaran,
                                         row.tracking)">
                                 <ion-icon name="print"></ion-icon>
                         </button>
+                        <button ion-button small color="light" tooltip="Edit" placement="top" (click)="updateOrder(row.order_id,row.nama_pelanggan,row.emel,
+                        row.tarikh_order,
+                        row.alamat_pelanggan,
+                      row.poskod,
+                        row.bandar,
+                        row.negeri,
+                        row.negara,
+                        row.nombor_hp,
+                        row.namaakaun,
+                        row.akaun,
+                        row.produk,
+                        row.jumProduk,
+                        row.jumlah_bayaran,
+                        row.nota_tambahan,
+                        row.pengesahan)">
+                                        <ion-icon name="create"></ion-icon>
+                                </button>
                         </ng-template>
                 </ngx-datatable-column>
 </ngx-datatable>

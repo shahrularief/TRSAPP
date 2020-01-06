@@ -27,55 +27,7 @@
 
           <ngx-datatable-column name="Nama Pelanggan" prop="nama_pelanggan"></ngx-datatable-column>
          
-          <ngx-datatable-column>
-                  <ng-template let-column="column" ngx-datatable-header-template>
-                    Alamat
-                  </ng-template>
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                      {{row.alamat_pelanggan}} <br>
-                      {{row.poskod}} <br>
-                      {{row.bandar}} <br>
-                      {{row.negeri}} <br>
-                      {{row.negara}} <br>
-
-                  </ng-template>
-              </ngx-datatable-column>
-        
-          <ngx-datatable-column>
-                          <ng-template let-column="column" ngx-datatable-header-template>
-                            H/P
-                          </ng-template>
-                          <ng-template let-row="row" ngx-datatable-cell-template>
-                              {{row.nombor_hp}} <br> 
-                              <a ion-button href="https://wa.me/{{row.nombor_hp}}"><ion-icon name="logo-whatsapp" style="zoom:1.5;"color="success"></ion-icon></a>
-                              <a ion-button href="tel:{{row.nombor_hp}}"><ion-icon name="call" style="zoom:1.5;" ></ion-icon></a>
-
-                          </ng-template>
-                      </ngx-datatable-column>
-          
-          <ngx-datatable-column>
-                  <ng-template let-column="column" ngx-datatable-header-template>
-                          Akaun
-                        </ng-template>
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                            {{row.namaakaun}} <br>
-                            {{row.akaun}} <br>
-                        </ng-template>
-
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Produk" prop="produk"></ngx-datatable-column>
-          <ngx-datatable-column name="Jumlah Produk" prop="jumProduk"></ngx-datatable-column>
-          <ngx-datatable-column name="Jumlah Bayaran" prop="jumlah_bayaran"></ngx-datatable-column>
-          <ngx-datatable-column>
-                  <ng-template let-column="column" ngx-datatable-header-template>
-                          Sales
-                        </ng-template>
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                            {{row.sales}} <br>
-                            {{row.company}} <br>
-                        </ng-template>
-          </ngx-datatable-column>
-        
+  
           <ngx-datatable-column name="Status" prop="pengesahan"></ngx-datatable-column>
 
        

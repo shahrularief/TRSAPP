@@ -3,25 +3,23 @@
 
     <ion-menu-button slot="start"></ion-menu-button>
     <ion-title>Utama</ion-title>
-    <ion-button slot="end" (click)="processLogout()" tooltip="Log Keluar" placement="top"> 
-      <ion-icon name="log-out" fill="solid" height="100px" width="100px"></ion-icon>
-    </ion-button>
+
+    <ion-icon slot="end" (click)="processLogout()" fill="outline" tooltip="Log Keluar" placement="top" name="log-out">
+    </ion-icon>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles"
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="dots"
       refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
 
 
   <ion-item>
-
     <ion-label color="dark">
-      <h1 font-weight: bold> {{username}} {{company}}</h1>
-
+      <h1 font-weight: bold> {{displayName}} {{company}}</h1>
     </ion-label>
   </ion-item>
 
@@ -40,8 +38,22 @@
         </ion-card>
       </ion-col>
 
-      <ion-col>
+     
+
+      <ion-col  *ngIf="showSaleOnly">
         <ion-card color="danger">
+          <ion-card-content *ngFor="let pend of totalpend">
+            <div class="ion-text-center">
+              <h2>Belum disahkan</h2>
+              <br>
+              RM {{ pend.sum}}
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+     
+      <ion-col>
+        <ion-card color="tertiary">
           <ion-card-content *ngFor="let today of todaysum">
             <div class="ion-text-center">
               <h2>Jualan Hari ini</h2>
@@ -52,59 +64,109 @@
         </ion-card>
       </ion-col>
 
+
       <ion-col>
         <ion-card color="warning">
-          <ion-card-content *ngFor="let month of monthsum">
+          <ion-card-content *ngFor="let mon of monthsum">
             <div class="ion-text-center">
-              <h2>Jualan Bulan Ini</h2>
+              <h2>Jualan Bulan {{month}}</h2>
+              <br>
+              RM {{ mon.sum}}
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col *ngIf="showCEO">
+        <ion-card color="primary">
+          <ion-card-content *ngFor="let sumTotal of totalsumceo">
+            <div class="ion-text-center">
+              <h2>Jumlah Jualan {{company}}</h2>
+              <br>
+              RM {{ sumTotal.sum}}
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+  
+      <ion-col *ngIf="showCEO">
+        <ion-card color="tertiary">
+          <ion-card-content *ngFor="let today of todaysumceo">
+            <div class="ion-text-center">
+              <h2>Jualan {{company}} Hari ini</h2>
+              <br>
+              RM {{ today.sum}}
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+  
+      <ion-col *ngIf="showCEO">
+        <ion-card color="warning">
+          <ion-card-content *ngFor="let month of monthsumceo">
+            <div class="ion-text-center">
+              <h2>Jualan Bulanan {{company}}</h2>
               <br>
               RM {{ month.sum}}
             </div>
           </ion-card-content>
         </ion-card>
       </ion-col>
+      
 
       <ion-col *ngIf="showSaleOnly">
-          <ion-card color="success">
-            <ion-card-content>
-              <div class="ion-text-center">
-                <h2>Anggaran Pendapatan</h2>
-                <br>
-                RM {{ comission}}
-              </div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-        <ion-col *ngIf="showSaleOnly">
-          <ion-card color="light">
-            <ion-card-content>
-              <div class="ion-text-center">
-                <h2>Overall Ranking</h2>
-                <br>
-                {{ overallrank }}
-              </div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-        <ion-col *ngIf="showSaleOnly">
-          <ion-card color="secondary">
-            <ion-card-content>
-              <div class="ion-text-center">
-                <h2>Team Ranking</h2>
-                <br>
-                {{ teamrank }}
-              </div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
+        <ion-card color="success">
+          <ion-card-content>
+            <div class="ion-text-center">
+              <h2>Anggaran Pendapatan</h2>
+              <br>
+              RM {{ comission}}
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+    
     </ion-row>
+    <ion-row>
+      <ion-col *ngIf="showSaleOnly">
+        <ion-card color="light">
+          <ion-card-content>
+            <div class="ion-text-center">
+              <h2>Overall Ranking</h2>
+              <br>
+              {{ overallrank }}
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col *ngIf="showSaleOnly">
+        <ion-card color="secondary">
+          <ion-card-content>
+            <div class="ion-text-center">
+              <h2>Team Ranking</h2>
+              <br>
+              {{ teamrank }}
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid>
+    <ion-row>
+     
+    </ion-row>
+  
   </ion-grid>
 
 
   <ion-grid>
     <ion-row>
-        <ion-col *ngIf="showAcc">
-          </ion-col>  
+      <ion-col *ngIf="showAcc">
+      </ion-col>
       <ion-col *ngIf="showAcc">
         <ion-card color="tertiary">
           <ion-card-content *ngFor="let uv of unverifys">
@@ -117,9 +179,9 @@
         </ion-card>
       </ion-col>
       <ion-col *ngIf="showAcc">
-        </ion-col>  
+      </ion-col>
       <ion-col *ngIf="showProd">
-      </ion-col>  
+      </ion-col>
       <ion-col *ngIf="showProd">
         <ion-card color="tertiary">
           <ion-card-content *ngFor="let up of unverifiedprod">
@@ -137,8 +199,8 @@
   </ion-grid>
 
   <ion-slides [options]="slider1" pager="true">
-    <ion-slide>
-      <ion-col *ngIf="showSale">
+    <ion-slide [hidden]="isSales">
+      <ion-col >
         <ion-card class="graph-card">
           <ion-card-header>
             <ion-label>
@@ -151,8 +213,8 @@
         </ion-card>
       </ion-col>
     </ion-slide>
-    <ion-slide>
-      <ion-col *ngIf="showSale">
+    <ion-slide [hidden]="isSales">
+      <ion-col >
         <ion-card class="graph-card">
           <ion-card-header>
             <ion-label>
@@ -165,8 +227,8 @@
         </ion-card>
       </ion-col>
     </ion-slide>
-    <ion-slide>
-      <ion-col *ngIf="showAdmin">
+    <ion-slide [hidden]="isAdmin">
+      <ion-col >
         <ion-card class="graph-card">
           <ion-card-header>
             <ion-label>
@@ -179,19 +241,35 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
-
     </ion-slide>
-    <ion-slide>
-      <ion-col *ngIf="showAdmin">
+    
+    <ion-slide [hidden]="isAdminOnly">
+      <ion-col>
         <ion-card class="graph-card">
           <ion-card-header>
             <ion-label>
-              Jumlah Jualan Produk
+              Jumlah Jualan Produk (unit)
             </ion-label>
           </ion-card-header>
           <ion-card-content>
 
-            <canvas #barCanvasP></canvas>
+            <canvas #doughnutCanvas></canvas>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-slide>
+  
+  <ion-slide [hidden]="isSalesOnly">
+      <ion-col >
+        <ion-card class="graph-card">
+          <ion-card-header>
+            <ion-label>
+              Jumlah Jualan Produk {{username}} (Bulan)
+            </ion-label>
+          </ion-card-header>
+          <ion-card-content>
+
+            <canvas #doughnutCanvasPS></canvas>
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -342,97 +420,137 @@
       </ion-slide>
     </ion-slides>
     <ion-col *ngIf="showProdOnly">
-      <ngx-datatable  [ngClass]="tableStyle" [rows]="count" [columnMode]="'force'"
-      [sortType]="'single'" [reorderable]="false" [scrollbarH]="true" [rowHeight]="'auto'" [headerHeight]="100"
-      [footerHeight]="0" >
-      
-      <ngx-datatable-column  width="100" name="Nama Produk" prop="prodName"></ngx-datatable-column>
-      <ngx-datatable-column  width="100" name="Stok Terkini" prop="stock"></ngx-datatable-column>
-     
-</ngx-datatable>
+      <ngx-datatable [ngClass]="tableStyle" [rows]="count" [columnMode]="'force'" [sortType]="'single'"
+        [reorderable]="false" [scrollbarH]="true" [rowHeight]="'auto'" [headerHeight]="100" [footerHeight]="50">
+
+        <ngx-datatable-column width="100" name="Nama Produk" prop="prodName"></ngx-datatable-column>
+        <ngx-datatable-column width="100" name="Stok Terkini" prop="stock"></ngx-datatable-column>
+
+      </ngx-datatable>
     </ion-col>
     <ion-row>
       <ion-col *ngIf="showSale">
         <ion-card>
           <ion-card-header>
-            Ranking Team Sales
+            Ranking TOP 10 {{company}} - {{month}}
           </ion-card-header>
           <ion-card-content>
             <ngx-datatable [ngClass]="tableStyle" [rows]="ranksales" [columnMode]="'force'" [sortType]="'single'"
-              [reorderable]="false"  [rowHeight]="'auto'" [headerHeight]="100" [footerHeight]="0"
-              [limit]="10">
+              [reorderable]="false" [rowHeight]="'auto'" [headerHeight]="100" [footerHeight]="30" [limit]="10" [scrollbarV]="false">
               <ngx-datatable-column name="No" width="80">
                 <ng-template let-rowIndex="rowIndex" let-row="row" ngx-datatable-cell-template>
                   <strong>{{ rowIndex + 1 }}</strong>
                 </ng-template>
               </ngx-datatable-column>
-             
+
               <ngx-datatable-column name="Nama" prop="sales" width="80"></ngx-datatable-column>
               <ngx-datatable-column name="Unit" prop="jumProduk" width="80"></ngx-datatable-column>
               <ngx-datatable-column name="Jualan" prop="jumlah_bayaran" width="80"></ngx-datatable-column>
+
+              <ngx-datatable-footer>
+                <ng-template
+                  ngx-datatable-footer-template
+                
+                >
+                  <div style="padding: 5px 10px"> 
+                    <div >
+                      <br>
+                      <strong>Jumlah Jualan : </strong>
+                      {{ footer_team }}
+                    </div>
+                    <hr style="width:100%" />
+                  </div>
+                </ng-template>
+              </ngx-datatable-footer>
             </ngx-datatable>
 
           </ion-card-content>
         </ion-card>
       </ion-col>
-      <ion-col *ngIf="showSale">
+    </ion-row>
+    <ion-row  *ngIf="showSale">
+      <ion-col>
         <ion-card>
           <ion-card-header>
-            Ranking Sales All
+            TRS Holding Team Sale Ranking          
           </ion-card-header>
           <ion-card-content>
             <ngx-datatable [ngClass]="tableStyle" [rows]="salesall" [columnMode]="'force'" [sortType]="'single'"
-              [reorderable]="false" [rowHeight]="'auto'" [headerHeight]="100" [footerHeight]="0"
-              [limit]="10">
+              [reorderable]="false" [rowHeight]="'auto'" [headerHeight]="100" [footerHeight]="30" [limit]="10"  [scrollbarV]="false" >
               <ngx-datatable-column name="No" width="'auto'">
                 <ng-template let-rowIndex="rowIndex" let-row="row" ngx-datatable-cell-template>
                   <strong>{{ rowIndex + 1 }}</strong>
                 </ng-template>
               </ngx-datatable-column>
-             
+
               <ngx-datatable-column name="Nama" prop="sales" width="'auto'"></ngx-datatable-column>
               <ngx-datatable-column name="Unit" prop="jumProduk" width="'auto'"></ngx-datatable-column>
               <ngx-datatable-column name="Jualan" prop="jumlah_bayaran" width="'auto'"></ngx-datatable-column>
+              <ngx-datatable-footer *ngIf="showAdmin">
+                <ng-template
+                  ngx-datatable-footer-template
+                
+                >
+                  <div style="padding: 5px 10px"> 
+                    <div >
+                      <br>
+                      <strong>Jumlah Jualan : </strong>
+                      {{ footer_team_sales }}
+                    </div>
+                    <hr style="width:100%" />
+                  </div>
+                </ng-template>
+              </ngx-datatable-footer>
             </ngx-datatable>
 
           </ion-card-content>
         </ion-card>
       </ion-col>
-
-      <ion-col *ngIf="showAdmin">
-        <ion-card>
-          <ion-card-header>
-            Team Ranking
-          </ion-card-header>
-          <ion-card-content>
-            <div style="overflow-x:auto;">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Nama</th>
-                    <th>Jualan(RM)</th>
-                    <th>Unit</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let name of ranking">
-                    <td>
-                      <ion-text>{{name.company}}</ion-text>
-                    </td>
-                    <td>
-                      <ion-text>{{name.jumlah_bayaran}}</ion-text>
-                    </td>
-                    <td>
-                      <ion-text>{{name.jumProduk}}</ion-text>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
     </ion-row>
+
+      <ion-row *ngIf="showAdmin">
+        <ion-col>
+          <ion-card>
+            <ion-card-header>
+             TRS Holding Sale Ranking
+            </ion-card-header>
+            <ion-card-content>
+              <ngx-datatable [ngClass]="tableStyle" [rows]="ranking" columnMode="'force'" [sortType]="'single'"
+              [reorderable]="false" [rowHeight]="'auto'" [rowHeight]="50" [headerHeight]="100" [footerHeight]="30" [limit]="10" [scrollbarV]="false">
+                <ngx-datatable-column name="No">
+                  <ng-template let-rowIndex="rowIndex" let-row="row" ngx-datatable-cell-template>
+                    <strong>{{ rowIndex + 1 }}</strong>
+                  </ng-template>
+                </ngx-datatable-column>
+  
+                <ngx-datatable-column name="Nama" prop="company"></ngx-datatable-column>
+                <ngx-datatable-column name="Unit" prop="jumProduk" ></ngx-datatable-column>
+                <ngx-datatable-column name="Jualan" prop="jumlah_bayaran" ></ngx-datatable-column>
+                <ngx-datatable-footer>
+                  <ng-template
+                    ngx-datatable-footer-template
+                  
+                  >
+                    <div style="padding: 5px 10px"> 
+                      <div  >
+                        <br>
+                        <strong>Jumlah Jualan : </strong>
+                        {{ footer_trs_sale }}
+                      </div>
+                      <hr style="width:100%" />
+                    </div>
+                  </ng-template>
+                </ngx-datatable-footer>
+              </ngx-datatable>
+  
+            </ion-card-content>
+          </ion-card>
+         
+        </ion-col>
+        
+      </ion-row>
+
+  
   </ion-grid>
 
 

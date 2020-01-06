@@ -1,4 +1,4 @@
-ion-card{
+ion-card {
   display: block;
   flex-direction: column;
   width: 30% !important;
@@ -7,18 +7,24 @@ ion-card{
   margin-right: auto !important;
 
 }
-   ion-select{
-    width: 40% !important;
-   }
 
-   .count-card{
-    background: rgb(167, 88, 23); 
-    color: white; 
-    width: 40px !important;
-     height: 20px !important;
-     font-size: 10pt;
-     text-align: center;
-   }
-  
+.my-select {
+  width: 100% !important;
+}
 
+.count-card {
+  background: rgb(167, 88, 23);
+  color: white;
+  width: 40px !important;
+  height: 20px !important;
+  font-size: 10pt;
+  text-align: center;
+}
 
+input{
+  width: 105px;
+}
+
+ion-searchbar{
+  width: 80% !important;
+}

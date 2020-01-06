@@ -1,5 +1,5 @@
-import { Component, OnInit} from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, NavigationExtras } from '@angular/router';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { PostProvider } from '../../../providers/post-provider';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -11,7 +11,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
   styleUrls: ['./employee.page.scss'],
 })
 export class EmployeePage implements OnInit {
-  
+
   employees: any[];
   emp: any[];
   tableColumns: any[];
@@ -59,18 +59,37 @@ export class EmployeePage implements OnInit {
           company: row['company'],
           userID: row['userID'],
           password: row['password'],
+          status: row['status'],
         }));
         console.log("map", this.employees);
       });
     });
   }
 
-  updateEmployee(user,full,nick,hp,emel,role,comp,id,pass){
-    this.router.navigate(['/updateemployee/' + user + '/' + full + '/' + nick + '/' + hp + '/' + emel + '/' + role + '/'
-    + comp + '/' + id  + '/' + pass]);
+  updateEmployee(user, full, nick, hp, emel, role, comp, id, pass) {
+    let source = "employee";
+    let details = {
+      userID: id,
+      username: user,
+      password: pass,
+      role: role,
+      fullname: full,
+      userhp: hp,
+      userEmail: emel,
+      company: comp,
+      nickname: nick,
+      source,
+    }
+    let navigationExtras: NavigationExtras = {
+      state: {
+        user: details
+      }
+    };
+    console.log("ne", navigationExtras)
+    this.router.navigate(['updateemployee'], navigationExtras);
   }
 
-  async deleteEmployee(id){
+  async deleteEmployee(id) {
     console.log(id);
     const alert = await this.alertCtrl.create({
       header: 'Delete!',
@@ -108,40 +127,83 @@ export class EmployeePage implements OnInit {
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
     if (val && val.trim() !== '') {
-    const temp = this.employees.filter(function(d) {
-      return d.fullname.toLowerCase().indexOf(val) !== -1 || !val || d.company.toLowerCase().indexOf(val) !== -1;
-    });
-    this.employees = temp;
-  } else {
-    this.employees = [];
-    this.loadEmployee();
+      const temp = this.employees.filter(function (d) {
+        return d.fullname.toLowerCase().indexOf(val) !== -1 || !val || d.company.toLowerCase().indexOf(val) !== -1;
+      });
+      this.employees = temp;
+    } else {
+      this.employees = [];
+      this.loadEmployee();
+    }
   }
-}
 
-switchStyle() {
-  if (this.tableStyle == 'dark'){
-    this.tableStyle = 'bootstrap';
-  } else {
-    this.tableStyle = 'dark';
+
+  getStatus(status) {
+    let col;
+    if (status == 'n') {
+      return col = 'danger'
+    } else if (status == 'y') {
+      return col = 'success'
+    } else if (status == 'cod') {
+      return col = 'dark'
+    } else if (status == 'codpending') {
+      return col = 'tertiary'
+    }
   }
-}
-
-
-
-  // onSearchTerm(ev: CustomEvent) {
-  //   const val = ev.detail.value;
-
-  //   if (val && val.trim() !== '') {
-  //     this.employees = this.employees.filter(term => {
-  //       return term.fullname.toLowerCase().indexOf(val.trim().toLowerCase()) > -1;
-  //     });
-  //   } else {
-  //     this.employees = [];
-  //     this.loadEmployee();
-  //   }
-  // }
   goList() {
     this.router.navigateByUrl('/registration');
   }
+
+  async verifyAlert(id) {
+    const alert = await this.alertCtrl.create({
+      header: 'Aktifkan?',
+      message: 'Sila pilih',
+      buttons: [
+        {
+          text: 'Tidak',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (data) => {
+            console.log('Confirm Cancel', id);
+          }
+        }, {
+          text: 'Aktif',
+          handler: data => {
+
+            let sah = 'y';
+            this.verifyStatus(id, sah);
+            console.log('Confirm Okay', id, sah);
+
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+
+
+  async verifyStatus(id, sah) {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'updatestatusemployee',
+        userID: id,
+        status: sah,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        this.router.navigate(['/employee']);
+
+
+      });
+      resolve(true);
+      console.log('OK');
+      this.employees = [];
+      this.loadEmployee();
+    });
+
+  }
+
 
 }

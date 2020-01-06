@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { DomSanitizer } from '@angular/platform-browser';
 
 
 @Component({
@@ -12,9 +13,10 @@ export class ImageModalPage implements OnInit {
 
   constructor(
     private modalController: ModalController,
+    private sanitizer: DomSanitizer,
+
   ) { }
-  public serverid: string;
-  public image: string;
+ 
   public base64image: string;
 
   ngOnInit() {
@@ -24,5 +26,9 @@ export class ImageModalPage implements OnInit {
     await this.modalController.dismiss();
   }
 
-
+  sanitize(img){
+    
+    let im = 'data:image/jpeg;base64,' + img;
+    return this.sanitizer.bypassSecurityTrustUrl(im);
+  }
 }

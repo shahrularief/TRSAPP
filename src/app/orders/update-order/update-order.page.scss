@@ -1,0 +1,38 @@
+ion-item{
+    width: 100% !important;
+}
+ion-card{
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+ion-select{
+   width: 100% !important;
+}
+
+/* Container needed to position the button. Adjust the width as needed */
+.container {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  }
+  /* Style the button and place it in the middle of the container/image */
+.container .btn {
+    position: absolute;
+    top: 10%;
+    left: 90%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+   
+    color: white;
+    font-size: 16px;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  ion-input{ 
+    .text-input{ text-align: right; }
+}
+  

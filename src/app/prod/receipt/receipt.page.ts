@@ -9,46 +9,88 @@ import { Printer, PrintOptions } from '@ionic-native/printer/ngx';
   styleUrls: ['./receipt.page.scss'],
 })
 export class ReceiptPage implements OnInit {
-  tarikh_order: string = '';
-  nama_pelanggan: string = '';
-  alamat_pelanggan: string = '';
-  nombor_hp: string = '';
-  akaun: string = '';
-  produk: string = '';
-  jumProduk: string = '';
-  jumlah_bayaran: string = '';
-  nota_tambahan: string = '';
-  id: number;
-  tracking;
+  public anArray: any[];
+  order_id;
+  nama;
+  emel;
+  tarikh;
+  alamat;
+  poskod;
+  bandar;
+  negeri;
+  hp;
+  namaakaun;
+  negara;
+  produk;
+  akaun;
+  jumProduk;
+  penghantaran;
+  bayaran;
   sales;
-
+  track;
+  data: any;
   constructor(
     private postPrvdr: PostProvider,
     private router: Router,
     private actRoute: ActivatedRoute,
     private printer: Printer,
-  ) { }
+  ) {
+    this.actRoute.queryParams.subscribe(params => {
+      if (this.router.getCurrentNavigation().extras.state) {
+        this.data = this.router.getCurrentNavigation().extras.state.user;
+        console.log("dataaaa", this.data);
+        
+        this.order_id = this.data.order_id;
+        this.nama = this.data.nama;
+        this.emel = this.data.emel;
+        this.tarikh = this.data.tarikh;
+        this.alamat = this.data.alamat;
+        this.poskod = this.data.poskod;
+        this.bandar = this.data.bandar;
+        this.negeri = this.data.negeri;
+        this.hp = this.data.hp;
+        this.negara = this.data.negara;
+        this.namaakaun = this.data.namaakaun;
+        this.akaun = this.data.akaun;
+        this.jumProduk = this.data.jumProduk;
+        this.penghantaran = this.data.penghantaran;
+        this.bayaran = this.data.bayaran;
+        this.sales = this.data.sales;
+        this.track = this.data.track;
+
+        let prod_bil = this.data.produk;
+
+
+       
+        let parts = prod_bil.split(",");
+        console.log(parts);
+        if (parts.length > 1) {
+          console.log("more");
+
+          for (let i = 0; i < parts.length; i++) {
+            let secondparts = parts[i].split("-", 2);
+            this.anArray.push({ value: secondparts[0], total: secondparts[1] });
+            console.log("2", secondparts);
+            console.log( this.anArray);
+          }
+
+        } else {
+          console.log("1");
+
+          let secondparts = parts[0].split("-", 2);
+          this.anArray.push({ value: secondparts[0], total: secondparts[1] });
+          console.log("2", secondparts);
+          console.log( this.anArray);
+         }
+
+        }
+
+    });
+
+   }
 
   ngOnInit() {
-    this.actRoute.params.subscribe((data: any) => {
-      this.id = data.id;
-      this.nama_pelanggan = data.nama;
-      this.tarikh_order = data.tarikh;
-      this.alamat_pelanggan = data.alamat;
-      this.nombor_hp = data.hp;
-      this.akaun = data.akaun;
-      this.produk = data.produk;
-      this.jumProduk = data.jumProduk;
-      this.jumlah_bayaran = data.bayaran;
-      this.nota_tambahan = data.nota;
-      this.tracking = data.track;
-      this.sales = data.sales;
-      this.tracking = data.track;
-      console.log(data);
-      // this.print();
-     
-    });
- 
+
   }
 
   ionViewDidEnter(){

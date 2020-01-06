@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { TooltipModule } from 'ng2-tooltip-directive';
+import { AutosizeModule } from 'ngx-autosize';
 
 import { IonicModule } from '@ionic/angular';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -16,9 +17,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
+  providers: [DatePipe],
   imports: [
     CommonModule,
     FormsModule,
+    AutosizeModule,
     IonicModule,
     CalendarModule,
     NgxDatatableModule,

@@ -1,13 +1,13 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button ></ion-back-button>
+      <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>Kemaskini Tempahan</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
   <!-- new order card -->
   <ion-card>
     <ion-card-header>
@@ -20,66 +20,241 @@
     </ion-card-header>
     <ion-card-content>
 
-      <!-- order form -->
-          <ion-list>
-              <ion-item>
-                <ion-label>Tarikh</ion-label>
-                <ion-datetime displayFormat="DD-MM-YY" placeholder="Pilih tarikh"
-                [(ngModel)]="tarikh_order"></ion-datetime>
-              </ion-item>
-              <ion-item>
-                <ion-label position="floating">Nama Pelanggan</ion-label>
-                <ion-input type="text" [(ngModel)]="nama_pelanggan"></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="floating">Alamat Pelanggan</ion-label>
-                <ion-input type="text" [(ngModel)]="alamat_pelanggan"></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="floating">Nombor Telefon</ion-label>
-                <ion-input type="number" [(ngModel)]="nombor_hp"></ion-input>
-              </ion-item>
-              <ion-item>
-                  <ion-label position="floating">Akaun Bank</ion-label>
-                  <ion-select placeholder="Pilih bank" type="text" [(ngModel)]="akaun">
-                      <ion-select-option value="Maybank">Maybank</ion-select-option>
-                      <ion-select-option value="CIMB">CIMB</ion-select-option>
-                    </ion-select>
-                </ion-item>
-              <ion-item>
-                <ion-label position="floating">Produk</ion-label>
-                <ion-input type="text" [(ngModel)]="produk"></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="floating">Jumlah Produk</ion-label>
-                <ion-input type="number" [(ngModel)]="jumProduk"></ion-input>
-            </ion-item>
-              <ion-item>
-                <ion-label position="floating">Bayaran (RM)</ion-label>
-                <ion-input type="number" [(ngModel)]="jumlah_bayaran"></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-textarea type="text" [(ngModel)]="nota_tambahan" placeholder="Maklumat tambahan di sini..."></ion-textarea>
-              </ion-item>
-            </ion-list>
+      <ion-grid>
+        <form [formGroup]="myForm">
+          <ion-item-divider>
+            <ion-label color="tertiary">
+              Status
+            </ion-label>
+          </ion-item-divider>
+          <ion-row>
+            <ion-select type="text" formControlName="sah" [disabled]="userRole">
+              <ion-select-option value="pending">Pending</ion-select-option>
+              <ion-select-option value="sah">Sah</ion-select-option>
+              <ion-select-option value="shipping">Shipping</ion-select-option>
+              <ion-select-option value="cod">COD</ion-select-option>
+              <ion-select-option value="codpending">codpending</ion-select-option>
+            </ion-select>
+          </ion-row>
 
-            <!-- <ion-item>
-                <ion-label >
-                    Fail Lampiran (Jika ada)
-                  </ion-label>
-                      <ion-button>
-                          <ion-icon name="cloud-upload"></ion-icon>
-                      </ion-button>
-            </ion-item> -->
-      
+         
+          <ion-item-divider>
+            <ion-label color="tertiary">
+              Maklumat Pelanggan
+            </ion-label>
+          </ion-item-divider>
+          <ion-row>
+            <ion-item>
+              <ion-label position="floating">Nama Pelanggan</ion-label>
+              <ion-input formControlName="nama" type="text"></ion-input>
+            </ion-item>
+          </ion-row>
+          <ion-row>
+            <ion-item>
+              <ion-label position="floating">Emel Pelanggan</ion-label>
+              <ion-input formControlName="emel" type="email"></ion-input>
+            </ion-item>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <international-phone-number formControlName="hp" [maxlength]="15" [defaultCountry]="'my'"
+                [required]="true" [allowedCountries]="['my', 'sg', 'id', 'bn']"></international-phone-number>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+
+          </ion-row>
+          <ion-item-divider>
+            <ion-label color="tertiary">
+              Alamat
+            </ion-label>
+          </ion-item-divider>
+          <ion-row>
+            <ion-item>
+              <ion-textarea formControlName="alamat" type="text" placeholder="-"></ion-textarea>
+            </ion-item>
+
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-input type="text" formControlName="poskod" placeholder="Poskod"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col>
+              <ion-item>
+                <ion-input formControlName="bandar" type="text" placeholder="Bandar"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-input formControlName="negeri" type="text" placeholder="Negeri"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col>
+
+              <ion-select type="text" formControlName="negara" placeholder="Negara">
+                <ion-select-option value="MALAYSIA">MALAYSIA</ion-select-option>
+                <ion-select-option value="SINGAPORE">SINGAPORE</ion-select-option>
+                <ion-select-option value="INDONESIA">INDONESIA</ion-select-option>
+                <ion-select-option value="BRUNEI">BRUNEI</ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+
+        </form>
+      </ion-grid>
     </ion-card-content>
   </ion-card>
+
+ <!-- PRODUK -->
+
+ <ion-card>
+   
+  <ion-item-divider >
+      <ion-label color="tertiary">
+        Maklumat Produk
+      </ion-label>
+      <ion-button (click)="Add()"  slot="end" fill="clear">
+        <ion-icon name="add" large></ion-icon>
+      </ion-button>
+      <ion-button (click)="openStock(products)" slot="end" fill="clear">
+        <ion-icon  color="success" name="list-box"></ion-icon>
+      </ion-button>
+    </ion-item-divider>
+
+    <ion-row *ngFor="let att of anArray; let idx = index">
+      <ion-item-divider color="tertiary">
+        <ion-label>
+          Produk {{idx + 1}}
+        </ion-label>
+        
+        <ion-button (click)="onDelete(idx)" slot="end" fill="clear">
+          <ion-icon name="close" color="light"></ion-icon>
+        </ion-button>
+      </ion-item-divider>
+        <ion-item>
+          <ion-label type="floating"> Produk </ion-label>
+          <ionic-selectable
+                [(ngModel)]="anArray[idx].value"
+                [items]="products"
+                itemValueField="prodCode"
+                itemTextField="prodName"
+                [canSearch]="true"
+                (onChange)="portChange($event)">
+              </ionic-selectable>
+        </ion-item>
+    
+        <ion-item>
+          <ion-label type="floating"> Jumlah </ion-label>
+          <ion-input type="number" text-right [(ngModel)]="anArray[idx].total"></ion-input>
+         
+        </ion-item>
+      
+      </ion-row>
+    
+    
+
+
+</ion-card>
+
+        
+      
+ 
+        
+      
+<!-- BAYARAN -->
+ 
+<ion-card>
+  <ion-item-divider>
+    <ion-label color="tertiary">
+      Maklumat Pembayaran
+    </ion-label>
+  </ion-item-divider>
+  <ion-item>
+      <ion-label> Resit </ion-label>
+      <div>
+          <ion-button  (click)="openGallery()" fill="clear">
+              <ion-icon name="image" large></ion-icon>
+            </ion-button>
+      </div>
+    </ion-item>
+  <ion-row *ngFor="let att of bankArray; index as idx">
+     <ion-item-divider  color="tertiary">
+    <ion-label>
+      Resit {{idx + 1}}
+    </ion-label>
+    <ion-button
+        (click)="onDeleteBank(idx)" slot="end" color="light" fill="clear">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+  </ion-item-divider>
+    <ion-item>
+      <ion-label type="floating"> Nama </ion-label>
+      <ion-input type="text" [(ngModel)]="namaakaun"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label type="floating">Bank </ion-label>
+      <ion-select type="text" [(ngModel)]="bankArray[idx].bank">
+        <ion-select-option value="MAYBANK">MAYBANK</ion-select-option>
+        <ion-select-option value="CIMB">CIMB</ion-select-option>
+        <ion-select-option value="BSN">BSN</ion-select-option>
+        <ion-select-option value="CDM">CDM</ion-select-option>
+        <ion-select-option value="COD">COD</ion-select-option>
+
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label type="floating"> Tarikh </ion-label>
+      <ion-input type="date" [(ngModel)]="bankArray[idx].tarikh" display-format="YYYY-MM-DD"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label type="floating"> Masa </ion-label>
+      <ion-input type="time" [(ngModel)]="bankArray[idx].masa" display-format="HH:mm"></ion-input>
+      
+    </ion-item>
+    <ion-item>
+        <div class="container">
+          <img src="{{bankArray[idx].img}}" title="pict" width="300px" height="400px">
+        </div>
+      </ion-item>
+   
+  </ion-row>
+
+
+    <ion-col>
+     
+    </ion-col>
+
+
+</ion-card>
+<ion-card>
+  <ion-item>
+    <ion-label position="floating">Bayaran (RM)</ion-label>
+    <ion-input type="number" [(ngModel)]="jumlah_bayaran"></ion-input>
+  </ion-item>
+  
+</ion-card>
+<ion-card>
+    <ion-item>
+        <ion-textarea type="text"  [(ngModel)]="nota_tambahan"
+          placeholder="Maklumat tambahan di sini..">
+        </ion-textarea>
+      </ion-item>
+</ion-card>
+
+
+
   <div class="ion-padding">
-    <ion-button expand="block" type="submit" class="ion-no-margin" shape="round"
-    (click)="updatedProcess()">
-    Kemaskini Tempahan
-        <ion-ripple-effect></ion-ripple-effect>
+    <ion-button expand="block" type="submit" class="ion-no-margin" shape="round" (click)="submit()">
+     Kemaskini Tempahan
+      <ion-ripple-effect></ion-ripple-effect>
     </ion-button>
   </div>
+
 
 </ion-content>

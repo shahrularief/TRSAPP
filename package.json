@@ -1,21 +1,22 @@
 {
-  "name": "trsAppV1",
-  "version": "0.2.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "name": "trsBiz",
+  "version": "0.1.6",
+  "author": "Shahrul",
+  "homepage": "https://trstest.lumiactive.com/",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node main.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "deploy": "gcloud app deploy"
   },
   "private": true,
   "dependencies": {
     "@angular/animations": "^8.2.13",
     "@angular/common": "^7.2.2",
-    "@angular/core": "^7.2.2",
+    "@angular/core": "^8.2.14",
     "@angular/forms": "^7.2.2",
     "@angular/http": "^7.2.2",
     "@angular/platform-browser": "^7.2.2",
@@ -39,11 +40,12 @@
     "@ionic/angular": "^4.1.0",
     "@ionic/app-scripts": "^3.2.4",
     "@ionic/storage": "^2.2.0",
+    "@ng-select/ng-select": "^3.3.0",
     "@swimlane/ngx-datatable": "^16.0.2",
     "@types/chart.js": "^2.8.5",
     "@types/papaparse": "^5.0.1",
     "call-number": "^1.0.1",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.3",
     "cordova": "^9.0.0",
     "cordova-android": "^8.0.0",
     "cordova-browser": "^6.0.0",
@@ -66,11 +68,14 @@
     "ion2-calendar": "^3.0.0-rc.0",
     "ion4-calendar": "^3.0.4-beta.17",
     "ionic-native": "^2.9.0",
+    "ionic-selectable": "^4.5.0",
     "ionic4-date-picker": "^0.1.0",
     "moment": "^2.24.0",
     "ng2-file-input": "^1.1.0",
     "ng2-file-upload": "^1.4.0",
     "ng2-tooltip-directive": "^2.8.17",
+    "ngx-autosize": "^1.7.2",
+    "ngx-file-helpers": "^2.0.0",
     "ngx-international-phone-number": "^1.0.4",
     "ngx-intl-tel-input": "^2.3.1",
     "ngx-papaparse": "^4.0.4",
@@ -138,8 +143,8 @@
       "cordova-plugin-file-transfer": {}
     },
     "platforms": [
-      "browser",
-      "android"
+      "android",
+      "browser"
     ]
   },
   "config": {

@@ -70,4 +70,37 @@ export class ViewcompanyPage implements OnInit {
     this.router.navigate(['/company']);
   }
 
+  async deleteAlert(id) {
+    const alert = await this.alertCtrl.create({
+      header: 'Delete!',
+      message: 'Adakah anda pasti?',
+      buttons: [
+        {
+          text: 'Tidak',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Delete',
+          handler: () => {
+            this.deleteCompany(id);
+            console.log('Confirm Okay');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+  deleteCompany(id) {
+    let body = {
+      aksi: 'deletecompany',
+      compID: id
+    };
+    this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+      this.ionViewWillEnter();
+    });
+  }
 }

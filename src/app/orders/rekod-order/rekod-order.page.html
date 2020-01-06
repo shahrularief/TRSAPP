@@ -1,70 +1,113 @@
 <ion-header>
-    <ion-toolbar>
-        <ion-menu-button slot="start"></ion-menu-button>
-        <ion-title>Rekod Tempahan</ion-title>
-      </ion-toolbar>
+  <ion-toolbar>
+    <ion-menu-button slot="start"></ion-menu-button>
+    <ion-title>Rekod Tempahan</ion-title>
+    <ion-button slot="end" fill="clear" color="success" tooltip="csv" (click)="downloadCSV()">
+      <ion-icon name="download"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content
-          pullingIcon="arrow-dropdown"
-          pullingText="Pull to refresh"
-          refreshingSpinner="circles"
-          refreshingText="Refreshing...">
-        </ion-refresher-content>
-      </ion-refresher>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
   <!-- <ion-searchbar showCancelButton="always"> </ion-searchbar>-->
 
-  
-    
 
-<ion-searchbar showCancelButton="always" (ionChange)="updateFilter($event)" placeholder="Name || order id"></ion-searchbar>
+  <ion-row>
+    <ion-searchbar showCancelButton="always" (ionChange)="updateFilter($event)" placeholder="Name || order id">
+    </ion-searchbar>
 
-     <ngx-datatable [ngClass]="tableStyle" [rows]="customers" [columnMode]="'force'"
-     [sortType]="'single'" [reorderable]="false"  [rowHeight]="'auto'" [headerHeight]="100"
-     [footerHeight]="'auto'" [limit]="15">
-     <ngx-datatable-column name= "ID" prop="order_id"></ngx-datatable-column>
-     <ngx-datatable-column name="Nama" prop="nama_pelanggan"></ngx-datatable-column>
-     <ngx-datatable-column name="Status" prop="pengesahan"></ngx-datatable-column>
-    
-     <ngx-datatable-column name="id" [resizeable]="false">
-             <ng-template ngx-datatable-header-template>
-                     
-             </ng-template>
-             <ng-template let-row="row" ngx-datatable-cell-template>
-                     <button ion-button small color="danger" (click)="deleteAlert(row.order_id)" tooltip="Delete">
-                             <ion-icon name="trash"></ion-icon>
-                     </button>
-                     <button ion-button small color="success" tooltip="Edit" (click)="updateCustomer(row.order_id,row.nama_pelanggan,
-                       row.tarikh_order,
-                       row.alamat_pelanggan,
-                       row.nombor_hp,
-                       row.akaun,
-                       row.produk,
-                       row.jumProduk,
-                       row.jumlah_bayaran,
-                       row.nota_tambahan)">
-                             <ion-icon name="create"></ion-icon>
-                     </button>
-                     <button ion-button small fill color="tertiary" tooltip="Show" (click)="openModal(
-                     row.order_id, 
-                     row.nama_pelanggan,
+   
+      <ion-button fill="clear">
+        <ion-select color="primary" type="text" [(ngModel)]="status" (ionChange)="updateStatus(status)" interface="popover">
+                 <ion-select-option disabled value="status">Status</ion-select-option>
+                <ion-select-option value="pending">Pending</ion-select-option>
+                <ion-select-option value="sah">Sah</ion-select-option>
+                <ion-select-option value="shipping">Shipping</ion-select-option>
+                <ion-select-option value="cod">COD</ion-select-option>
+                <ion-select-option value="all">All</ion-select-option>
+  </ion-select>
+  </ion-button>
+    </ion-row>
+   
+
+ 
+
+
+  <ngx-datatable [ngClass]="tableStyle" [rows]="customers" [columnMode]="'force'" [sortType]="'single'"
+    [reorderable]="false" [rowHeight]="'auto'" [headerHeight]="100" [footerHeight]="'auto'" [limit]="15">
+    <ngx-datatable-column name="ID" prop="order_id"></ngx-datatable-column>
+    <ngx-datatable-column name="Nama Pelanggan" prop="nama_pelanggan"></ngx-datatable-column>
+    <ngx-datatable-column name="Status" prop="pengesahan"></ngx-datatable-column>
+
+    <ngx-datatable-column name="id" [resizeable]="false">
+      <ng-template ngx-datatable-header-template>
+
+      </ng-template>
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <button ion-button small fill color="tertiary" tooltip="Show" (click)="openModal(row.order_id,row.nama_pelanggan,row.emel,
+                        row.tarikh_order,
+                        row.alamat_pelanggan,
+                      row.poskod,
+                        row.bandar,
+                        row.negeri,
+                        row.negara,
+                        row.nombor_hp,
+                        row.namaakaun,
+                        row.akaun,
+                        row.produk,
+                        row.jumProduk,
+                        row.jumlah_bayaran,
+                        row.nota_tambahan,
+                        row.pengesahan,
+                        row.tracking,
+                        row.resit,
+                        row.masaakaun,
+                        row.penghantaran)">
+          <ion-icon name="eye"></ion-icon>
+        </button>
+        <button ion-button small color="success" tooltip="Edit" [disabled]="lockEdit" (click)="updateOrder(row.order_id,row.nama_pelanggan,row.emel,
                      row.tarikh_order,
                      row.alamat_pelanggan,
+                   row.poskod,
+                     row.bandar,
+                     row.negeri,
+                     row.negara,
                      row.nombor_hp,
+                     row.namaakaun,
                      row.akaun,
                      row.produk,
                      row.jumProduk,
                      row.jumlah_bayaran,
                      row.nota_tambahan,
+                     row.pengesahan,
                      row.resit,
-                     row.pengesahan)">
-                             <ion-icon name="eye"></ion-icon>
-                     </button>
-                    
-             </ng-template>
-     </ngx-datatable-column>
-</ngx-datatable>
+                     row.masaakaun,
+                     row.prodCode)">
+          <ion-icon name="create"></ion-icon>
+        </button>
+
+
+        <button ion-button small fill color="tertiary" tooltip="Tambahan"
+           (click)="openNota(row.order_id,row.nota_tambahan)">
+          <ion-icon name="paper-plane"></ion-icon>
+        </button>
+
+        <button ion-button small fill color="tertiary" tooltip="Nota Akaun" class="notification-button"
+          (click)="openRequest(row.order_id,row.request)">
+          <ion-icon [name]="showBadge(row.request)" [color]="badgeCol(row.request)"></ion-icon>
+        
+        </button>
+        <button ion-button small color="danger" (click)="deleteAlert(row.order_id)" tooltip="Delete">
+          <ion-icon name="trash"></ion-icon>
+        </button>
+
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
 
 </ion-content>

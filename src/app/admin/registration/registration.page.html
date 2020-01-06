@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-      <ion-back-button slot="start"></ion-back-button>
+      <ion-back-button slot="start" defaultHref="home"></ion-back-button>
     <ion-title>Pendaftaran</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -56,12 +56,14 @@
                         <ion-select placeholder="Role" type="text" [(ngModel)]="role">
                           <ion-select-option value="BOD">BOD</ion-select-option>
                           <ion-select-option value="CEO">CEO</ion-select-option>
-                          <ion-select-option value="SALES">SALES</ion-select-option>
-                          <ion-select-option value="SALES LEADER">SALES LEADER</ion-select-option>
+                          <ion-select-option value="SALES">TEAM SALES</ion-select-option>
+                          <!-- <ion-select-option value="SALES LEADER">SALES LEADER</ion-select-option> -->
+                          
+                          <ion-select-option value="ACCOUNT HEAD">HEAD OF ACCOUNTING </ion-select-option>
                           <ion-select-option value="ACCOUNT">ACCOUNT</ion-select-option>
-                          <ion-select-option value="ACCOUNT LEADER">ACCOUNT LEADER</ion-select-option>
-                          <ion-select-option value="PRODUCTION LEADER">PRODUCTION</ion-select-option>
+                          <ion-select-option value="PRODUCTION HEAD">HEAD OF PRODUCTION</ion-select-option>
                           <ion-select-option value="PRODUCTION">PRODUCTION</ion-select-option>
+                          <ion-select-option value="HR">HR</ion-select-option>
                         </ion-select>
                       </ion-item>
                  

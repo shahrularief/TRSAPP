@@ -25,7 +25,7 @@ const routes: Routes = [
 
   { path: 'update-order', loadChildren: './orders/update-order/update-order.module#UpdateOrderPageModule' },
   {
-    path: 'update-order/:id/:tarikh/:nama/:alamat/:hp/:akaun/:produk/:jumProduk/:bayaran/:nota',
+    path: 'update-order/:id/:tarikh/:nama/:emel/:poskod/:bandar/:negeri/:negara/:hp/:namaakaun/:akaun/:produk/:jumProduk/:bayaran/:nota/:sah/:alamat',
     loadChildren: './orders/update-order/update-order.module#UpdateOrderPageModule'
   },
 
@@ -57,6 +57,10 @@ const routes: Routes = [
   { path: 'updateemployee/:user/:full/:nick/:hp/:emel/:role/:comp/:id/:pass',
   loadChildren: './admin/updateemployee/updateemployee.module#UpdateemployeePageModule' },
   { path: 'account-report', loadChildren: './accounting/account-report/account-report.module#AccountReportPageModule' },
+  { path: 'transaction', loadChildren: './transaction/transaction.module#TransactionPageModule' },
+  { path: 'view-profile', loadChildren: './view-profile/view-profile.module#ViewProfilePageModule' },
+  { path: 'request', loadChildren: './modals/request/request.module#RequestPageModule' },
+  { path: 'currentstock', loadChildren: './modals/currentstock/currentstock.module#CurrentstockPageModule' },
 
 ];
 

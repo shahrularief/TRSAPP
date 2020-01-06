@@ -6,6 +6,11 @@
 </ion-header>
 
 <ion-content scrollX="true">
+        <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+                <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh"
+                        refreshingSpinner="circles" refreshingText="Refreshing...">
+                </ion-refresher-content>
+        </ion-refresher>
         <ion-grid>
                 <ion-row>
 
@@ -39,45 +44,96 @@
                 </ion-row>
                 <ion-row>
                         <ion-col>
-                                <ion-button (click)="totalProductModal()" fill="outline">Jumlah Produk</ion-button>
-                                <ion-button (click)="openCalendar()" fill="outline">
+                                <ion-button (click)="totalProductModal()" fill="solid" tooltip="Jumlah Produk" placement="left"><ion-icon name="list-box"></ion-icon></ion-button>
+                                <ion-button (click)="openCalendar()" fill="solid" tooltip="Search by date" placement="bottom">
                                         <ion-icon name="calendar"></ion-icon>
                                 </ion-button>
-
-                                <ion-button (click)="downloadCSV()" fill="outline" color="tertiary">CSV
-                                        <ion-icon name="download"></ion-icon>
+                                <ion-button  fill="solid" color="success" tooltip="Upload CSV" placement="top">
+                                        <label for="file-input">
+                                                CSV <ion-icon name="arrow-round-up">
+                                                        <input id="file-input" type="file" accept=".csv" name="files" class="form-control" #uploads
+                                                        (change)="onChange(uploads.files)" value="process" style="visibility: hidden; position: absolute;" />
+                                                </ion-icon>
+                                               </label>
                                 </ion-button>
-                                <ion-button (click)="clearArrayCust()" fill="outline" color="danger">
+                                <ion-button (click)="downloadCSV()" fill="solid" color="tertiary" tooltip="Download CSV" placement="bottom">CSV
+                                        <ion-icon name="arrow-round-down"></ion-icon>
+                                </ion-button>
+                                <ion-button (click)="submitProcedure()" fill="solid" tooltip="Submit" placement="top">
+                                        <ion-icon name="cloud-upload"></ion-icon>
+                                </ion-button>
+                                <ion-button (click)="clearArrayCust()" fill="solid" color="danger">
                                         <ion-icon name="close"></ion-icon>
                                 </ion-button>
+                                <ion-button fill="clear" color="danger" [tooltip]="prodText" placement="right">
+                                        <ion-icon name="alert"></ion-icon>
+                                </ion-button>
+                               
+                              
 
+                              
                         </ion-col>
                 </ion-row>
 
 
                 <ion-row>
-                        <ion-searchbar showCancelButton="always" (ionChange)="updateFilter($event)"
-                                placeholder="company//nama pelanggan// nama seller"></ion-searchbar>
-                </ion-row>
+                        <ion-searchbar showCancelButton="always" (ionChange)="updateFilter($event)" placeholder="search by company"></ion-searchbar>
+                        <ion-button fill="clear">
+                                <ion-select color="primary" type="text" [(ngModel)]="status" (ionChange)="updateStatus(status)" interface="popover">
+                                         <ion-select-option disabled value="status">Status</ion-select-option>
+                                        <ion-select-option value="pending">Pending</ion-select-option>
+                                        <ion-select-option value="sah">Sah</ion-select-option>
+                                        <ion-select-option value="shipping">Shipping</ion-select-option>
+                                        <ion-select-option value="cod">COD</ion-select-option>
+                                        <ion-select-option value="all">All</ion-select-option>
+                         </ion-select>
+                        </ion-button>
+</ion-row>
         </ion-grid>
 
 
 
         <ngx-datatable class="fullscreen" [ngClass]="tableStyle" [rows]="customers" [columnMode]="'force'"
-                [sortType]="'single'" [reorderable]="false" [scrollbarH]="true" [rowHeight]="'auto'"
-                [headerHeight]="100" [footerHeight]="50" [limit]="10">
-
-
+                [sortType]="'single'" [reorderable]="false" [scrollbarH]="false" [rowHeight]="'auto'"
+                [headerHeight]="100" [footerHeight]="50" [limit]="10"  
+                [selected]="selected"
+                [selectionType]="SelectionType.checkbox"
+                [selectAllRowsOnPage]="false"
+                (activate)="onActivate($event)"
+                (select)="onSelect($event)">
+                <ngx-datatable-column
+                [width]="50"
+                [sortable]="false"
+                [canAutoResize]="false"
+                [draggable]="false"
+                [resizeable]="false"
+                [headerCheckboxable]="true"
+                [checkboxable]="true"
+              >
+              </ngx-datatable-column>
                 <ngx-datatable-column width="100" name="Tarikh Order" prop="tarikh_order"></ngx-datatable-column>
                 <ngx-datatable-column width="100" name="Nama" prop="nama_pelanggan"></ngx-datatable-column>
-                <ngx-datatable-column width="100" name="Alamat" prop="alamat_pelanggan"></ngx-datatable-column>
+                <ngx-datatable-column>
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                                Alamat
+                        </ng-template>
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.alamat_pelanggan}},
+                                {{row.poskod}}
+                                {{row.bandar}},
+                                {{row.negeri}},
+                                {{row.negara}},
+
+                        </ng-template>
+                </ngx-datatable-column>
+
                 <ngx-datatable-column>
                         <ng-template let-column="column" ngx-datatable-header-template>
                                 H/P
                         </ng-template>
                         <ng-template let-row="row" ngx-datatable-cell-template>
                                 {{row.nombor_hp}} <br>
-                                <a ion-button href="https://wa.me/{{row.nombor_hp}}">
+                                <a ion-button target="_blank" href="https://wa.me/{{row.nombor_hp}}">
                                         <ion-icon name="logo-whatsapp" style="zoom:1.5;" color="success"></ion-icon>
                                 </a>
                                 <a ion-button href="tel:{{row.nombor_hp}}">
@@ -86,69 +142,42 @@
 
                         </ng-template>
                 </ngx-datatable-column>
-                <ngx-datatable-column width="100" name="Akaun" prop="akaun"></ngx-datatable-column>
+                <ngx-datatable-column>
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                                Akaun
+                        </ng-template>
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.namaakaun}} <br>
+                                {{row.akaun}} <br>
+                                {{row.masaakaun}} <br>
+                        </ng-template>
+
+                </ngx-datatable-column>
                 <ngx-datatable-column width="100" name="Produk" prop="produk"></ngx-datatable-column>
                 <ngx-datatable-column width="100" name="Jumlah Produk" prop="jumProduk"></ngx-datatable-column>
                 <ngx-datatable-column width="100" name="Jumlah Bayaran" prop="jumlah_bayaran"></ngx-datatable-column>
-                <ngx-datatable-column width="100" name="Sales" prop="sales"></ngx-datatable-column>
+                <ngx-datatable-column>
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                                Sales
+                        </ng-template>
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.nickname}} <br>
+                                {{row.sales}} <br>
+                                {{row.sales_hp}} <br>
+                                <a ion-button target="_blank" href="https://wa.me/{{row.sales_hp}}">
+                                        <ion-icon name="logo-whatsapp" style="zoom:1.5;" color="success"></ion-icon>
+                                </a>
+                                <a ion-button href="tel:{{row.sales_hp}}">
+                                        <ion-icon name="call" style="zoom:1.5;"></ion-icon>
+                                </a>
+                        </ng-template>
+
+                </ngx-datatable-column>
                 <ngx-datatable-column width="100" name="Team" prop="company"></ngx-datatable-column>
                 <ngx-datatable-column width="100" name="Status" prop="pengesahan"></ngx-datatable-column>
+                <ngx-datatable-column width="100" name="Nota" prop="nota_tambahan"></ngx-datatable-column>
 
-
-                <ngx-datatable-column name="id" [resizeable]="false">
-                        <ng-template ngx-datatable-header-template>
-                                <button ion-button (click)="submitCollected()" style="background-color: white;">Upload</button>
-                        </ng-template>
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                                <ion-row>
-                                        <ion-select tooltip="Delivery" placement="right" [(ngModel)]="row.penghantaran">
-                                                <ion-select-option value="POSLAJU">POSLAJU</ion-select-option>
-                                                <ion-select-option value="DHL">DHL</ion-select-option>
-                                                <ion-select-option value="CITYLINK">CITYLINK</ion-select-option>
-                                        </ion-select>
-
-                                </ion-row>
-                                <ion-row>
-                                        <ion-input type="text" placeholder="tracking" [(ngModel)] = "row.tracking"
-                                                (keyup.enter)='updateArray(row.tracking, row.order_id, row.penghantaran)'> </ion-input>
-                                </ion-row>
-
-
-
-
-                        </ng-template>
-                </ngx-datatable-column>
-
-                <ngx-datatable-column name="id" [resizeable]="false">
-                        <ng-template ngx-datatable-header-template>
-
-                        </ng-template>
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                                <button ion-button small color="light" (click)="deleteOrder(row.order_id)"
-                                        tooltip="Delete" placement="left">
-                                        <ion-icon name="trash"></ion-icon>
-                                </button>
-                                <button ion-button small color="light" tooltip="Edit" placement="top" (click)="updateOrder(row.order_id,row.nama_pelanggan,
-                                  row.tarikh_order,
-                                  row.alamat_pelanggan,
-                                  row.nombor_hp,
-                                  row.akaun,
-                                  row.produk,
-                                  row.jumProduk,
-                                  row.jumlah_bayaran,
-                                  row.nota_tambahan)">
-                                        <ion-icon name="create"></ion-icon>
-                                </button>
-                                <button ion-button small outline color="light" tooltip="Nombor Tracking"
-                                        placement="bottom" (click)="openTrackModal(row.order_id,row.tracking)">
-                                        <ion-icon name="keypad"></ion-icon>
-                                </button>
-                                <button ion-button small outline color="light" tooltip="Penghantaran" placement="right"
-                                        (click)="openDeliveryModal(row.order_id,row.penghantaran)">
-                                        <ion-icon name="bus"></ion-icon>
-                                </button>
-
-                        </ng-template>
-                </ngx-datatable-column>
+                <ngx-datatable-column width="100" name="Penghantaran" prop="penghantaran"></ngx-datatable-column>
+                <ngx-datatable-column width="100" name="Tracking" prop="tracking"></ngx-datatable-column>
         </ngx-datatable>
 </ion-content>

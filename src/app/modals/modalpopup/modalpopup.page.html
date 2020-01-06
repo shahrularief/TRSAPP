@@ -1,82 +1,139 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-title ion-text-centre>Maklumat {{nama_pelanggan}}</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="closeModal()">
-        <ion-icon slot="icon-only" name="close"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+    <ion-toolbar color="tertiary">
+        <ion-title ion-text-centre>Maklumat {{nama_pelanggan}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="closeModal()">
+                <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen>
 
-<table>
-    <thead>
-        <tr>
-            <th> Maklumat </th>
-            <th> Status </th>
-        </tr>
-    </thead>
-    <tbody>
+    <table>
+
+        <tbody>
             <tr>
-                    <td>Order ID</td>
-                    <td>{{order_id}}</td>
+
+                <ion-item-divider>
+                    <ion-label color="primary">
+                        Status
+                    </ion-label>
+                </ion-item-divider>
+
+            </tr>
+            <tr>
+                <td>Order ID</td>
+                <td>{{order_id}}</td>
+            </tr>
+            <tr>
+                <td>Pengesahan</td>
+                <td>{{pengesahan}}</td>
+            </tr>
+            <tr>
+                    <td>Tracking</td>
+                    <td>{{penghantaran}} - {{tracking}}</td>
                 </tr>
-        <tr>
-            <td>Pengesahan</td>
-            <td>{{pengesahan}}</td>
-        </tr>
-        <tr>
+            <tr>
+
+                <ion-item-divider>
+                    <ion-label color="primary">
+                        Maklumat Pelanggan
+                    </ion-label>
+                </ion-item-divider>
+
+            </tr>
+
+
+            <tr>
                 <td>Nama Pelanggan</td>
                 <td>{{nama_pelanggan}}</td>
             </tr>
             <tr>
-                   
+                <td>Emel Pelanggan</td>
+                <td>{{emel}}</td>
+            </tr>
+            <tr>
+                <td>Tarikh Order</td>
+                <td>{{tarikh_order}}</td>
+            </tr>
+            <tr>
+                <td>Alamat Pelanggan</td>
+                <td>{{alamat_pelanggan}}<br>{{poskod}},{{bandar}}<br>{{negeri}}<br>{{negara}}</td>
+            </tr>
+            <tr>
+                <td> No. Hp</td>
+                <td>{{nombor_hp}}
+                    <a ion-button target="_blank" href="https://wa.me/{{nombor_hp}}">
+                        <ion-icon name="logo-whatsapp" style="zoom:1.5" color="success"></ion-icon>
+                    </a>
+                    <a ion-button href="tel:{{nombor_hp}}">
+                        <ion-icon name="call" style="zoom:1.5;"></ion-icon>
+                    </a>
+                </td>
+
+            </tr>
+
+
+            <ion-item-divider>
+                <ion-label color="primary">
+                    Maklumat Pesanan
+                </ion-label>
+            </ion-item-divider>
+
+            <tr>
+                <td>Produk</td>
+                <td>{{produk}}</td>
+            </tr>
+            <tr>
+                <td>Jumlah Produk</td>
+                <td>{{jumProduk}}</td>
+            </tr>
+            <tr>
+                <td>Nota Tambahan</td>
+                <td>{{nota_tambahan}}</td>
+            </tr>
+
+            <ion-item-divider>
+                <ion-label color="primary">
+                    Maklumat Pembayaran
+                </ion-label>
+            </ion-item-divider>
+
+            <tr>
+
+            </tr>
+
+            <tr>
+                <td>Nama Pemegang Akaun</td>
+                <td>{{namaakaun}}</td>
+            </tr>
+            <tr>
+                <td>Akaun</td>
+                <td>{{akaun}}</td>
+            </tr>
+            <tr>
+                    <td>Tarikh Bayaran</td>
+                    <td>{{masaakaun}}</td>
                 </tr>
-                <tr>
-                        <td>Tarikh Order</td>
-                        <td>{{tarikh_order}}</td>
-                    </tr>
-                    <tr>
-                            <td>Alamat Pelanggan</td>
-                            <td>{{alamat_pelanggan}}</td>
-                        </tr>
-                        <tr>
-                                <td> No. Hp</td>
-                                <td>{{nombor_hp}} 
-                                    <a ion-button href="https://wa.me/{{nombor_hp}}"><ion-icon name="logo-whatsapp" style="zoom:1.5" color="success"></ion-icon></a>
-                                    <a ion-button href="tel:{{nombor_hp}}"><ion-icon name="call" style="zoom:1.5;" ></ion-icon></a>
-                                </td>
-                                
-                            </tr>
-                            <tr>
-                                    <td>Akaun</td>
-                                    <td>{{akaun}}</td>
-                                </tr>
-                                <tr>
-                                        <td>Produk</td>
-                                        <td>{{produk}}</td>
-                                    </tr>
-                                    <tr>
-                                            <td>Jumlah Produk</td>
-                                            <td>{{jumProduk}}</td>
-                                        </tr>
-                                        <tr>
-                                                <td>Jumlah Bayaran</td>
-                                                <td>RM {{jumlah_bayaran}}</td>
-                                            </tr>
-                                            <tr>
-                                                    <td>Nota Tambahan</td>
-                                                    <td>{{nota_tambahan}}</td>
-                                                </tr>
+    
+            <tr>
+                <td>Jumlah Bayaran</td>
+                <td>RM {{jumlah_bayaran}}</td>
+            </tr>
 
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
 
 
-<img src="{{base64image}}" width= "700px" height="700px">
+    <ion-row *ngFor="let att of base64image; let idx = index">
+        <ion-col>
+            <ion-item>
+                <img [src]="sanitize(base64image[idx])" width="700px" height="700px">
+            </ion-item>
+        </ion-col>
+    </ion-row>
 
-   
 </ion-content>

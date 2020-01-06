@@ -1,0 +1,72 @@
+<ion-header>
+    <ion-toolbar>
+            <ion-back-button slot="start"></ion-back-button>
+            <ion-title>Transaksi</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content scrollX="true">
+            <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+                            <ion-refresher-content 
+                              pullingIcon="arrow-dropdown"
+                              pullingText="Pull to refresh"
+                              refreshingSpinner="circles"
+                              refreshingText="Refreshing...">
+                            </ion-refresher-content>
+                          </ion-refresher>
+    <ion-grid>
+            <ion-row>
+                    <ion-col>
+                           
+                            <ion-button (click)="openCalendar()" fill="outline">
+                                    <ion-icon name="calendar"></ion-icon>
+                            </ion-button>
+                           
+                            <ion-button (click)="downloadCSV()" fill="outline" color="tertiary">CSV
+                                    <ion-icon name="download"></ion-icon>
+                            </ion-button>
+                            <ion-button (click)="clearArrayCust()" fill="outline" color="danger">
+                                    <ion-icon name="close"></ion-icon>
+                            </ion-button>
+                    </ion-col>
+
+
+            </ion-row>
+
+            <ion-row>
+                    
+                                    <ion-searchbar showCancelButton="always" (ionChange)="updateFilter($event)" placeholder="Nama produk"></ion-searchbar>
+            </ion-row>
+    </ion-grid>
+
+
+   
+    
+    
+
+    <ngx-datatable [ngClass]="tableStyle" [rows]="tranx" [columnMode]="'force'"
+            [sortType]="'single'" [reorderable]="false" [rowHeight]="'auto'" [headerHeight]="100"
+            [footerHeight]="50" [limit]="50" >
+            <ngx-datatable-column color="primary"  prop="txid" name="ID"></ngx-datatable-column>
+            <ngx-datatable-column color="primary" name="Tarikh" prop="created_at"></ngx-datatable-column>
+            <ngx-datatable-column name="Produk" prop="txproduct"></ngx-datatable-column>
+           
+            <ngx-datatable-column>
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  Jumlah 
+                </ng-template>
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.txtotal}} 
+                   <ion-icon [name]="getIcon(row.txtype)" [color]="getColor(row.txtype)"></ion-icon>
+
+                </ng-template>
+            </ngx-datatable-column>
+      
+            <ngx-datatable-column name="Jenis Transaksi" prop="txtype"></ngx-datatable-column>
+            <ngx-datatable-column name="Nama" prop="txname"></ngx-datatable-column>
+
+    </ngx-datatable>
+
+
+</ion-content>

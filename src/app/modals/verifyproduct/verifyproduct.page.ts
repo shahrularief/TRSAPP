@@ -6,14 +6,19 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./verifyproduct.page.scss'],
 })
 export class VerifyproductPage implements OnInit {
-
+  public anArray = [];
   constructor(
     private modalController: ModalController
   ) { }
 
-    public counted: any[];
+  public counted: any[];
 
   ngOnInit() {
   }
+
+  async closeModal() {
+    await this.modalController.dismiss();
+  }
+
 
 }

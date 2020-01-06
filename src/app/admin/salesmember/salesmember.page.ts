@@ -72,6 +72,11 @@ export class SalesmemberPage implements OnInit {
         }, Object.create(null));
         console.log('ranking', ranking);
         this.ranking = ranking.concat();
+        for (let i = 0; i < this.ranking.length; i++) {
+          this.ranking[i].jumlah_bayaran = parseFloat(this.ranking[i].jumlah_bayaran);
+          this.ranking[i].jumlah_bayaran = this.ranking[i].jumlah_bayaran.toFixed(2);
+          console.log(this.ranking[i].jumlah_bayaran)
+        }
         this.ranking.sort(function (a, b) {
           return b.jumlah_bayaran - a.jumlah_bayaran;
         });
@@ -109,6 +114,11 @@ export class SalesmemberPage implements OnInit {
         }, Object.create(null));
         console.log('ranking', rankingW);
         this.rankingW = rankingW.concat();
+        for (let i = 0; i < this.rankingW.length; i++) {
+          this.rankingW[i].jumlah_bayaran = parseFloat(this.rankingW[i].jumlah_bayaran);
+          this.rankingW[i].jumlah_bayaran = this.rankingW[i].jumlah_bayaran.toFixed(2);
+          console.log(this.rankingW[i].jumlah_bayaran)
+        }
         this.rankingW.sort(function (a, b) {
           return b.jumlah_bayaran - a.jumlah_bayaran;
         });
@@ -147,6 +157,12 @@ export class SalesmemberPage implements OnInit {
         }, Object.create(null));
         console.log('ranking', rankingM);
         this.rankingM = rankingM.concat();
+        for (let i = 0; i < this.rankingM.length; i++) {
+          this.rankingM[i].jumlah_bayaran = parseFloat(this.rankingM[i].jumlah_bayaran);
+          this.rankingM[i].jumlah_bayaran = this.rankingM[i].jumlah_bayaran.toFixed(2);
+          console.log(this.rankingM[i].jumlah_bayaran)
+        }
+       
         this.rankingM.sort(function (a, b) {
           return b.jumlah_bayaran - a.jumlah_bayaran;
         });

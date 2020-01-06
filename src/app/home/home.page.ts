@@ -1,10 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { MenuController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Chart } from 'chart.js';
 import { PostProvider } from '../../providers/post-provider';
 import { AuthService } from '../services/auth.service';
-import { ProdProductPage } from '../modals/prod-product/prod-product.page';
 
 
 
@@ -16,10 +15,12 @@ const TOKEN_KEY = 'user-access-token';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
-  @ViewChild('lineCanvas') lineCanvas: ElementRef;
-  @ViewChild('lineCanvasProductSold') lineCanvasPS: ElementRef;
-  @ViewChild('barCanvasT') barCanvasT: ElementRef;
-  @ViewChild('barCanvasP') barCanvasP: ElementRef;
+  @ViewChild('lineCanvas', { static: false }) lineCanvas: ElementRef;
+  @ViewChild('lineCanvasProductSold', { static: false }) lineCanvasPS: ElementRef;
+  @ViewChild('barCanvasT', { static: false }) barCanvasT: ElementRef;
+  @ViewChild('barCanvasP', { static: false }) barCanvasP: ElementRef;
+  @ViewChild('doughnutCanvas', { static: false }) doughnutCanvas: ElementRef;
+  @ViewChild('doughnutCanvasPS', { static: false }) doughnutCanvasPS: ElementRef;
 
   slider1 = {
     initialSlide: 0,
@@ -30,7 +31,8 @@ export class HomePage implements OnInit {
     observeParents: true,
 
   };
-
+  private doughnutChart: Chart;
+  private doughnutChartPS: Chart;
   private barChartT: Chart;
   private barChartP: Chart;
   private lineChart: Chart;
@@ -41,20 +43,29 @@ export class HomePage implements OnInit {
   showProdOnly: boolean = false;
   showSale: boolean = false;
   showAcc: boolean = false;
+  showCEO: boolean = false;
+
   showSaleOnly: boolean = false;
   teamrank: any;
   overallrank: any;
   username: string;
+  month: string;
+  displayName: string;
   users: any;
   company: string;
   tableStyle = 'bootstrap';
+  totalpend: any[];
   totalsum: any[];
   todaysum: any[];
   monthsum: any[];
+  totalsumceo: any[];
+  todaysumceo: any[];
+  monthsumceo: any[];
   newmonth: any[];
   monthgraph: any[];
   monthgraphP: any[];
   monthgraphPS: any[];
+  monthgraphPSales: any;
   monthgraphT: any[];
   daygraph: any[];
   months: any[];
@@ -68,6 +79,7 @@ export class HomePage implements OnInit {
   Tjb: any[];
   role: string;
   salesranking: any[];
+  salesrankingteam: any[];
   ranking: any[];
   ranksales: any[];
   nameranking: any[];
@@ -85,23 +97,35 @@ export class HomePage implements OnInit {
   customers: any = [];
   monthcom: any = [{ sum: 0 }];
   count: any[];
-
+  footer_team;
+  footer_team_sales;
+  footer_trs_sale;
+  isAdmin = false;
+  isSales = false;
+  isSalesOnly = false;
+  isAdminOnly = false;
   constructor(
     private postPrvdr: PostProvider,
     private storage: Storage,
     private auth: AuthService,
     private modalController: ModalController,
+    private menu: MenuController,
 
-  ) { }
+  ) {
+
+  }
 
   ngOnInit() {
 
   }
 
-
   ionViewWillEnter() {
     this.totalsum = [];
     this.todaysum = [];
+    this.totalsumceo = [];
+    this.todaysumceo = [];
+    this.monthsumceo = [];
+    this.totalpend = [];
     this.monthsum = [];
     this.monthcom = [];
     this.newmonth = [];
@@ -117,9 +141,11 @@ export class HomePage implements OnInit {
     this.monthgraphT = [];
     this.monthgraphP = [];
     this.monthgraphPS = [];
+    this.monthgraphPSales = [];
     this.monthgraph = [];
     this.daygraph = [];
     this.salesranking = [];
+    this.salesrankingteam = [];
     this.ranking = [];
     this.allranking = [];
     this.rankingall = [];
@@ -137,6 +163,7 @@ export class HomePage implements OnInit {
 
     this.auth.authState.subscribe(state => {
       this.users = state;
+      this.displayName = this.users.username;
       this.username = this.users.username;
       this.company = this.users.company;
       this.role = this.users.role;
@@ -145,6 +172,10 @@ export class HomePage implements OnInit {
       console.log(this.role);
       this.checkUser();
     });
+
+    const date = new Date();  // 2009-11-10
+    const month = date.toLocaleString('default', { month: 'long' });
+    this.month = month;
   }
 
   processLogout() {
@@ -162,23 +193,34 @@ export class HomePage implements OnInit {
     if (this.role === 'SALES') {
       this.showSale = true;
       this.showSaleOnly = true;
+      this.isAdmin = true;
+      this.isAdminOnly = true;
       this.loadTotalSale();
       this.loadSaleToday();
       this.loadMonthGraphSales();
       this.loadMonthSale();
       this.loadMonthGraphByTeam();
       this.loadMonthGraphByProductSold();
+      this.loadMonthGraphByProductSoldALL();
       this.loadTeamSales();
       this.loadSalesRanking();
       this.loadMonthlyComission();
+      this.loadPending();
 
-    } else if (this.role === 'CEO' || this.role === 'BOD') {
+
+    } else if (this.role === 'BOD') {
       this.showAdmin = true;
       this.showSale = true;
       this.showProd = true;
+      this.isSalesOnly = true;
+      this.isAdminOnly = false;
+      this.isSales = false;
+      this.isAdmin = false;
+
       this.loadAllSale();
       this.loadAllTodaySale();
       this.loadAllMonthSale();
+     
       this.loadMonthGraph();
       this.loadMonthGraphByProduct();
       this.loadMonthGraphByTeam();
@@ -190,18 +232,58 @@ export class HomePage implements OnInit {
       this.loadAllShippingMonthly();
       this.loadSalesRanking();
       this.loadTeamSales();
-    } else if (this.role === 'ACCOUNT') {
+    } else if (this.role === 'CEO') {
+      this.showAdmin = true;
+      this.showSale = true;
+      this.showProd = true;
+      this.isSalesOnly = true;
+      this.isAdminOnly = false;
+      this.isSales = false;
+      this.isAdmin = false;
+      this.showCEO = true;
+      this.loadAllSale();
+      this.loadAllTodaySale();
+      this.loadAllMonthSale();
+      this.loadCEOSale();
+      this.loadCEOTodaySale();
+      this.loadCEOMonthSale();
+      this.loadMonthGraph();
+      this.loadMonthGraphByProduct();
+      this.loadMonthGraphByTeam();
+      this.loadAllSalesRanking();
+      this.loadMonthGraphByProductSoldALL();
+      this.loadAllShipping();
+      this.loadAllShippingToday();
+      this.loadAllShippingWeekly();
+      this.loadAllShippingMonthly();
+      this.loadSalesRanking();
+      this.loadTeamSales();
+    }
+     else if (this.role === 'ACCOUNT' || this.role === 'ACCOUNT HEAD' ) {
       this.showAcc = true;
+      this.isSales = true;
+      this.isAdmin = true;
+      this.isSalesOnly = true;
+      this.isAdminOnly = true;
       this.loadUnverifyAcc();
-    } else if (this.role === 'ACCOUNT LEADER') {
-      this.showAcc = true;
-      this.loadUnverifyAcc();
-    } else if (this.role === 'PRODUCTION') {
+    } else if (this.role === 'PRODUCTION' || this.role === 'PRODUCTION HEAD' ) {
       this.showProd = true;
       this.showProdOnly = true;
+      this.isSales = true;
+      this.isAdmin = true;
+      this.isSalesOnly = true;
+      this.isAdminOnly = true;
       this.loadUnverifyProduction();
       this.loadAllShipping();
       this.getProduct();
+    } else if (this.role === 'HR') {
+      this.showProd = false;
+      this.showProdOnly = false;
+      this.isSales = true;
+      this.isAdmin = true;
+      this.isSalesOnly = true;
+      this.isAdminOnly = true;
+      this.showAcc = false;
     } else if (this.role === 'DEV') {
       this.showAdmin = true;
       this.showSale = true;
@@ -234,6 +316,7 @@ export class HomePage implements OnInit {
     }
 
   }
+
 
   // ALL --> ADMIN // CEO // BOD
   loadAllSale() {
@@ -276,6 +359,58 @@ export class HomePage implements OnInit {
         for (const sum of data.result) {
           this.monthsum.push(sum);
           console.log('total', this.monthsum);
+        }
+        resolve(true);
+      });
+    });
+  }
+
+  loadCEOSale() {
+    console.log("CEO OF COMAPNAY", this.company)
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getsumceo',
+        company: this.company,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (const sum of data.result) {
+          this.totalsumceo.push(sum);
+          console.log('total', this.totalsumceo);
+        }
+        resolve(true);
+      });
+    });
+  }
+  loadCEOTodaySale() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getsumceotoday',
+        company: this.company,
+
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (const sum of data.result) {
+          this.todaysumceo.push(sum);
+          console.log('total' + this.todaysumceo);
+        }
+        resolve(true);
+      });
+    });
+  }
+  loadCEOMonthSale() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getsumceomonth',
+        company: this.company,
+
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (const sum of data.result) {
+          this.monthsumceo.push(sum);
+          console.log('total monthsumceo', this.monthsumceo);
         }
         resolve(true);
       });
@@ -407,75 +542,71 @@ export class HomePage implements OnInit {
           this.Pjb.push(pm.jumlah_bayaran);
           this.Pprod.push(pm.produk);
         }
+        console.log("this.Prod", this.Pprod)
 
-        console.log('Pjb', this.Pjb);
-        console.log('Pprod', this.Pprod);
-        console.log('prodMonth', prodmonth);
+        let anArray = [];
+        let parts;
+        let secondparts;
+        let ndArray = [];
+        for (let i = 0; i < this.Pprod.length; i++) {
+          parts = this.Pprod[i].split(",");
 
-        this.barChartP = new Chart(this.barCanvasP.nativeElement, {
-          type: 'bar',
+          for (let n = 0; n < parts.length; n++) {
+            anArray.push(parts[n]);
+            console.log("parts", parts);
+          }
+          console.log("anarray", anArray)
+        }
+
+        for (let i = 0; i < anArray.length; i++) {
+          secondparts = anArray[i].split("-");
+          ndArray.push({ produk: secondparts[0], total: secondparts[1] });
+          console.log("2parts", ndArray);
+        }
+
+        let addprod = [];
+
+        ndArray.forEach(function (a) {
+          if (!this[a.produk]) {
+            this[a.produk] = { produk: a.produk, total: 0 };
+            addprod.push(this[a.produk]);
+          }
+          this[a.produk].total += +a.total;
+        }, Object.create(null));
+        console.log('addprod', addprod);
+
+        const pro = [];
+        const proBil = [];
+
+        for (const pm of addprod) {
+          pro.push(pm.produk)
+          proBil.push(pm.total);
+
+        }
+
+
+        this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, {
+          type: "doughnut",
           data: {
-            labels: this.Pprod,
+            labels: pro,
             datasets: [
               {
-                label: 'Sold',
-                data: this.Pjb,
+                label: "Bil Produk",
+                data: proBil,
                 backgroundColor: [
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
+                  "rgba(255, 99, 132, 0.2)",
+                  "rgba(54, 162, 235, 0.2)",
+                  "rgba(255, 206, 86, 0.2)",
+                  "rgba(75, 192, 192, 0.2)",
+                  "rgba(153, 102, 255, 0.2)",
+                  "rgba(255, 159, 64, 0.2)"
                 ],
-                borderColor: [
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
-                  'rgba(255,99,132,1)',
-
-
-                ],
-                borderWidth: 0.5
+                hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#FF6384", "#36A2EB", "#FFCE56"]
               }
             ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              yAxes: [
-                {
-                  scaleLabel: {
-                    display: true,
-                    labelString: 'Jumlah (RM)'
-                  },
-                  ticks: {
-                    beginAtZero: true
-                  }
-                }
-              ],
-              xAxes: [
-                {
-                  scaleLabel: {
-                    display: true,
-                    labelString: 'Produk'
-                  },
-                  ticks: {
-                    beginAtZero: true
-                  }
-                }
-              ]
-            }
           }
         });
+
       });
 
     });
@@ -609,9 +740,34 @@ export class HomePage implements OnInit {
         }, Object.create(null));
         console.log(' loadAllSalesRanking', ranking);
         this.ranking = ranking.concat();
+
+        for (let i = 0; i < this.ranking.length; i++) {
+          this.ranking[i].jumlah_bayaran = parseFloat(this.ranking[i].jumlah_bayaran);
+          this.ranking[i].jumlah_bayaran = this.ranking[i].jumlah_bayaran.toFixed(2);
+          console.log(this.ranking[i].jumlah_bayaran)
+        }
+       
+
         this.ranking.sort(function (a, b) {
           return b.jumlah_bayaran - a.jumlah_bayaran;
         });
+
+        let sum = 0;
+        let sumfin;
+        for (let i = 0; i < this.ranking.length; i++) {
+        
+          sum += +this.ranking[i].jumlah_bayaran;
+          sumfin = Math.round(sum * 100) / 100
+          console.log("ranking",sumfin);
+        }
+        this.footer_trs_sale = sumfin;
+
+        this.ranking = this.ranking.map(row => ({
+          id: row['id'],
+          company: row['company'],
+          jumProduk: row['jumProduk'],
+          jumlah_bayaran: row['jumlah_bayaran'],
+        }));
 
         console.log('Team rank', this.ranking);
       });
@@ -797,6 +953,23 @@ export class HomePage implements OnInit {
       });
     });
   }
+
+  loadPending() {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'getsumpending',
+        sales_username: this.username,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (const sum of data.result) {
+          this.totalpend.push(sum);
+          console.log('total pending', this.totalpend);
+        }
+        resolve(true);
+      });
+    });
+  }
   loadSaleToday() {
     return new Promise(resolve => {
       const body = {
@@ -971,6 +1144,39 @@ export class HomePage implements OnInit {
       });
 
     });
+  }
+
+  graphProductSoldSale(pro, proBil) {
+    console.log("AAAAAAAAAAAAAAAAAAAAAAA", pro, proBil);
+    console.log(this.doughnutCanvas.nativeElement);
+    this.doughnutChartPS = new Chart(this.doughnutCanvas.nativeElement, {
+      type: "pie",
+      data: {
+        labels: pro,
+        datasets: [
+          {
+            label: "Bil Produk",
+            data: proBil,
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(255, 159, 64, 0.2)",
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(255, 159, 64, 0.2)"
+            ],
+            hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#FF6384", "#36A2EB", "#FFCE56", "#FF6384", "#36A2EB"
+              , "#FFCE56", "#FF6384", "#36A2EB", "#FFCE56"]
+          }
+        ]
+      }
+    });
 
 
   }
@@ -984,70 +1190,92 @@ export class HomePage implements OnInit {
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
         for (const sum of data.result) {
-          this.monthgraphPS.push(sum);
+          this.monthgraphPSales.push(sum);
         }
         resolve(true);
-        console.log('monthgraphPS', this.monthgraphPS);
-        const psmonth = [];
+        console.log('monthgraphPSales', this.monthgraphPSales);
 
-        this.monthgraphPS.forEach(function (a) {
-          if (!this[a.month]) {
-            this[a.month] = { month: a.month, jumProduk: 0 };
-            psmonth.push(this[a.month]);
+        let produkPS = [];
+        for (let i = 0; i < this.monthgraphPSales.length; i++) {
+          produkPS.push(this.monthgraphPSales[i].produk);
+
+        }
+        let anArray = [];
+        let parts;
+        let secondparts;
+        let ndArray = [];
+        for (let i = 0; i < produkPS.length; i++) {
+          parts = produkPS[i].split(",");
+
+          for (let n = 0; n < parts.length; n++) {
+            anArray.push(parts[n]);
+            console.log("parts", parts);
           }
-          this[a.month].jumProduk += +a.jumProduk;
-        }, Object.create(null));
-
-
-        for (const psm of psmonth) {
-          this.PSjb.push(psm.jumProduk);
-          this.PSmonth.push(psm.month);
+          console.log("anarray", anArray)
         }
 
-        console.log('PSjb', this.PSjb);
-        console.log('PSmonth', this.PSmonth);
-        console.log('psmonth', psmonth);
+        for (let i = 0; i < anArray.length; i++) {
+          secondparts = anArray[i].split("-");
+          ndArray.push({ produk: secondparts[0], total: secondparts[1] });
+          console.log("2parts", ndArray);
+        }
 
-        this.lineChartPS = new Chart(this.lineCanvasPS.nativeElement, {
-          type: 'line',
-          data: {
-            labels: this.PSmonth,
-            datasets: [
-              {
-                label: 'Total Sale Monthly',
-                fill: false,
-                lineTension: 0.1,
-                backgroundColor: 'rgba(75,192,192,0.4)',
-                borderColor: 'rgba(75,192,192,1)',
-                borderCapStyle: 'butt',
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: 'miter',
-                pointBorderColor: 'rgba(75,192,192,1)',
-                pointBackgroundColor: '#fff',
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-                pointHoverBorderColor: 'rgba(220,220,220,1)',
-                pointHoverBorderWidth: 2,
-                pointRadius: 5,
-                // pointHitRadius: 10,
-                data: this.PSjb,
-                spanGaps: false
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
+        let addprod = [];
+
+        ndArray.forEach(function (a) {
+          if (!this[a.produk]) {
+            this[a.produk] = { produk: a.produk, total: 0 };
+            addprod.push(this[a.produk]);
           }
-        });
+          this[a.produk].total += +a.total;
+        }, Object.create(null));
+        console.log('addprod', addprod);
+
+        const pro = [];
+        const proBil = [];
+
+        for (const pm of addprod) {
+          pro.push(pm.produk)
+          proBil.push(pm.total);
+
+        }
+        console.log("pro", pro, "pro", proBil);
+
+
+
+        this.graphProductSold(proBil, pro)
+
       });
 
     });
-
-
   }
+
+  graphProductSold(num, letr) {
+    console.log('PSjb ggg PRODUCT SOLD', num);
+    this.doughnutChart = new Chart(this.doughnutCanvasPS.nativeElement, {
+      type: "doughnut",
+      data: {
+        labels: letr,
+        datasets: [
+          {
+            label: "Bil Produk",
+            data: num,
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(255, 159, 64, 0.2)"
+            ],
+            hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#FF6384", "#36A2EB", "#FFCE56"]
+          }
+        ]
+      }
+    });
+  }
+
+
   loadTeamSales() {
     return new Promise(resolve => {
       const body = {
@@ -1057,14 +1285,14 @@ export class HomePage implements OnInit {
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
-        for (const sales of data.result) {
-          this.salesranking.push(sales);
+        for (let sales of data.result) {
+          this.salesrankingteam.push(sales);
         }
         resolve(true);
-        console.log('loadTeamSales:' + this.salesranking);
+        console.log('loadTeamSales:' + this.salesrankingteam);
         let ranksales = [];
 
-        this.salesranking.forEach(function (a) {
+        this.salesrankingteam.forEach(function (a) {
           if (!this[a.sales]) {
 
             this[a.sales] = { sales: a.sales, jumProduk: 0, jumlah_bayaran: 0 };
@@ -1076,6 +1304,14 @@ export class HomePage implements OnInit {
         }, Object.create(null));
         console.log('loadTeamSales', ranksales);
         this.ranksales = ranksales.concat();
+
+        for (let i = 0; i < this.ranksales.length; i++) {
+          this.ranksales[i].jumlah_bayaran = parseFloat(this.ranksales[i].jumlah_bayaran);
+          this.ranksales[i].jumlah_bayaran = this.ranksales[i].jumlah_bayaran.toFixed(2);
+          console.log(this.ranksales[i].jumlah_bayaran)
+        }
+       
+
         this.ranksales.sort(function (a, b) {
           return b.jumlah_bayaran - a.jumlah_bayaran;
         });
@@ -1083,6 +1319,16 @@ export class HomePage implements OnInit {
         let index = this.ranksales.findIndex(x => x.sales === this.username);
         console.log("index team sale", index);
         this.teamrank = index + 1;
+
+        let sum = 0;
+        let sumfin;
+        for (let i = 0; i < this.ranksales.length; i++) {
+         
+          sum += +this.ranksales[i].jumlah_bayaran;
+          sumfin = Math.round(sum * 100) / 100
+          console.log("ranksales",sumfin);
+        }
+        this.footer_team = sumfin;
       });
       this.ranksales = this.ranksales.map(row => ({
         id: row['id'],
@@ -1090,6 +1336,8 @@ export class HomePage implements OnInit {
         jumProduk: row['jumProduk'],
         jumlah_bayaran: row['jumlah_bayaran'],
       }));
+
+
 
 
 
@@ -1126,6 +1374,14 @@ export class HomePage implements OnInit {
         }, Object.create(null));
 
         this.salesall = ranksales.concat();
+
+        for (let i = 0; i < this.salesall.length; i++) {
+          this.salesall[i].jumlah_bayaran = parseFloat(this.salesall[i].jumlah_bayaran);
+          this.salesall[i].jumlah_bayaran = this.salesall[i].jumlah_bayaran.toFixed(2);
+          console.log(this.salesall[i].jumlah_bayaran)
+        }
+       
+
         this.salesall.sort(function (a, b) {
           return b.jumlah_bayaran - a.jumlah_bayaran;
         });
@@ -1133,12 +1389,25 @@ export class HomePage implements OnInit {
         let index = this.salesall.findIndex(x => x.sales === this.username);
         console.log("index overall", index);
         this.overallrank = index + 1;
+
+        let sum = 0;
+        let sumfin;
+        for (let i = 0; i < this.salesall.length; i++) {
+          let parse = parseFloat(this.salesall[i].jumlah_bayaran);
+          let add = parse.toFixed(2);
+          sum += +add;
+          sumfin = Math.round(sum * 100) / 100
+          console.log("salesall",sumfin);
+        }
+        this.footer_team_sales = sumfin;
+
       });
       this.salesall = this.salesall.map(row => ({
         nama: row['sales'],
         jumProduk: row['jumProduk'],
         jumlah_bayaran: row['jumlah_bayaran'],
       }));
+
     });
 
   }

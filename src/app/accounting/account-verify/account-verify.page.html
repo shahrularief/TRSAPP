@@ -7,9 +7,17 @@
 
 
 <ion-content scrollX="true">
+                <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+                                <ion-refresher-content 
+                                  pullingIcon="arrow-dropdown"
+                                  pullingText="Pull to refresh"
+                                  refreshingSpinner="circles"
+                                  refreshingText="Refreshing...">
+                                </ion-refresher-content>
+                              </ion-refresher>
         <ion-grid>
                 <ion-row>
-                        <ion-card color="tertiary" height="40px">
+                        <ion-card color="primary" height="40px">
                                 <ion-card-subtitle>
                                         <div class="ion-text-center">
                                                 Belum selesai
@@ -24,15 +32,15 @@
                 </ion-row>
                 <ion-row>
                         <ion-col>
-                                <ion-button (click)="totalProductModal()" fill="outline">Jumlah Produk</ion-button>
-                                <ion-button (click)="openCalendar()" fill="outline">
+                                <ion-button  (click)="totalProductModal()" color="primary" fill="solid" tooltip="Jumlah Produk" placement="top"><ion-icon name="list"></ion-icon></ion-button>
+                                <ion-button (click)="openCalendar()" color="primary" fill="solid" tooltip="Date" placement="bottom">
                                         <ion-icon name="calendar"></ion-icon>
                                 </ion-button>
                                
-                                <ion-button (click)="downloadCSV()" fill="outline" color="tertiary">CSV
+                                <ion-button (click)="downloadCSV()" fill="solid" color="primary" tooltip="Download" placement="top">CSV
                                         <ion-icon name="download"></ion-icon>
                                 </ion-button>
-                                <ion-button (click)="clearArrayCust()" fill="outline" color="danger">
+                                <ion-button (click)="clearArrayCust()" fill="solid" color="danger">
                                         <ion-icon name="close"></ion-icon>
                                 </ion-button>
                         </ion-col>
@@ -41,7 +49,23 @@
                 </ion-row>
 
                 <ion-row>
-                        <ion-searchbar showCancelButton="always" (ionChange)="updateFilter($event)" placeholder="search by company"></ion-searchbar>
+                        
+                                        <ion-searchbar showCancelButton="always" (ionChange)="updateFilter($event)" placeholder="search by company"></ion-searchbar>
+                                        <ion-button fill="clear">
+                                                <ion-select color="primary" type="text" [(ngModel)]="status" (ionChange)="updateStatus(status)" interface="popover">
+                                                         <ion-select-option disabled value="status">Status</ion-select-option>
+                                                        <ion-select-option value="pending">Pending</ion-select-option>
+                                                        <ion-select-option value="sah">Sah</ion-select-option>
+                                                        <ion-select-option value="shipping">Shipping</ion-select-option>
+                                                        <ion-select-option value="cod">COD</ion-select-option>
+                                                        <ion-select-option value="all">All</ion-select-option>
+                                         </ion-select>
+                                        </ion-button>
+                                       
+                                      
+                       
+                        
+                        
                 </ion-row>
         </ion-grid>
 
@@ -50,7 +74,7 @@
         
         
 
-        <ngx-datatable [ngClass]="tableStyle" [rows]="loadedcustomers" [columnMode]="'force'"
+        <ngx-datatable [ngClass]="tableStyle" [rows]="customers" [columnMode]="'force'"
                 [sortType]="'single'" [reorderable]="false" [rowHeight]="'auto'" [headerHeight]="100"
                 [footerHeight]="50" [limit]="10" >
                 <ngx-datatable-column color="primary"  prop="order_id" name="ID"></ngx-datatable-column>
@@ -77,7 +101,7 @@
                                 </ng-template>
                                 <ng-template let-row="row" ngx-datatable-cell-template>
                                     {{row.nombor_hp}} <br> 
-                                    <a ion-button href="https://wa.me/{{row.nombor_hp}}"><ion-icon name="logo-whatsapp" style="zoom:1.5;"color="success"></ion-icon></a>
+                                    <a ion-button  target="_blank" href="https://wa.me/{{row.nombor_hp}}"><ion-icon name="logo-whatsapp" style="zoom:1.5;"color="success"></ion-icon></a>
                                     <a ion-button href="tel:{{row.nombor_hp}}"><ion-icon name="call" style="zoom:1.5;" ></ion-icon></a>
 
                                 </ng-template>
@@ -90,6 +114,7 @@
                               <ng-template let-row="row" ngx-datatable-cell-template>
                                   {{row.namaakaun}} <br>
                                   {{row.akaun}} <br>
+                                  {{row.masaakaun}} <br>
                               </ng-template>
 
                 </ngx-datatable-column>
@@ -106,32 +131,58 @@
                               </ng-template>
                 </ngx-datatable-column>
               
-                <ngx-datatable-column name="Status" prop="pengesahan"></ngx-datatable-column>
-
+                <ngx-datatable-column>
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                                Status
+                              </ng-template>
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                      <ion-chip [color]="colorStatus(row.pengesahan)">
+                                        {{row.pengesahan}} 
+                                      </ion-chip>
+                                
+                                 
+                              </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Nota" prop="nota_tambahan"></ngx-datatable-column>
+                
+               
+                <ngx-datatable-column>
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                                Nota Akaun
+                              </ng-template>
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <ion-button small fill="clear" [color]="showBadge(row.request)" (click)="openRequest(row.order_id,row.request)">
+                                        <ion-icon name="mail" ></ion-icon>
+                                </ion-button>
+                                
+                              </ng-template>
+                </ngx-datatable-column>                
                 <ngx-datatable-column name="id" [resizeable]="false">
                         <ng-template ngx-datatable-header-template>
                                 
                         </ng-template>
                         <ng-template let-row="row" ngx-datatable-cell-template>
-                                <button ion-button small color="light" (click)="deleteOrder(row.order_id)"  tooltip="Delete" placement="left">
-                                        <ion-icon name="trash"></ion-icon>
-                                </button>
-                                <button ion-button small color="light"  tooltip="Edit" placement="top" (click)="updateOrder(row.order_id,row.nama_pelanggan,
-                                  row.tarikh_order,
-                                  row.alamat_pelanggan,
-                                  row.nombor_hp,
-                                  row.akaun,
-                                  row.produk,
-                                  row.jumProduk,
-                                  row.jumlah_bayaran,
-                                  row.nota_tambahan)">
-                                        <ion-icon name="create"></ion-icon>
-                                </button>
-                                <button ion-button small outline color="light" (click)="verifyAlert(row.order_id)"  tooltip="Sahkan" placement="top"> 
+                
+                                <button ion-button small outline color="light" (click)="verifyAlert(row.order_id,row.nama_pelanggan,
+                                row.masaakaun,
+                                row.alamat_pelanggan,
+                              row.poskod,
+                                row.bandar,
+                                row.negeri,
+                                row.negara,
+                                row.nombor_hp,
+                                row.namaakaun,
+                                row.akaun,
+                                row.produk,
+                                row.jumProduk,
+                                row.jumlah_bayaran,
+                                row.nota_tambahan,
+                                row.sales,
+                                row.company)"  tooltip="Sahkan" placement="top"> 
                                         <ion-icon name="checkbox-outline"></ion-icon>
                                 </button>
                                 <button ion-button small outline color="light"  tooltip="Resit" placement="right"
-                                        (click)="openModal(row.fail_lampiran, server,row.resit)">
+                                        (click)="openModal(row.resit)">
                                         <ion-icon name="image" ></ion-icon>
                                 </button>
                         </ng-template>

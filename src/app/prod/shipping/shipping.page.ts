@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { CalendarModal, CalendarModalOptions, CalendarResult } from 'ion2-calendar';
 import { PostProvider } from '../../../providers/post-provider';
 import * as papa from 'papaparse';
+import { DatePipe } from '@angular/common';
+
+
 @Component({
   selector: 'app-shipping',
   templateUrl: './shipping.page.html',
@@ -37,6 +40,8 @@ export class ShippingPage implements OnInit {
     public toastCtrl: ToastController,
     public alertCtrl: AlertController,
     public modalController: ModalController,
+    private datePipe: DatePipe,
+
   ) { }
 
   ngOnInit() {
@@ -61,6 +66,13 @@ export class ShippingPage implements OnInit {
     }, 500);
   }
 
+  doRefresh(event) {
+    setTimeout(() => {
+      this.customers = [];
+      this.ionViewWillEnter();
+      event.target.complete();
+    }, 500);
+  }
   loadCustomer() {
     return new Promise(resolve => {
       const body = {
@@ -75,23 +87,33 @@ export class ShippingPage implements OnInit {
         }
         resolve(true);
         this.customers = this.customers.map(row => ({
-          order_id: row['order_id'],
-          tarikh_order: row['tarikh_order'],
-          nama_pelanggan: row['nama_pelanggan'],
-          alamat_pelanggan: row['alamat_pelanggan'],
-          nombor_hp: row['nombor_hp'],
-          akaun: row['akaun'],
-          produk: row['produk'],
-          penghantaran: row['penghantaran'],
-          jumlah_bayaran: row['jumlah_bayaran'],
-          jumProduk: row['jumProduk'],
-          nota_tambahan: row['nota_tambahan'],
-          sales: row['sales'],
-          company: row['company'],
-          fail_lampiran: row['fail_lampiran'],
-          resit: row['resit'],
-          pengesahan: row['pengesahan'],
-          tracking: row['tracking']
+          order_id: row["order_id"],
+          tarikh_order: row["tarikh_order"],
+          verified_by: row["verified_by"],
+          tarikh_verify: row["tarikh_verify"],
+          shipped_by: row["shipped_by"],
+          tarikh_shipping: row["tarikh_shipping"],
+          nama_pelanggan: row["nama_pelanggan"],
+          emel: row["emel"],
+          alamat_pelanggan: row["alamat_pelanggan"],
+          bandar: row["bandar"],
+          poskod: row["poskod"],
+          negeri: row["negeri"],
+          negara: row["negara"],
+          nombor_hp: row["nombor_hp"],
+          namaakaun: row["namaakaun"],
+          masaakaun: row["masaakaun"],
+          akaun: row["akaun"],
+          produk: row["produk"],
+          penghantaran: row["penghantaran"],
+          jumlah_bayaran: row["jumlah_bayaran"],
+          jumProduk: row["jumProduk"],
+          nota_tambahan: row["nota_tambahan"],
+          sales: row["sales"],
+          sales_hp: row["sales_hp"],
+          company: row["company"],
+          pengesahan: row["pengesahan"],
+          tracking: row["tracking"]
         }));
       });
     });
@@ -115,12 +137,13 @@ export class ShippingPage implements OnInit {
     });
   }
 
+
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
     if (val && val.trim() !== '') {
       const temp = this.customers.filter(function (d) {
         return d.company.toLowerCase().indexOf(val) !== -1 || !val || d.nama_pelanggan.toLowerCase().indexOf(val) !== -1
-        || d.sales.toLowerCase().indexOf(val) !== -1;
+          || d.sales.toLowerCase().indexOf(val) !== -1;
       });
       this.customers = temp;
     } else {
@@ -144,9 +167,9 @@ export class ShippingPage implements OnInit {
     const event: any = await myCalendar.onDidDismiss();
     const date: CalendarResult = event.data;
     const dateString: any = date.string;
-    console.log(dateString);
-    this.onSearchDate(dateString);
-
+    let tar = this.datePipe.transform(dateString, 'dd-MM-yyyy');
+    console.log(tar);
+    this.onSearchDate(tar);
   }
 
   onSearchDate(from) {
@@ -171,10 +194,36 @@ export class ShippingPage implements OnInit {
     this.loadShipped();
   }
 
-  updateOrder(id, nama, tarikh, alamat, hp, akaun, produk, penghantaran, bayaran, nota) {
-    this.router.navigate(['/update-order/' + id + '/' + tarikh + '/' + nama + '/' + alamat + '/' + hp + '/' + akaun + '/'
-      + produk + '/' + penghantaran + '/' + bayaran + '/' + nota]);
+  updateOrder(id, nama, emel, tarikh, alamat, poskod, bandar, negeri, negara, hp, namaakaun, akaun, produk, penghantaran, bayaran, nota, sah) {
+
+    let details = {
+      order_id: id,
+      nama: nama,
+      emel: emel,
+      tarikh: tarikh,
+      alamat: alamat,
+      poskod: poskod,
+      bandar: bandar,
+      negeri: negeri,
+      negara: negara,
+      hp: hp,
+      namaakaun: namaakaun,
+      akaun: akaun,
+      produk: produk,
+      penghantaran: penghantaran,
+      bayaran: bayaran,
+      nota: nota,
+      sah: sah,
+    }
+    let navigationExtras: NavigationExtras = {
+      state: {
+        user: details
+      }
+    };
+    console.log("ne", navigationExtras)
+    this.router.navigate(['update-order'], navigationExtras);
   }
+
 
   async deleteOrder(id) {
 
@@ -233,52 +282,87 @@ export class ShippingPage implements OnInit {
   }
 
   downloadCSV() {
-    let day = this.date.getDay();
-    let month = this.date.getMonth() + 1;
-    let year = this.date.getFullYear();
-    let min = this.date.getMinutes();
-    let hours = this.date.getHours();
-  
+    let date = new Date();
+    let day = date.getDay() + 1;
+    let month = date.getMonth() + 1;
+
+    let alamatTRS = 'NO.15 1 ST FLOOR, JALAN SERI PUTRA 1/4,BANDAR SERI PUTRA, 43000 KAJANG'
 
     console.log(day + '/' + month);
     let customersCSV = this.customers.map(row => ({
-      order_id: row['order_id'],
-      tarikh_order: row['tarikh_order'],
-      nama_pelanggan: row['nama_pelanggan'],
-      alamat_pelanggan: row['alamat_pelanggan'],
-      nombor_hp: row['nombor_hp'],
-      akaun: row['akaun'],
-      produk: row['produk'],
-      penghantaran: row['penghantaran'],
-      jumlah_bayaran: row['jumlah_bayaran'],
-      jumProduk: row['jumProduk'],
-      nota_tambahan: row['nota_tambahan'],
-      sales: row['sales'],
-      company: row['company'],
-      pengesahan: row['pengesahan']
+      Order_ID: row['order_id'],
+      Tarikh_Order: row['tarikh_order'],
+      Nama_Pelanggan: row['nama_pelanggan'],
+      Nombor_Hp: row['nombor_hp'],
+      Alamat_Pelanggan: row['alamat_pelanggan'],
+      Poskod: row['poskod'],
+      Bandar: row['bandar'],
+      Negeri: row['negeri'],
+      Negera: row['negera'],
+      Nama_Akaun: row['namaakaun'],
+      Akaun: row['akaun'],
+      Tarikh_Bayaran: row['masaakaun'],
+      Produk: row['produk'],
+      Jumlah_Produk: row['jumProduk'],
+      Bayaran: row['jumlah_bayaran'],
+      Penghantaran: row['penghantaran'],
+      Track: row['tracking'],
+      Nota_Tambahan: row['nota_tambahan'],
+      Sales: row['sales'],
+      Company: row['company'],
+      Alamat: alamatTRS,
+      Status: row['pengesahan'],
+      Account: row["verified_by"],
+      Tarikh_Sah: row["tarikh_verify"],
+      Production: row["shipped_by"],
+      Tarikh_Delivery: row["tarikh_shipping"],
     }));
 
-    console.log(customersCSV);
+
+    console.log("csv", customersCSV);
     let csv = papa.unparse({
       fields: this.headerRow,
       data: customersCSV,
     });
 
     // Dummy implementation for Desktop download purpose
-    let blob = new Blob([csv]);
-    let a = window.document.createElement("a");
+    var blob = new Blob([csv]);
+    var a = window.document.createElement('a');
     a.href = window.URL.createObjectURL(blob);
-    a.download = day + '/' +  month +  '/' +  year + '/' + 'shipping.csv';
+    a.download = day + '' + month + '' + "shipping" + ".csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
   }
 
-  printReceipt(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, resit,sales,track) {
-    this.router.navigate(['/receipt/' + id + '/' + tarikh + '/' + nama + '/' + alamat + '/' + hp + '/' + akaun + '/'
-      + produk + '/' + jumProduk + '/' + bayaran + '/' + nota + '/' + sales + '/' + track]);
-    resit;
-    console.log(id, nama, tarikh, alamat, hp, akaun, produk, jumProduk, bayaran, nota, sales, track);
+  printReceipt(id, nama, emel, tarikh, alamat, poskod, bandar, negeri, negara, hp, namaakaun, akaun, produk, jumProduk, bayaran, sales, penghantaran, track ) {
+    let details = {
+      order_id: id,
+      nama: nama,
+      emel: emel,
+      tarikh: tarikh,
+      alamat: alamat,
+      poskod: poskod,
+      bandar: bandar,
+      negeri: negeri,
+      negara: negara,
+      hp: hp,
+      namaakaun: namaakaun,
+      akaun: akaun,
+      produk: produk,
+      jumProduk: jumProduk,
+      penghantaran: penghantaran,
+      bayaran: bayaran,
+      sales: sales,
+      track: track,
+    }
+    let navigationExtras: NavigationExtras = {
+      state: {
+        user: details
+      }
+    };
+    console.log("ne", navigationExtras);
+    this.router.navigate(['receipt'], navigationExtras);
   }
 
 }

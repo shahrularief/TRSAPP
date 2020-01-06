@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { PostProvider } from '../../../providers/post-provider';
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-stock',
   templateUrl: './stock.page.html',
@@ -9,22 +10,47 @@ import { PostProvider } from '../../../providers/post-provider';
 })
 export class StockPage implements OnInit {
   products: any[];
- 
+  username;
+  userrole;
   dinner: any;
+  role = false;
   constructor(
     private router: Router,
     private postPrvdr: PostProvider,
     public toastCtrl: ToastController,
     public alertCtrl: AlertController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private auth: AuthService,
   ) { }
 
   ngOnInit() { }
 
   ionViewWillEnter() {
     this.products = [];
-    
+    this.getUser();
     this.loadProduct();
+  }
+  getUser() {
+    this.auth.authState.subscribe(data => {
+      this.username = data.username;
+      this.userrole = data.role;
+      console.log(this.username);
+    });
+
+    if (this.userrole === 'CEO' || this.userrole === 'BOD' || this.userrole === 'PRODUCTION HEAD') {
+      this.role = false;
+    } else {
+      this.role = true
+    }
+  }
+
+
+  doRefresh(event) {
+    setTimeout(() => {
+      this.products = [];
+      this.ionViewWillEnter();
+      event.target.complete();
+    }, 500);
   }
 
   onSearchTerm(ev: CustomEvent) {
@@ -45,7 +71,7 @@ export class StockPage implements OnInit {
     return new Promise(resolve => {
       const body = {
         aksi: 'getproduct',
-        
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
@@ -73,14 +99,19 @@ export class StockPage implements OnInit {
           placeholder: 'Kod Produk'
         },
         {
-          name: 'prodPrice',
-          type: 'number',
-          placeholder: 'Harga Produk'
-        },
-        {
           name: 'prodStock',
           type: 'number',
           placeholder: 'Stok Produk'
+        },
+        {
+          name: 'kos_founder',
+          type: 'number',
+          placeholder: 'Kos Founder'
+        },
+        {
+          name: 'kos_company',
+          type: 'number',
+          placeholder: 'Kos Intercompany'
         }
       ],
       buttons: [
@@ -98,13 +129,12 @@ export class StockPage implements OnInit {
             if (
               data.prodName !== '' &&
               data.prodCode !== '' &&
-              data.prodPrice !== ''
+              data.prodStock !== ''
             ) {
               console.log('Confirm Ok');
               this.newProduct(data);
               console.log(data);
-              this.products = [];
-              this.loadProduct();
+              
             } else {
               const toast = await this.toastCtrl.create({
                 message: 'Isi ruang kosong',
@@ -119,24 +149,116 @@ export class StockPage implements OnInit {
     await alert.present();
   }
 
-  async newProduct(data) {
+  async EditProduct(prodID, kos_founder, kos_company, prodName, prodCode) {
+    const alert = await this.alertCtrl.create({
+      header: 'Edit' + '-' + prodName,
+      inputs: [
+        {
+          name: 'prodName',
+          type: 'text',
+          value: prodName
+        },
+        {
+          name: 'prodCode',
+          type: 'text',
+          value: prodCode
+        },
+        {
+          name: 'kos_founder',
+          type: 'number',
+          placeholder: "Founder" + ' ' + kos_founder
+        },
+        {
+          name: 'kos_company',
+          type: 'number',
+          placeholder: "Company" + ' ' +kos_company
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: blah => {
+            console.log('Confirm Cancel');
+          }
+        },
+        {
+          text: 'Ok',
+          handler: async data => {
+            if (
+              data.prodName !== '' &&
+              data.prodCode !== '' &&
+              data.kos_founder !== ''
+              &&
+              data.kos_company !== ''
+            ) {
+              console.log('Confirm Ok');
+              this.editedProduct(data, prodID);
+              console.log(data);
+              
+            } else {
+              const toast = await this.toastCtrl.create({
+                message: 'Isi ruang kosong',
+                duration: 2000
+              });
+              toast.present();
+            }
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async editedProduct(data, prodID) {
     console.log(data);
     const body = {
-      aksi: 'addproduct',
+      aksi: 'editproduct',
+      prodID: prodID,
       prodCode: data.prodCode,
-      prodPrice: data.prodPrice,
-      prodStock: data.prodStock,
-      prodName: data.prodName
+      prodName: data.prodName,
+      kos_founder: data.kos_founder,
+      kos_company: data.kos_company
     };
 
     this.postPrvdr.postData(body, 'process-api.php').subscribe(async data => {
       this.router.navigate(['/stock']);
       console.log('OK');
       console.log(data);
-
+      this.products = [];
+      this.loadProduct();
 
       const toast = await this.toastCtrl.create({
-        message: 'PRODUK telah disimpan',
+        message: 'Produk telah dikemaskini',
+        duration: 2000
+      });
+      toast.present();
+    });
+  }
+
+
+
+  async newProduct(data) {
+    console.log(data);
+    const body = {
+      aksi: 'addproduct',
+      prodCode: data.prodCode,
+      prodStock: data.prodStock,
+      prodName: data.prodName,
+      kos_founder: data.kos_founder,
+      kos_company: data.kos_company
+    };
+
+    this.postPrvdr.postData(body, 'process-api.php').subscribe(async data => {
+      this.router.navigate(['/stock']);
+      console.log('OK');
+      console.log(data);
+      this.products = [];
+      this.loadProduct();
+
+      const toast = await this.toastCtrl.create({
+        message: 'Produk telah disimpan',
         duration: 2000
       });
       toast.present();
@@ -203,9 +325,8 @@ export class StockPage implements OnInit {
         }, {
           text: 'Ok',
           handler: add => {
-            this.addStock(id, add.addstock, stock);
-            this.products = [];
-            this.loadProduct();
+            this.addStock(add.addstock, prodName);
+            this.addTX(add.addstock, prodName);
             console.log('Confirm Ok' + add.addstock);
           }
         }
@@ -213,24 +334,47 @@ export class StockPage implements OnInit {
     });
     await alert.present();
   }
-  addStock(id, add: number, stock: number) {
-    let sum = +add + +stock;
-    console.log(sum);
 
+  addTX(rmstock, prodName) {
+
+    let txtype = 'masuk';
     return new Promise(resolve => {
-      const body = {
-        aksi: 'updatestock',
-        prodID: id,
-        stock: sum,
+      let body = {
+        aksi: 'intransaction',
+        txproduct: prodName,
+        txtotal: rmstock,
+        txtype: txtype,
+        txname: this.username,
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
-        this.router.navigate(['/stock']);
-        this.ionViewWillEnter();
-        console.log('OK' + data);
+        console.log("txin", data)
+
+
       });
+      resolve(true);
     });
   }
+  addStock(add, prodName) {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'updatestockin',
+        stock_in: add,
+        prodName: prodName,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        console.log("updatestockin", data);
+        this.products = [];
+        this.ionViewWillEnter();
+      });
+      resolve(true);
+
+    });
+  }
+
+
   async removeAlert(id, stock, prodName) {
     const alert = await this.alertCtrl.create({
       header: 'Stok Keluar',
@@ -253,7 +397,8 @@ export class StockPage implements OnInit {
         }, {
           text: 'Ok',
           handler: remove => {
-            this.removeStock(id, remove.rmstock, stock);
+            this.removeStock(remove.rmstock, prodName);
+            this.removeTX(remove.rmstock, prodName);
             console.log('Confirm Ok');
           }
         }
@@ -261,23 +406,47 @@ export class StockPage implements OnInit {
     });
     await alert.present();
   }
+  removeTX(rmstock: any, prodName: any) {
 
-  removeStock(id, remove, stock) {
-    let remain =  stock - remove;
-    console.log(remain);
-
+    let txtype = 'keluar';
     return new Promise(resolve => {
-      const body = {
-        aksi: 'updatestock',
-        prodID: id,
-        stock: remain,
+      let body = {
+        aksi: 'outtransaction',
+        txproduct: prodName,
+        txtotal: rmstock,
+        txtype: txtype,
+        txname: this.username,
+
       };
 
       this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
-        this.router.navigate(['/stock']);
-        this.ionViewWillEnter();
-        console.log('OK' + data);
+        console.log("tx", data)
+
+
       });
+      resolve(true);
     });
+  }
+
+  removeStock(remove, prodName) {
+    return new Promise(resolve => {
+      const body = {
+        aksi: 'updatestockout',
+        stock_out: remove,
+        prodName: prodName,
+      };
+
+      this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+        console.log("updatestockout", data);
+        this.products = [];
+        this.ionViewWillEnter();
+      });
+      resolve(true);
+
+    });
+  }
+
+  goTXpage() {
+    this.router.navigate(['transaction']);
   }
 }

@@ -47,7 +47,7 @@ export class AccountReportPage implements OnInit {
   loadCustomer() {
     return new Promise(resolve => {
       const body = {
-        aksi: 'getdataverified',
+        aksi: 'getdataverifiedreport',
 
       };
 

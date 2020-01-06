@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, RouteReuseStrategy, Routes } from '@angular/router';
+import { IonicSelectableModule } from 'ionic-selectable';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -9,6 +10,7 @@ import { TooltipModule } from 'ng2-tooltip-directive';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
+import { NgxFileHelpersModule } from 'ngx-file-helpers';
 
 import { HttpModule } from '@angular/http';
 import { PostProvider } from '../providers/post-provider';
@@ -20,8 +22,10 @@ import { FilePath } from '@ionic-native/file-path/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 import { ImageModalPageModule } from './modals/image-modal/image-modal.module';
 import { ModalpopupPageModule } from './modals/modalpopup/modalpopup.module';
+import { CurrentstockPageModule } from './modals/currentstock/currentstock.module';
+import { AutosizeModule } from 'ngx-autosize';
+import { RequestPageModule } from './modals/request/request.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { VerifyproductPageModule } from './modals/verifyproduct/verifyproduct.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ProdProductPageModule } from './modals/prod-product/prod-product.module';
@@ -35,15 +39,20 @@ import { FileChooser } from '@ionic-native/file-chooser/ngx';
   entryComponents: [],
   imports: [
     BrowserModule,
+    NgxFileHelpersModule,
     HttpModule,
+    AutosizeModule,
     TooltipModule,
+    IonicSelectableModule,
     JwtModule.forRoot({}),
     HttpClientModule,
     IonicModule.forRoot(),
     AppRoutingModule,
     ImageModalPageModule,
+    CurrentstockPageModule,
     ModalpopupPageModule,
     VerifyproductPageModule,
+    RequestPageModule,
     ProdProductPageModule,
     BrowserAnimationsModule,
     NgxDatatableModule,

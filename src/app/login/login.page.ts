@@ -11,10 +11,18 @@ import { MenuController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  avatarimage: any;
   image: string;
   username = '';
+  fullname = '';
+  nickname = '';
+  userhp = '';
+  userEmail = '';
   password = '';
+  confirm_password = '';
+  role = '';
+  company = '';
+
+  companies: any[];
 
   constructor(
     private router: Router,
@@ -25,6 +33,8 @@ export class LoginPage implements OnInit {
     private menu: MenuController,
 
   ) { this.image = '../assets/trsgold.png'; 
+
+ 
 }
 
   ngOnInit() {
@@ -32,6 +42,8 @@ export class LoginPage implements OnInit {
 
   ionViewWillEnter() {
     this.menu.swipeGesture(false);
+    this.loadTeam();
+    this.companies = [];
   }
 
 
@@ -80,4 +92,80 @@ export class LoginPage implements OnInit {
       console.log(user);
     });
   }
+
+  async processRegisterEmployee() {
+    // validation done
+    if (this.username === '') {
+      const toast = await this.toastCtrl.create({
+        message: '*Username',
+        duration: 3000
+      });
+      toast.present();
+    } else if (this.password === '') {
+      const toast = await this.toastCtrl.create({
+        message: '*Password',
+        duration: 3000
+      });
+      toast.present();
+    } else if (this.password !== this.confirm_password) {
+      const toast = await this.toastCtrl.create({
+        message: 'Invalid password',
+        duration: 3000
+      });
+      toast.present();
+    } else {
+
+      const body = {
+        aksi: 'registerlogin',
+        username: this.username,
+        password: this.password,
+        fullname: this.fullname,
+        nickname: this.nickname,
+        userhp: this.userhp,
+        userEmail: this.userEmail,
+        role: this.role,
+        company: this.company,
+
+      };
+
+      this.postPvdr.postData(body, 'process-api.php').subscribe(async data => {
+        let alertpesan = data.msg;
+        if (data.success) {
+          this.router.navigate(['/login']);
+          const toast = await this.toastCtrl.create({
+            message: 'Pendaftaran berjaya',
+            duration: 3000
+          });
+          toast.present();
+        } else {
+          const toast = await this.toastCtrl.create({
+            message: alertpesan,
+            duration: 3000
+          });
+          toast.present();
+        }
+      });
+
+    }
+
+  }
+
+
+  loadTeam() {
+    return new Promise(resolve => {
+      let body = {
+        aksi: 'getcompany',
+      
+      };
+
+      this.postPvdr.postData(body, 'process-api.php').subscribe(data => {
+        for (let comp of data.result) {
+          this.companies.push(comp);
+        }
+        console.log(this.companies);
+        resolve(true);
+      });
+    });
+  }
+
 }

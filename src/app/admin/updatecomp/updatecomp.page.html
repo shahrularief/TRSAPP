@@ -64,11 +64,13 @@
       </ion-item>
       <ion-item>
           <ion-label>Kitaran Bulanan (Mula)</ion-label>
-          <ion-datetime displayFormat="YYYY-MM-DD " placeholder="Select Date" [(ngModel)]="compMonthS"></ion-datetime>
+          <ion-input  slot="end"type="date" [(ngModel)]="compMonthS" display-format="YYYY-MM-DD"></ion-input>
+
         </ion-item>
         <ion-item>
             <ion-label>Kitaran Bulanan (Akhir)</ion-label>
-            <ion-datetime displayFormat="YYYY-MM-DD " placeholder="Select Date" [(ngModel)]="compMonthE"></ion-datetime>
+            <ion-input slot="end" type="date" [(ngModel)]="compMonthE" display-format="YYYY-MM-DD"></ion-input>
+
           </ion-item>
     </ion-card-content>
   </ion-card>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PostProvider } from '../../../providers/post-provider';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastController, ActionSheetController } from '@ionic/angular';
+import { resolve } from 'dns';
 
 @Component({
   selector: 'app-company',
@@ -31,22 +32,25 @@ export class CompanyPage implements OnInit {
 
   async createCompany() {
     if (this.compname !== '' && this.compreg !== '') {
+      return new Promise(async resolve => {
       let body = {
         aksi: 'addcompany',
         compname: this.compname,
         compreg: this.compreg,
         compaddr: this.compaddr,
         compcity: this.compcity,
-        comppostcode: this.comppostcode,
+        comppostcode: this.comppostcode.toString(),
         compstate: this.compstate,
-        comphp: this.comphp,
+        comphp: this.comphp.toString(),
       };
+      const toast = await this.toastController.create({
+        message: 'Maklumat telah di simpan',
+        duration: 2000
+      });
+      this.postPrvdr.postData(body, 'process-api.php').subscribe( data => {
 
-      this.postPrvdr.postData(body, 'process-api.php').subscribe(async data => {
-        this.router.navigate(['/company']);
         console.log('OK');
-        console.log(data);
-
+        
         this.compname = '';
         this.compreg = '';
         this.compaddr = '';
@@ -54,19 +58,47 @@ export class CompanyPage implements OnInit {
         this.comppostcode = '';
         this.compstate = '';
         this.comphp = '';
-     
+
+        console.log(data);
+        
+      });
+      resolve(true);
+      this.router.navigate(['/viewcompany']);
+      toast.present();
+      
+    });
+    }
+  }
+
+
+  updatedProcess() {
+    if (this.compname !== '' && this.compreg !== '') {
+    return new Promise(async resolve => {
+        let body = {
+          aksi: 'addcompany',
+          compname: this.compname,
+          compreg: this.compreg,
+          compaddr: this.compaddr,
+          compcity: this.compcity,
+          comppostcode: this.comppostcode,
+          compstate: this.compstate,
+          comphp: this.comphp,
+
+        };
         const toast = await this.toastController.create({
-          message: 'Tempahan telah di simpan',
+          message: 'Telah dikemaskini',
           duration: 2000
         });
-        toast.present();
+        
+        this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
+          this.router.navigate(['/viewcompany']);
+          console.log('OK');
+          toast.present();
+        });
       });
     }
   }
 
- 
-
-  
 
 
 }

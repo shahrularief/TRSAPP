@@ -21,8 +21,7 @@
     padding: .5em;
   }
 
-  h3,
-  .label {
+  h3{
     color: white;
     font-weight: bold;
   }
@@ -125,3 +124,73 @@
   }
 }
 
+.split-pane-visible > ion-menu {
+  max-width: 40% !important;
+}
+
+.misc-body{
+    position: absolute;
+    // left: 30px;
+    // top: 48px;
+    height: 100%;
+    width: 50%;
+    left: calc(0.5%);
+    right: calc(55%);
+    background-image: url(C:\xampp\htdocs\trsAppV1\src\assets\background_trs.jpg);
+    color: white;
+    padding-right: 20px;
+    background-size: 90% 100%;
+    // padding-left: 20px;
+    // padding-top: 3px;
+    // padding-bottom: 3px;
+    // font-size: 30px;
+    // font-weight: normal;
+}
+
+
+
+.content-body {
+  position: absolute;
+    height: 100%;
+    width: 50%;
+    left: calc(45%);
+    overflow-x: hidden;
+    outline-style: solid;
+    outline-color: invert;
+}
+
+.full-screen{
+  position: absolute;
+    height: 100%;
+    width: 100%;
+   
+    overflow-x: hidden;
+}
+
+body{
+  background-color: #202020;
+}
+
+ion-modal {
+  --border-radius: 10px!important;
+}
+
+ion-modal.auto-height {
+  --height: auto;
+  .modal-wrapper{
+    width: 90vw;
+    .ion-page {
+      position: relative;
+      contain: content;
+      max-height: 90vh;
+      .ion-content {
+        overflow: auto;
+      }
+    }
+  }
+}
+ion-refresher-content{
+  color: white;
+  background-color: #E1B956;
+ 
+}

@@ -5,7 +5,8 @@ import { MenuController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { AuthService } from './services/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-
+import { AlertController } from '@ionic/angular';
+import { DomSanitizer } from '@angular/platform-browser';
 const TOKEN_KEY = 'user-access-token';
 
 
@@ -19,8 +20,13 @@ export class AppComponent {
   users: any;
   items: any;
   username: string;
+  avatar: string;
   res: any;
+  
 
+  content: string;
+  misc: string;
+  full_icon = "expand";
   ordlabel = false;
   acclabel = false;
   prodlabel = false;
@@ -59,6 +65,8 @@ export class AppComponent {
     private auth: AuthService,
     private menu: MenuController,
     public spinner: NgxSpinnerService,
+    public alertController: AlertController,
+    private sanitizer: DomSanitizer,
   ) {
     this.initializeApp();
     this.loadUser();
@@ -68,9 +76,22 @@ export class AppComponent {
 
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-
       this.spinner.show();
+      console.log(this.platform.platforms());
     });
+  }
+
+  fullscreen() {
+    if (this.content === "content-body" && this.misc === "misc-body") {
+      this.content = "full-screen";
+      this.misc = " ";
+      this.full_icon = "contract"
+    } else if (this.content === "full-screen" && this.misc === " ") {
+      this.content = "content-body";
+      this.misc = "misc-body";
+      this.full_icon = "expand"
+    }
+
   }
 
   loadUser() {
@@ -80,12 +101,26 @@ export class AppComponent {
         this.res = state;
         this.username = state.username;
         this.role = state.role;
-        console.log("appcomp", this.res);
-        console.log("appcomp", this.username);
-        console.log("appcomp", this.role);
+        let imageData = state.avatar;
+        this.sanitizer.bypassSecurityTrustResourceUrl(imageData);
+        this.avatar = 'data:image/jpeg;base64,' + imageData;
+
+        console.log("appcompres", this.res);
+        console.log("appcompuser", this.username);
+        console.log("appcomprole", this.role);
 
         if (this.res !== null && this.role === 'SALES') {
           this.router.navigate(['/home']);
+
+          if (this.platform.is("android")) {
+            this.content = "fullscreen";
+            this.misc = " ";
+            this.full_icon = " ";
+          } else if (this.platform.is("cordova") || this.platform.is("desktop")) {
+            this.content = "content-body";
+            this.misc = "misc-body";
+            this.full_icon = "expand";
+          }
 
           this.ordlabel = true;
           this.appSales = [
@@ -110,7 +145,8 @@ export class AppComponent {
           this.router.navigate(['/home']);
           this.appSales = [];
           this.appPerform = [];
-
+          this.content = "full-screen";
+          this.misc = " ";
           this.acclabel = true;
           this.ordlabel = false;
           this.prodlabel = false;
@@ -127,15 +163,15 @@ export class AppComponent {
             icon: 'train'
           },
           ];
-          this.appProduction = [
-          ];
+          this.appProduction = [];
           this.appAdmin = [];
 
-        } else if (this.res !== null && this.role === 'ACCOUNT LEADER') {
+        } else if (this.res !== null && this.role === 'ACCOUNT HEAD') {
           this.router.navigate(['/home']);
           this.appSales = [];
           this.appPerform = [];
-
+          this.content = "full-screen";
+          this.misc = " ";
           this.acclabel = true;
           this.ordlabel = false;
           this.prodlabel = false;
@@ -158,6 +194,11 @@ export class AppComponent {
           }
           ];
           this.appProduction = [
+            {
+              title: 'Stok',
+              url: '/stock',
+              icon: 'filing'
+            },
           ];
           this.appAdmin = [];
 
@@ -166,22 +207,40 @@ export class AppComponent {
         else if (this.res !== null && this.role === 'PRODUCTION') {
           this.router.navigate(['/home']);
           this.appPerform = [];
-          this.ordlabel = true;
+          this.content = "full-screen";
+          this.misc = " ";
+          this.ordlabel = false;
           this.acclabel = false;
           this.perflabel = false;
           this.admlabel = false;
-          this.appSales = [
+          this.appSales = [];
+
+          this.appAccount = [];
+          this.prodlabel = true;
+          this.appProduction = [
             {
-              title: 'Tempahan Baru',
-              url: '/new-order',
-              icon: 'add'
+              title: 'Production',
+              url: '/production',
+              icon: 'cube'
             },
             {
-              title: 'Rekod Tempahan',
-              url: '/rekod-order',
-              icon: 'grid'
+              title: 'Shipping',
+              url: '/shipping',
+              icon: 'train'
             },
           ];
+          this.appAdmin = [];
+
+        } else if (this.res !== null && this.role === 'PRODUCTION HEAD') {
+          this.router.navigate(['/home']);
+          this.appPerform = [];
+          this.content = "full-screen";
+          this.misc = " ";
+          this.ordlabel = false;
+          this.acclabel = false;
+          this.perflabel = false;
+          this.admlabel = false;
+          this.appSales = [];
 
           this.appAccount = [];
           this.prodlabel = true;
@@ -205,10 +264,12 @@ export class AppComponent {
           ];
           this.appAdmin = [];
 
-        } else if (this.res !== null && this.role === 'CEO' || this.role === 'BOD' || this.role === 'DEV') {
+        } 
+        else if (this.res !== null && this.role === 'CEO' || this.role === 'BOD' || this.role === 'DEV') {
           this.router.navigate(['/home']);
           this.ordlabel = true;
-
+          this.content = "full-screen";
+          this.misc = " ";
           this.appSales = [
             {
               title: 'Tempahan Baru',
@@ -274,6 +335,33 @@ export class AppComponent {
             },
           ];
         }
+        else if (this.res !== null && this.role === 'HR') {
+          this.router.navigate(['/home']);
+          this.appPerform = [];
+          this.content = "full-screen";
+          this.misc = " ";
+          this.ordlabel = false;
+          this.acclabel = false;
+          this.perflabel = false;
+          this.admlabel = false;
+          this.appSales = [];
+          this.appAccount = [];
+          this.prodlabel = false;
+          this.appProduction = [];
+          this.appAdmin = [
+            {
+              title: 'Staff Syarikat',
+              url: '/employee',
+              icon: 'person'
+            },
+            {
+              title: 'Syarikat',
+              url: '/viewcompany',
+              icon: 'business'
+            },
+          ];
+
+        }
       } else {
         this.router.navigate(['login']);
         this.appProduction = [];
@@ -282,6 +370,10 @@ export class AppComponent {
         this.appSales = [];
       }
     });
+  }
+
+  goToProfile(){
+    this.router.navigate(['view-profile']);
   }
 }
 

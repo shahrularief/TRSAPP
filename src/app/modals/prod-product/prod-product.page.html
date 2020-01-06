@@ -1,6 +1,11 @@
 <ion-header>
     <ion-toolbar>
       <ion-title>Jumlah Produk</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="closeModal()">
+            <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
+    </ion-buttons>
     </ion-toolbar>
   </ion-header>
   
@@ -16,7 +21,7 @@
     <tbody>
       <tr *ngFor="let ch of counted">
         <td>{{ch.produk}}</td>
-        <td>{{ch.jumProduk}}</td>
+        <td>{{ch.total}}</td>
       </tr>
     </tbody>
   </table>

@@ -7,13 +7,41 @@
 
 
 <ion-content scrollX="true">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+          pullingIcon="arrow-dropdown"
+          pullingText="Pull to refresh"
+          refreshingSpinner="circles"
+          refreshingText="Refreshing...">
+        </ion-refresher-content>
+      </ion-refresher>
 
   <ion-searchbar placeholder="Search product" animated="true" (ionChange)="onSearchTerm($event)"></ion-searchbar>
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  
+  <ion-fab vertical="bottom" horizontal="end"  slot="fixed" >
+      <ion-fab-button color="secondary">
+        <ion-icon name="arrow-dropup" ></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="top">
+          <ion-fab-button color="success" (click)="openAddProduct()" >
+              <ion-icon name="add" tooltip="Tambah Produk" placement="top"></ion-icon>
+            </ion-fab-button>
+      </ion-fab-list>
+      <ion-fab-list side="start">
+       
+          <ion-fab-button color="tertiary" (click)="goTXpage()" >
+              <ion-icon name="swap" tooltip="Transaksi" placement="left"></ion-icon>
+            </ion-fab-button>
+          
+    </ion-fab-list>
+    </ion-fab>
+  
+  <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="openAddProduct()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
-  </ion-fab>
+  </ion-fab> -->
+
   <div style="overflow-x:auto;">
   <table>
     <thead>
@@ -21,26 +49,34 @@
         <th></th>
         <th>Nama Produk</th>
         <th>Kod Produk</th>
-        <th>Harga</th>
-        <th>Stok</th>
+        <th>Masuk</th>
+        <th>Keluar</th>
+        <th>Terkini</th>
+        <th>Kos Founder</th>
+        <th>Kos Company</th>
       </tr>
     </thead>
     <tbody>
       <tr  *ngFor="let pro of products">
         <td >
-            <ion-button size="small" color="danger"
+            <ion-button size="small" color="danger" [disabled]="role"
             (click)="deleteOrder(pro.prodID)">
             <ion-icon name="trash"></ion-icon>
             </ion-button>
 
-            <ion-button size="small" color="primary"
+            <ion-button size="small" color="primary" [disabled]="role"
             (click)="addAlert(pro.prodID, pro.stock,pro.prodName)">
             <ion-icon name="add"></ion-icon>
             </ion-button>
 
-            <ion-button size="small" color="tertiary"
+            <ion-button size="small" color="tertiary" [disabled]="role"
             (click)="removeAlert(pro.prodID, pro.stock, pro.prodName)">
             <ion-icon name="remove-circle"></ion-icon>
+            </ion-button>
+
+            <ion-button size="small" color="light" [disabled]="role"
+            (click)="EditProduct(pro.prodID, pro.kos_founder, pro.kos_company, pro.prodName, pro.prodCode)">
+            <ion-icon name="create"></ion-icon>
             </ion-button>
         </td>
 
@@ -51,12 +87,22 @@
         <td>
             <ion-text>{{pro.prodCode}}</ion-text>
         </td>
+
         <td>
-            <ion-text>RM {{pro.prodPrice}}</ion-text>
+            <ion-text>{{pro.stock_in}}</ion-text>
+        </td>
+        <td>
+            <ion-text>{{pro.stock_out}}</ion-text>
         </td>
         <td>
             <ion-text>{{pro.stock}}</ion-text>
         </td>
+        <td>
+          <ion-text>{{pro.kos_founder}}</ion-text>
+      </td>
+      <td>
+        <ion-text>{{pro.kos_company}}</ion-text>
+    </td>
     </tbody>
   </table>
   </div>

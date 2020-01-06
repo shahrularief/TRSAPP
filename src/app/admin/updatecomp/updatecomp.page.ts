@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PostProvider } from '../../../providers/post-provider';
 import { Router, ActivatedRoute } from '@angular/router';
-
+import { ToastController, ActionSheetController } from '@ionic/angular';
 @Component({
   selector: 'app-updatecomp',
   templateUrl: './updatecomp.page.html',
@@ -22,7 +22,10 @@ export class UpdatecompPage implements OnInit {
   constructor(
     private postPrvdr: PostProvider,
     private router: Router,
-    private actRoute: ActivatedRoute,) { }
+    private actRoute: ActivatedRoute,
+    public toastController: ToastController,
+
+    ) { }
 
   ngOnInit() {
     this.actRoute.params.subscribe((data: any) => {
@@ -40,9 +43,9 @@ export class UpdatecompPage implements OnInit {
     });
   }
 
-  updatedProcess() {
+updatedProcess() {
     console.log(this.compMonthS);
-    return new Promise(resolve => {
+    return new Promise(async resolve => {
         let body = {
           aksi : 'updatecompany',
           compID : this.id,
@@ -57,10 +60,15 @@ export class UpdatecompPage implements OnInit {
           compMonthE : this.compMonthE,
 
         };
-
+        const toast = await this.toastController.create({
+          message: 'Telah dikemaskini',
+          duration: 2000
+        });
+        
         this.postPrvdr.postData(body, 'process-api.php').subscribe(data => {
           this.router.navigate(['/viewcompany']);
           console.log('OK');
+          toast.present();
         });
       });
 

@@ -8,9 +8,9 @@
 
 			</div>
 			<div class="info">
-				<h2>Sales Receipt</h2>
-				<h2>TRS Holdings</h2>
-				<h2> No 14, 1, Jalan Seri Putra 1/4, Bandar Seri Putra, 43000 Kajang, Selangor</h2>
+				<h2>Receipt {{order_id}}</h2>
+				<h2>TRS</h2>
+				<h2> NO.15 1 ST FLOOR, JALAN SERI PUTRA 1/4,BANDAR SERI PUTRA, 43000 KAJANG</h2>
 			</div>
 			<!--End Info-->
 		</div>
@@ -21,9 +21,9 @@
 				<h2>Info Pelanggan</h2>
 				<p>
 					Staff : {{sales}}<br>
-					Nama Pelanggan : {{nama_pelanggan}}<br>
-					Alamat : {{alamat_pelanggan}}<br>
-					Nombor Telefon : {{nombor_hp}}<br>
+					Nama Pelanggan : {{nama}}<br>
+					Alamat : {{alamat}},{{poskod}},{{bandar}},{{negeri}},{{negara}}<br>
+					Nombor Telefon : {{hp}}<br>
 				</p>
 			</div>
 		</div>
@@ -41,10 +41,10 @@
 							<h2>Qty</h2>
 						</td>
 						<td class="Rate">
-							<h2>Sub Total</h2>
+							
 						</td>
 					</tr>
-
+					<ion-row *ngFor="let att of anArray; let idx = index">
 					<tr class="service">
 						<td class="tableitem">
 							<p class="itemtext">{{produk}}</p>
@@ -53,10 +53,10 @@
 							<p class="itemtext">{{jumProduk}}</p>
 						</td>
 						<td class="tableitem">
-							<p class="itemtext">{{jumlah_bayaran}}</p>
+							
 						</td>
 					</tr>
-
+					</ion-row>
 
 					<tr class="tabletitle">
 						<td></td>
@@ -64,7 +64,7 @@
 							<h2>Total</h2>
 						</td>
 						<td class="payment">
-							<h2>{{jumlah_bayaran}}</h2>
+							<h2>{{bayaran}}</h2>
 						</td>
 					</tr>
 

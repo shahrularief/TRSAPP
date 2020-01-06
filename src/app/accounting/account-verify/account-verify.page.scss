@@ -34,3 +34,23 @@ ion-card{
      font-size: 10pt;
      text-align: center;
    }
+
+   ion-searchbar{
+     width: 80% !important;
+   }
+
+   .notification-button {            
+    position: relative;
+    width: 42px;
+    top:1px;
+    right: 1px;
+    overflow: visible!important;
+}
+
+
+.notifications-badge {
+    position: absolute;
+    top: -6px;
+    right: -3px;
+    border-radius: 50%;
+}

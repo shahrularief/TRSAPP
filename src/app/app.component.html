@@ -1,27 +1,53 @@
 <ion-app>
-    <ion-menu type="reveal">
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>TRS Holdings</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-          <div #header>
-              <ion-row style="align-items:center;">
-                <ion-col col-3>
-                </ion-col>
-                <ion-col col-6>
-                  <img class="user-avatar round" [src]="'assets/img/avatar/avatar-placeholder.png'"/>
-                </ion-col>
-                <ion-col col-3>
-                </ion-col>
-              </ion-row>
-              <ion-row style="justify-content: center;">
-                <h3>{{username}}</h3>
-              </ion-row>
-            </div>
-        <ion-list>
-            <ion-menu-toggle auto-hide="false" *ngFor="let p of appHome">
+  <div [class]=misc>
+        <ion-label >TRS Biz</ion-label>
+  </div>
+
+  <div [class]=content>
+      <ion-menu type="overlay">
+          <ion-header>
+            <ion-toolbar>
+              <ion-title slot="start">TRS Biz</ion-title>
+              <ion-button slot="end" (click)="fullscreen()" fill="clear"><ion-icon [name]="full_icon"></ion-icon></ion-button>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content>
+              <div #header>
+                  <ion-row style="align-items:center;">
+                    <ion-col col-3>
+                    </ion-col>
+                    <!-- ///  -->
+                    <ion-col col-6 (click)="goToProfile()">
+                      <img class="user-avatar round"  src="{{avatar}}"/>
+                    </ion-col>
+                    <ion-col col-3>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row style="justify-content: center;">
+                    <h3>{{username}}</h3><br>
+                    
+                  </ion-row>
+                  <ion-row style="justify-content: center;">
+                   
+                    <small> V 0.1.6</small>
+                  </ion-row>
+                 
+                </div>
+            <ion-list>
+                <ion-menu-toggle auto-hide="false" *ngFor="let p of appHome">
+                    <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
+                      <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                      <ion-label>
+                        {{p.title}}
+                      </ion-label>
+                    </ion-item>
+                  </ion-menu-toggle>
+    
+              <ion-item *ngIf="ordlabel">
+                  <ion-label color="medium">Tempahan</ion-label>
+              </ion-item>
+             
+              <ion-menu-toggle auto-hide="false" *ngFor="let p of appSales">
                 <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
                   <ion-icon slot="start" [name]="p.icon"></ion-icon>
                   <ion-label>
@@ -29,74 +55,72 @@
                   </ion-label>
                 </ion-item>
               </ion-menu-toggle>
-
-          <ion-item *ngIf="ordlabel">
-              <ion-label color="medium">Tempahan</ion-label>
+    
+              <ion-item *ngIf="acclabel">
+                  <ion-label  color="medium">Accounting</ion-label>
+                  <ion-icon name="information-circle" tooltip="View hanya sesuai untuk Desktop"></ion-icon>
+              </ion-item>
+              
+              <ion-menu-toggle auto-hide="false" *ngFor="let p of appAccount">
+                <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
+                  <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                  <ion-label>
+                    {{p.title}}
+                  </ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+    
+              <ion-item *ngIf="prodlabel">
+                  <ion-label color="medium">Production </ion-label>
+                  <ion-icon name="information-circle" tooltip="View hanya sesuai untuk Desktop"></ion-icon>
+              </ion-item>
+              
+              <ion-menu-toggle auto-hide="false" *ngFor="let p of appProduction">
+                <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
+                  <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                  <ion-label>
+                    {{p.title}}
+                  </ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+    
+              <ion-item *ngIf="perflabel">
+                  <ion-label color="medium">Prestasi</ion-label>
+              </ion-item>
+              
+              <ion-menu-toggle auto-hide="false" *ngFor="let p of appPerform">
+                <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
+                  <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                  <ion-label>
+                    {{p.title}}
+                  </ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+    
+              <ion-item *ngIf="admlabel">
+                  <ion-label color="medium">Administration</ion-label>
+              </ion-item>
+              
+              <ion-menu-toggle auto-hide="false" *ngFor="let p of appAdmin">
+                <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
+                  <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                  <ion-label>
+                    {{p.title}}
+                  </ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+            </ion-list>
+            <ion-item>
+              <a target="_blank" href="https://docs.google.com/forms/d/1hu96axgBeCuqn0FnIpyZfvQ208jXk3QaMJ_zSO1_Gk0/">Feedback</a>
           </ion-item>
-         
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appSales">
-            <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
-              <ion-icon slot="start" [name]="p.icon"></ion-icon>
-              <ion-label>
-                {{p.title}}
-              </ion-label>
-            </ion-item>
-          </ion-menu-toggle>
+          <!-- <ion-item>
+            <a href="/androidapk/app-debug.apk" download>Android APK</a>        
+          </ion-item> -->
 
-          <ion-item *ngIf="acclabel">
-              <ion-label  color="medium">Accounting</ion-label>
-          </ion-item>
-          
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appAccount">
-            <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
-              <ion-icon slot="start" [name]="p.icon"></ion-icon>
-              <ion-label>
-                {{p.title}}
-              </ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-
-          <ion-item *ngIf="prodlabel">
-              <ion-label color="medium">Production</ion-label>
-          </ion-item>
-          
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appProduction">
-            <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
-              <ion-icon slot="start" [name]="p.icon"></ion-icon>
-              <ion-label>
-                {{p.title}}
-              </ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-
-          <ion-item *ngIf="perflabel">
-              <ion-label color="medium">Prestasi</ion-label>
-          </ion-item>
-          
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPerform">
-            <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
-              <ion-icon slot="start" [name]="p.icon"></ion-icon>
-              <ion-label>
-                {{p.title}}
-              </ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-
-          <ion-item *ngIf="admlabel">
-              <ion-label color="medium">Administration</ion-label>
-          </ion-item>
-          
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appAdmin">
-            <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
-              <ion-icon slot="start" [name]="p.icon"></ion-icon>
-              <ion-label>
-                {{p.title}}
-              </ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-        </ion-list>
+          </ion-content>
+        </ion-menu>
         
-      </ion-content>
-    </ion-menu>
-    <ion-router-outlet main></ion-router-outlet>  
+        <ion-router-outlet main></ion-router-outlet>  
+  </div>
+  
 </ion-app>

@@ -78,9 +78,9 @@ export class RegistrationPage implements OnInit {
       this.postPvdr.postData(body, 'process-api.php').subscribe(async data => {
         let alertpesan = data.msg;
         if (data.success) {
-          this.router.navigate(['/login']);
+          this.router.navigate(['/employee']);
           const toast = await this.toastCtrl.create({
-            message: 'Register succesful',
+            message: 'Pendaftaran berjaya',
             duration: 3000
           });
           toast.present();

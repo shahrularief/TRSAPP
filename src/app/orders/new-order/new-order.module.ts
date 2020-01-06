@@ -6,6 +6,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { NewOrderPage } from './new-order.page';
 import { InternationalPhoneNumberModule } from 'ngx-international-phone-number';
+import { TooltipModule } from 'ng2-tooltip-directive';
+import { IonicSelectableModule } from 'ionic-selectable';
 
 const routes: Routes = [
   {
@@ -21,6 +23,7 @@ const routes: Routes = [
     IonicModule,
     ReactiveFormsModule,
     InternationalPhoneNumberModule,
+    TooltipModule, IonicSelectableModule,
     RouterModule.forChild(routes)
   ],
   declarations: [NewOrderPage]
