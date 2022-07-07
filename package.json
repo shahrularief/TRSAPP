@@ -70,7 +70,7 @@
     "ionic-native": "^2.9.0",
     "ionic-selectable": "^4.5.0",
     "ionic4-date-picker": "^0.1.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "ng2-file-input": "^1.1.0",
     "ng2-file-upload": "^1.4.0",
     "ng2-tooltip-directive": "^2.8.17",
